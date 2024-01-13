@@ -175,6 +175,7 @@ return [
         // Domain Service Providers
         // Admin
         Project\Domains\Admin\Authentication\Infrastructure\AuthenticationServiceProvider::class,
+        Project\Domains\Admin\Company\Infrastructure\CompanyServiceProvider::class,
 
         App\Providers\DoctrineServiceProvider::class,
     ])->toArray(),

@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Shared\Domain\ValueObject;
 
-// use Doctrine\DBAL\Types\Types;
-// use Doctrine\ORM\Mapping as ORM;
-
-abstract class StringValueObject implements \Stringable
+abstract class StringValueObject // implements \Stringable
 {
-    // #[ORM\Column(type: Types::STRING)]
     public ?string $value;
 
     public function __construct(?string $value)
@@ -52,9 +48,9 @@ abstract class StringValueObject implements \Stringable
     //     return $this->value;
     // }
 
-    public function __toString(): string
-    {
-        return $this->value;
-    }
+    // public function __toString(): string
+    // {
+    //     return $this->value;
+    // }
 
 }

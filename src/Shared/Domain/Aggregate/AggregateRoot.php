@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Project\Shared\Domain\Aggregate;
 
-use Illuminate\Contracts\Support\Arrayable;
+use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Bus\Event\DomainEvent;
 
-abstract class AggregateRoot implements Arrayable
+abstract class AggregateRoot implements ArrayableInterface
 {
     private array $domainEvents = [];
 
