@@ -5,12 +5,13 @@ namespace App\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Project\Shared\Domain\DomainException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -83,6 +84,19 @@ class Handler extends ExceptionHandler
                 ],
                 Response::HTTP_UNAUTHORIZED
             );
+        }
+
+        if ($ex instanceof HandlerFailedException) {
+            $domainException = $ex->getPrevious();
+            if ($domainException instanceof \Project\Shared\Domain\DomainException) {
+                return response()->json(
+                    [
+                        'message' => $domainException->getMessage(),
+                    ],
+                    $domainException->getHttpResponseCode()
+                );
+                // return $domainException->response();
+            }
         }
 
         return response()->json([

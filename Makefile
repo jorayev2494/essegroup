@@ -17,3 +17,6 @@ build:
 
 bash:
 	docker-compose -f ${DOCKER_COMPOSE_FILE} run --rm php-cli bash
+
+migration:
+	ENTITY=client php ./vendor/bin/doctrine-migrations diff

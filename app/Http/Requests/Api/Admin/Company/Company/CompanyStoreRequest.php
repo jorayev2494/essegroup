@@ -17,8 +17,9 @@ class CompanyStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', Rule::unique('pgsql_admin.company_companies', 'name')],
-            'domain' => ['required', 'string', 'alpha', Rule::unique('pgsql_admin.company_companies', 'domain')],
+            // 'logo' => ['required', 'file'],
+            'name' => ['required', 'string'],
+            'domain' => ['required', 'string', 'alpha'],
         ];
     }
 }

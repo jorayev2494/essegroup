@@ -16,11 +16,9 @@ class CompanyUpdateRequest extends FormRequest
 
     public function rules(): array
     {
-        $uuid = $this->route('uuid');
-
         return [
-            'name' => ['required', 'string', Rule::unique('pgsql_admin.company_companies', 'name')->ignore($uuid, 'uuid')],
-            'domain' => ['required', 'string', 'alpha', Rule::unique('pgsql_admin.company_companies', 'domain')->ignore($uuid, 'uuid')],
+            'name' => ['required', 'string'],
+            'domain' => ['required', 'string', 'alpha'],
         ];
     }
 }

@@ -14,11 +14,12 @@ use Project\Domains\Admin\Company\Domain\Status\ValueObjects\Note;
 use Project\Domains\Admin\Company\Domain\Status\ValueObjects\Value;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\NoteType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\ValueType;
+use Project\Shared\Contracts\ArrayableInterface;
 
 #[ORM\Entity]
 #[ORM\Table('company_statuses')]
 #[ORM\HasLifecycleCallbacks]
-class Status
+class Status implements ArrayableInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -34,6 +35,11 @@ class Status
     #[ORM\Column(name: 'company_uuid', type: Types::STRING)]
     private string $companyUuid;
 
+    // #[ORM\OneToOne(targetEntity: Company::class, inversedBy: 'company')]
+    // #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
+    // private Company $company;
+
+    // #[ORM\OneToOne(targetEntity: Company::class, inversedBy: 'company')]
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'companies')]
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
     private Company $company;
@@ -58,6 +64,11 @@ class Status
         );
     }
 
+    public function getValue(): Value
+    {
+        return $this->value;
+    }
+
     public function setCompany(Company $company): self
     {
         $this->company = $company;
@@ -76,5 +87,15 @@ class Status
     public function preUpdating(PreUpdateEventArgs $event): void
     {
         $this->updatedAt = new DateTimeImmutable();
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'value' => $this->value->value,
+            'note' => $this->note->value,
+            'created_at' => $this->createdAt->getTimestamp(),
+            'updated_at' => $this->updatedAt->getTimestamp(),
+        ];
     }
 }
