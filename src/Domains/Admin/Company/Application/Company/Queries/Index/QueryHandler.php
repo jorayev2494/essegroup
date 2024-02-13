@@ -19,6 +19,6 @@ readonly class QueryHandler implements QueryHandlerInterface
 
     public function __invoke(Query $query): array
     {
-        return array_map(static fn (ArrayableInterface $company): array => $company->toArray(), $this->repository->getAll());
+        return $this->repository->paginate($query);
     }
 }

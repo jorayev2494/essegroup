@@ -12,6 +12,7 @@ readonly class CompanyWasCreatedDomainEvent extends DomainEvent
         public string $uuid,
         public string $name,
         public string $domain,
+        public string $status,
         string $eventId = null,
         string $occurredOn = null,
     )

@@ -2,14 +2,18 @@
 
 namespace App\Providers;
 
+use Doctrine\Common\EventManager;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\Migrations\Version\Comparator;
+use Gedmo\Mapping\Driver\AttributeReader;
+use Gedmo\Translatable\TranslatableListener;
 use Project\Shared\Infrastructure\Repository\Doctrine\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Illuminate\Support\ServiceProvider;
 use Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\AdminEntityManagerInterface;
 use Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\ClientEntityManagerInterface;
 use Project\Shared\Infrastructure\Repository\Doctrine\ProjectVersionComparator;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class DoctrineServiceProvider extends ServiceProvider
 {
@@ -67,5 +71,19 @@ class DoctrineServiceProvider extends ServiceProvider
 
         $this->app->instance(ClientEntityManagerInterface::class, $entityManager);
         $this->app->instance('client_dbal_connection', $connection);
+    }
+
+    private function getEventManager(): EventManager
+    {
+        $eventManager = new EventManager();
+        $cache = new ArrayAdapter();
+        $translatableListener = new TranslatableListener();
+        $translatableListener->setTranslatableLocale('en'); // en_us
+        $translatableListener->setDefaultLocale('en');  // en_us
+        $translatableListener->setAnnotationReader(new AttributeReader());
+        $translatableListener->setCacheItemPool($cache);
+        $eventManager->addEventSubscriber($translatableListener);
+
+        return $eventManager;
     }
 }

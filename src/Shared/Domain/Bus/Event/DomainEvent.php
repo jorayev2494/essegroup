@@ -16,14 +16,14 @@ abstract readonly class DomainEvent implements Event
     {
         $this->eventId = $eventId ?: UuidValueObject::generate()->value;
         $this->occurredOn = $occurredOn ?: (new \DateTimeImmutable())->format('Y-m-d H:i:s.u T');
-//         $this->occurredOn = $occurredOn ?: (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
+        // $this->occurredOn = $occurredOn ?: (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
     }
 
     abstract public static function fromPrimitives(
         string $id,
         array $body,
         string $eventId,
-        string $occurredOn,
+        string $occurredOn
     ): self;
 
     abstract public static function eventName(): string;

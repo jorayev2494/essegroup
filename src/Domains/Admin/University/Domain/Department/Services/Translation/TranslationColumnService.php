@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Project\Domains\Admin\University\Domain\Department\Services\Translation;
+
+use Project\Domains\Admin\University\Domain\Department\DepartmentTranslation;
+use Project\Domains\Admin\University\Domain\Department\Services\Translation\Contracts\TranslationColumnServiceInterface;
+use Project\Shared\Application\Command\DTOs\CommandTranslateValue;
+use Project\Shared\Domain\Translation\TranslatableInterface;
+
+class TranslationColumnService implements TranslationColumnServiceInterface
+{
+    #[\Override]
+    public function addTranslations(TranslatableInterface $translatable, array $translations): void
+    {
+        foreach ($translations as $locale => $translates) {
+            /** @var CommandTranslateValue $translate */
+            foreach ($translates as $translate) {
+                $translatable->addTranslation(DepartmentTranslation::make($locale, $translate->field, $translate->value));
+            }
+        }
+    }
+}

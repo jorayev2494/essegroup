@@ -176,6 +176,10 @@ return [
         // Admin
         Project\Domains\Admin\Authentication\Infrastructure\AuthenticationServiceProvider::class,
         Project\Domains\Admin\Company\Infrastructure\CompanyServiceProvider::class,
+        Project\Domains\Admin\University\Infrastructure\UniversityServiceProvider::class,
+
+        // Public
+        Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,
 
         App\Providers\DoctrineServiceProvider::class,
     ])->toArray(),

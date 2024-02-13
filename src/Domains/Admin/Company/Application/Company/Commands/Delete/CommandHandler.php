@@ -9,6 +9,7 @@ use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyDomainAlreadyExistsDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNameAlreadyExistsDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNotFoundDomainException;
+use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoServiceInterface;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
@@ -19,6 +20,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private CompanyRepositoryInterface $repository,
+        private LogoServiceInterface $logoService,
         private EventBusInterface $eventBus,
     )
     {
@@ -33,7 +35,8 @@ readonly class CommandHandler implements CommandHandlerInterface
             throw new CompanyNotFoundDomainException();
         }
 
+        $this->logoService->delete($company);
         $this->repository->delete($company);
-        // $this->eventBus->publish(...$company->pullDomainEvents());
+        $this->eventBus->publish(...$company->pullDomainEvents());
     }
 }

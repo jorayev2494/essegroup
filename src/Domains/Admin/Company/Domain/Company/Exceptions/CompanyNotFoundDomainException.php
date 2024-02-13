@@ -19,7 +19,7 @@ class CompanyNotFoundDomainException extends DomainException
     #[\Override]
     public function getHttpResponseCode(): int
     {
-        return Response::HTTP_BAD_REQUEST;
+        return Response::HTTP_NOT_FOUND;
     }
 
 }

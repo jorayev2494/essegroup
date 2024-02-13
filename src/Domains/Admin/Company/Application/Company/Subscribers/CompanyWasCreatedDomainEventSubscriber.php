@@ -24,6 +24,6 @@ readonly class CompanyWasCreatedDomainEventSubscriber implements DomainEventSubs
 
     public function __invoke(CompanyWasCreatedDomainEvent $event): void
     {
-        dd(__METHOD__, $event);
+        // dd(__METHOD__, $event);
     }
 }

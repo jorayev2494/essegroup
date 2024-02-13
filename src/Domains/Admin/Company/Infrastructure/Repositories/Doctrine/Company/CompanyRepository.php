@@ -9,6 +9,7 @@ use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
+use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 
 class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepositoryInterface
@@ -22,6 +23,14 @@ class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepo
     public function findByUuid(Uuid $uuid): ?Company
     {
         return $this->entityRepository->find($uuid);
+    }
+
+    public function paginate(BaseHttpQueryParams $baseHttpQueryParams): array
+    {
+        $query = $this->entityRepository->createQueryBuilder('c')
+            ->getQuery();
+
+        return $this->paginator($query, $baseHttpQueryParams->paginatorHttpQueryParams)->toArray();
     }
 
     #[\Override]
@@ -52,6 +61,7 @@ class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepo
     #[\Override]
     public function delete(Company $company): void
     {
+        $this->entityRepository->getEntityManager()->flush();
         $this->entityRepository->getEntityManager()->remove($company);
         $this->entityRepository->getEntityManager()->flush();
     }

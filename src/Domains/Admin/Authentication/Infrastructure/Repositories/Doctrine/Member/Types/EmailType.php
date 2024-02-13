@@ -28,6 +28,11 @@ class EmailType extends Type
         return $value->value;
     }
 
+    /**
+     * @param string $value
+     * @param AbstractPlatform $platform
+     * @return Email
+     */
     public function convertToPHPValue($value, AbstractPlatform $platform): Email
     {
         return Email::fromValue($value);
