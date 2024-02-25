@@ -51,6 +51,7 @@ class DoctrineServiceProvider extends ServiceProvider
             isDevMode: !$this->app->environment('production'),
         );
 
+        $this->adminConnection['host'] = env('ADMIN_DB_HOST');
         $connection = DriverManager::getConnection($this->adminConnection, $config);
         $entityManager = new EntityManager($connection, $config);
 
@@ -66,6 +67,7 @@ class DoctrineServiceProvider extends ServiceProvider
             isDevMode: !$this->app->environment('production'),
         );
 
+        $this->clientConnection['host'] = env('CLIENT_DB_HOST');
         $connection = DriverManager::getConnection($this->clientConnection, $config);
         $entityManager = new EntityManager($connection, $config);
 
