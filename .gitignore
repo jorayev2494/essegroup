@@ -2,6 +2,7 @@
 
 # Docker
 /docker/database/data
+/docker/postgres/data
 /docker/.env
 
 /node_modules
