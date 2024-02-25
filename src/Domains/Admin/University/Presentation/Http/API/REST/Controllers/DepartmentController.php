@@ -10,6 +10,7 @@ use Project\Domains\Admin\University\Application\Department\Commands\Delete\Comm
 use Project\Domains\Admin\University\Application\Department\Commands\Update\Command as UpdateCommand;
 use Project\Domains\Admin\University\Application\Department\Queries\Index\Query as IndexQuery;
 use Project\Domains\Admin\University\Application\Department\Commands\Create\Command as CreateCommand;
+use Project\Domains\Admin\University\Application\Department\Queries\List\Query as ListQuery;
 use Project\Domains\Admin\University\Application\Department\Queries\Show\Query;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
@@ -27,6 +28,15 @@ readonly class DepartmentController
     )
     {
 
+    }
+
+    public function list(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                ListQuery::makeFromRequest($request)
+            )
+        );
     }
 
     public function index(Request $request): JsonResponse

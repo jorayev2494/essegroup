@@ -11,8 +11,14 @@ readonly class Command implements CommandInterface
 {
     public function __construct(
         public string $uuid,
+        public string $fullName,
+        public string $birthday,
+        public string $passportNumber,
         public string $email,
         public string $phone,
+        public string $universityUuid,
+        public string $facultyUuid,
+        public string $countryUuid,
         public UploadedFile $passport,
         public UploadedFile $passportTranslation,
         public UploadedFile $schoolAttestat,
@@ -21,6 +27,12 @@ readonly class Command implements CommandInterface
         public UploadedFile $transcriptTranslation,
         public UploadedFile $equivalenceDocument,
         public UploadedFile $biometricPhoto,
+        public array $additionalDocuments,
+        public bool $isAgreedToShareData,
+        public ?string $fatherName,
+        public ?string $motherName,
+        public ?string $friendPhone,
+        public ?string $homeAddress,
     )
     {
 

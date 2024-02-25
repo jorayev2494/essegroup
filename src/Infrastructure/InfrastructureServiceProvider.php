@@ -9,6 +9,8 @@ use Project\Infrastructure\Generators\TokenGenerator;
 use Project\Infrastructure\Generators\UuidGenerator;
 use Project\Infrastructure\Hashers\Contracts\PasswordHasherInterface;
 use Project\Infrastructure\Hashers\PasswordHasher;
+use Project\Infrastructure\Services\Auth\AuthManager;
+use Project\Infrastructure\Services\Auth\Contracts\AuthManagerInterface;
 use Project\Infrastructure\Services\Authentication\AuthenticationService;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticationServiceInterface;
 use Project\Shared\Domain\File\FileSystemInterface;
@@ -18,6 +20,7 @@ class InfrastructureServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        // $this->app->singleton(AuthManagerInterface::class, AuthManager::class);
         $this->app->singleton(AuthenticationServiceInterface::class, AuthenticationService::class);
         $this->app->singleton(FileSystemInterface::class, FileSystem::class);
         $this->app->singleton(UuidGeneratorInterface::class, UuidGenerator::class);

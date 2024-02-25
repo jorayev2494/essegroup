@@ -29,7 +29,11 @@ readonly class CommandHandler
             throw new ModelNotFoundException();
         }
 
-        $accessToken = $this->authenticationService->authenticateByUuid($foundDevice->getAuthor()->getUuid(), GuardType::ADMIN);
+        $accessToken = $this->authenticationService->authenticateByUuid(
+            $foundDevice->getAuthor()->getUuid(),
+            GuardType::ADMIN,
+            ['company_uuid' => '885a3665-0684-43e5-be1c-677da726bbf6']
+        );
         $foundDevice->setRefreshToken($this->tokenGenerator->generate());
 
         $this->deviceRepository->save($foundDevice);

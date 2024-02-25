@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasAddedDomainEvent;
@@ -70,8 +71,11 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     #[ORM\Column(type: DescriptionType::NAME, nullable: true)]
     private Description $description;
 
+    #[ORM\Column(name: 'company_uuid')]
+    private string $companyUuid;
+
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'universities')]
-    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid')]
+    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
     private Company $company;
 
     #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'university', cascade: ['persist', 'remove'])]
@@ -82,6 +86,9 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
      */
     #[ORM\OneToMany(targetEntity: UniversityTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
+
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'universities')]
+    private Collection $applications;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     protected DateTimeImmutable $createdAt;
@@ -285,6 +292,16 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
         return $this;
     }
 
+    public function isEquals(self $other): bool
+    {
+        return $this->uuid === $other->uuid;
+    }
+
+    public function isNotEquals(self $other): bool
+    {
+        return $this->uuid !== $other->uuid;
+    }
+
     #[ORM\PrePersist]
     public function prePersist(PrePersistEventArgs $event): void
     {
@@ -306,11 +323,12 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     {
         return [
             'uuid' => $this->uuid->value,
-            'youtube_video_id' => $this->youTubeVideoId->value,
-            'logo' => $this->logo?->toArray(),
-            'cover' => $this->cover?->toArray(),
             'name' => $this->name->value,
             'label' => $this->label->value,
+            'logo' => $this->logo?->toArray(),
+            'cover' => $this->cover?->toArray(),
+            'youtube_video_id' => $this->youTubeVideoId->value,
+            'company' => $this->company->toArray(),
             'description' => $this->description->value,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),

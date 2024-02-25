@@ -19,6 +19,13 @@ readonly class QueryHandler implements QueryHandlerInterface
 
     public function __invoke(Query $query): array
     {
+
+        $res = auth()->payload();
+
+        dd(
+            $res
+        );
+
         return $this->repository->paginate($query);
     }
 }

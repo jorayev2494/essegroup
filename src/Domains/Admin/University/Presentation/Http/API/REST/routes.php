@@ -34,6 +34,7 @@ Route::group(
 Route::group(
     ['prefix' => 'departments', 'controller' => DepartmentController::class],
     static function (Router $router): void {
+        $router->get('/list', 'list');
         $router->get('/', 'index');
         $router->post('/', 'store');
         $router->get('/{uuid}', 'show');
@@ -47,6 +48,7 @@ Route::group(
     static function (Router $router): void {
         $router->get('/', 'index');
         $router->post('/', 'store');
+        $router->get('/status-list', 'statusList');
         $router->get('/{uuid}', 'show');
         $router->put('/{uuid}', 'update');
         $router->delete('/{uuid}', 'delete');

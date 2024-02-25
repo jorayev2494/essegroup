@@ -12,7 +12,7 @@ use Project\Domains\Admin\Authentication\Presentation\Http\API\REST\Controllers\
 
 Route::group(['prefix' => 'auth'], static function (Router $router): void {
     $router->post('/login', LoginController::class);
-    $router->post('/refresh_token', RefreshTokenController::class);
+    $router->post('/refresh-token', RefreshTokenController::class);
     $router->post('/logout', LogoutController::class);
 
     $router->group(['prefix' => 'restore-password', 'as' => 'restore_password.'], static function (Router $router): void {

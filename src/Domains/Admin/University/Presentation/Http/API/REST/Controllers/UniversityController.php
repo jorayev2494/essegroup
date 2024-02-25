@@ -38,11 +38,11 @@ readonly class UniversityController
         );
     }
 
-    public function list(): JsonResponse
+    public function list(Request $request): JsonResponse
     {
         return $this->response->json(
             $this->queryBus->ask(
-                new ListQuery()
+                ListQuery::makeFromRequest($request)
             )
         );
     }

@@ -47,6 +47,10 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\SchoolAttestatTranslation\Contracts\SchoolAttestatTranslationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\SchoolAttestatTranslation\SchoolAttestatTranslationService::class],
         \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\EquivalenceDocument\Contracts\EquivalenceDocumentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\EquivalenceDocument\EquivalenceDocumentService::class],
         \Project\Domains\Admin\University\Domain\Application\Services\Contracts\StatusServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\StatusService::class],
+        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\AdditionalDocumentService::class],
+
+        // Country
+        \Project\Domains\Admin\University\Domain\Country\CountryRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Country\Repositories\Doctrine\CountryRepository::class]
     ];
 
     /** @var array<array-key, string> */
@@ -63,37 +67,15 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         // Department
         \Project\Domains\Admin\University\Application\Department\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Department\Queries\Show\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\Department\Queries\List\QueryHandler::class,
 
         // Application
         \Project\Domains\Admin\University\Application\Application\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Application\Queries\Show\QueryHandler::class,
-    ];
+        \Project\Domains\Admin\University\Application\Application\Queries\StatusList\QueryHandler::class,
 
-    /** @var array<array-key, string> */
-    protected const COMMAND_HANDLERS = [
-        \Project\Domains\Admin\University\Application\University\Commands\Create\CommandHandler::class,
-        \Project\Domains\Admin\University\Application\University\Commands\Update\CommandHandler::class,
-        \Project\Domains\Admin\University\Application\University\Commands\Delete\CommandHandler::class,
-
-        // Faculty
-        \Project\Domains\Admin\University\Application\Faculty\Commands\Create\CommandHandler::class,
-        \Project\Domains\Admin\University\Application\Faculty\Commands\Update\CommandHandler::class,
-        \Project\Domains\Admin\University\Application\Faculty\Commands\Delete\CommandHandler::class,
-
-        // Department
-        \Project\Domains\Admin\University\Application\Department\Commands\Create\CommandHandler::class,
-        \Project\Domains\Admin\University\Application\Department\Commands\Update\CommandHandler::class,
-        \Project\Domains\Admin\University\Application\Department\Commands\Delete\CommandHandler::class,
-
-        // Application
-        \Project\Domains\Admin\University\Application\Application\Commands\Create\CommandHandler::class,
-        \Project\Domains\Admin\University\Application\Application\Commands\Update\CommandHandler::class,
-        \Project\Domains\Admin\University\Application\Application\Commands\Delete\CommandHandler::class,
-    ];
-
-    /** @var array<array-key, string> */
-    protected const DOMAIN_EVENT_SUBSCRIBERS = [
-        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
+        // Country
+        \Project\Domains\Admin\University\Application\Country\Queries\List\QueryHandler::class,
     ];
 
     /** @var array<string, string> */
@@ -123,9 +105,49 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
 
         // Application
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\UuidType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\PassportNumberType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\FatherNameType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\MotherNameType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\FriendPhoneType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\FullNameType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\EmailType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\PhoneType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusEnumType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\HomeAddressType::class,
+
+
+    ];
+
+    /** @var array<array-key, string> */
+    protected const COMMAND_HANDLERS = [
+        \Project\Domains\Admin\University\Application\University\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\University\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\University\Commands\Delete\CommandHandler::class,
+
+        // Faculty
+        \Project\Domains\Admin\University\Application\Faculty\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Faculty\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Faculty\Commands\Delete\CommandHandler::class,
+
+        // Department
+        \Project\Domains\Admin\University\Application\Department\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Department\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Department\Commands\Delete\CommandHandler::class,
+
+        // Application
+        \Project\Domains\Admin\University\Application\Application\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Application\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Application\Commands\Delete\CommandHandler::class,
+    ];
+
+    /** @var array<array-key, string> */
+    protected const DOMAIN_EVENT_SUBSCRIBERS = [
+        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
+
+        \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasCreatedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedValueDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedISODomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedIsActiveDomainEventSubscriber::class,
     ];
 
     /** @var array<array-key, string> */
@@ -152,5 +174,6 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         __DIR__ . '/../Domain/Department',
         __DIR__ . '/../Domain/Application/ValueObjects',
         __DIR__ . '/../Domain/Application',
+        __DIR__ . '/../Domain/Country',
     ];
 }

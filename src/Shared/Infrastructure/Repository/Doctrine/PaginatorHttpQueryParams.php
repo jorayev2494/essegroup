@@ -26,4 +26,13 @@ readonly class PaginatorHttpQueryParams
         );
     }
 
+    public static function makeFromArray(array $data): self
+    {
+        return new self(
+            page: $data['page'] ?? 1,
+            perPage: $data['perPage'] ?? 15,
+            cursor: $data['cursor'] ?? null
+        );
+    }
+
 }

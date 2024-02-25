@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Logo;
@@ -62,6 +63,9 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
     #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'faculty', cascade: ['persist', 'remove'])]
     private Collection $departments;
 
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'countries')]
+    private Collection $applications;
+
     #[ORM\Column(name: 'is_active')]
     private bool $isActive;
 
@@ -80,6 +84,11 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         $this->departments = new ArrayCollection();
         $this->isActive = $isActive;
         $this->translations = new ArrayCollection();
+    }
+
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
     }
 
     public function getName(): ?Name
@@ -209,6 +218,16 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         }
 
         return $this;
+    }
+
+    public function isEquals(self $other): bool
+    {
+        return $this->uuid === $other->uuid;
+    }
+
+    public function isNotEquals(self $other): bool
+    {
+        return $this->uuid !== $other->uuid;
     }
 
     #[ORM\PrePersist]
