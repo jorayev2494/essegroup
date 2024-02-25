@@ -27,11 +27,19 @@ readonly class ApplicationController
     {
         $uuid = $this->uuidGenerator->generate();
 
+        ['additional_documents' => $additionalDocuments] = $request->all();
+
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
+                $request->get('full_name'),
+                $request->get('birthday'),
+                $request->get('passport_number'),
                 $request->get('email'),
                 $request->get('phone'),
+                $request->get('university_uuid'),
+                $request->get('faculty_uuid'),
+                $request->get('country_uuid'),
                 $request->file('passport'),
                 $request->file('passport_translation'),
                 $request->file('school_attestat'),
@@ -40,6 +48,12 @@ readonly class ApplicationController
                 $request->file('transcript_translation'),
                 $request->file('equivalence_document'),
                 $request->file('biometric_photo'),
+                $additionalDocuments,
+                $request->boolean('is_agreed_to_share_data'),
+                $request->get('father_name'),
+                $request->get('mother_name'),
+                $request->get('friend_phone'),
+                $request->get('home_address')
             )
         );
 

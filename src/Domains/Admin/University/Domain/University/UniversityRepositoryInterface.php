@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\University\Domain\University;
 
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Infrastructure\University\Filters\HttpQueryFilterDTO;
 use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
@@ -14,7 +15,7 @@ interface UniversityRepositoryInterface
 
     public function paginate(BaseHttpQueryParams $baseHttpQueryParams): Paginator;
 
-    public function list(): UniversityCollection;
+    public function list(HttpQueryFilterDTO $httpQueryFilterDTO): UniversityCollection;
 
     public function findByUuid(Uuid $uuid): ?University;
 

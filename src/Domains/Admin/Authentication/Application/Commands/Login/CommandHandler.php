@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Project\Domains\Admin\Authentication\Domain\Member\MemberRepositoryInterface;
 use Project\Domains\Admin\Authentication\Domain\Member\Services\DeviceService;
 use Project\Domains\Admin\Authentication\Domain\Member\ValueObjects\Email;
-use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNameAlreadyExistsDomainException;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticationServiceInterface;
 use Project\Infrastructure\Services\Authentication\DTOs\CredentialsDTO;
 use Project\Infrastructure\Services\Authentication\Enums\GuardType;
@@ -34,7 +33,8 @@ readonly class CommandHandler
 
         $accessToken = $this->authenticationService->authenticate(
             new CredentialsDTO($command->email, $command->password),
-            GuardType::ADMIN
+            GuardType::ADMIN,
+            ['company_uuid' => '885a3665-0684-43e5-be1c-677da726bbf6']
         );
 
         $device = $this->deviceService->handle($foundMember, $command->deviceId);

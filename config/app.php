@@ -177,6 +177,7 @@ return [
         Project\Domains\Admin\Authentication\Infrastructure\AuthenticationServiceProvider::class,
         Project\Domains\Admin\Company\Infrastructure\CompanyServiceProvider::class,
         Project\Domains\Admin\University\Infrastructure\UniversityServiceProvider::class,
+        Project\Domains\Admin\Country\Infrastructure\CountryServiceProvider::class,
 
         // Public
         Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,

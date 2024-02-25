@@ -8,16 +8,30 @@ use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInt
 use Project\Domains\Admin\University\Domain\Application\Exceptions\ApplicationNotFoundDomainException;
 use Project\Domains\Admin\University\Domain\Application\Services\Contracts\StatusServiceInterface;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Email;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\FatherName;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\FriendPhone;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\FullName;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\HomeAddress;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\MotherName;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\PassportNumber;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Phone;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Domain\Country\CountryRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
+use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
+use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid as FacultyUuid;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private ApplicationRepositoryInterface $applicationRepository,
-        private StatusServiceInterface $statusService
+        private StatusServiceInterface $statusService,
+        private UniversityRepositoryInterface $universityRepository,
+        private FacultyRepositoryInterface $facultyRepository,
+        private CountryRepositoryInterface $countryRepository
     )
     {
 
@@ -29,8 +43,21 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $application ?? throw new ApplicationNotFoundDomainException();
 
+        $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
+        $faculty = $this->facultyRepository->findByUuid(FacultyUuid::fromValue($command->facultyUuid));
+        $country = $this->countryRepository->findByUuid($command->countryUuid);
+
+        $application->changeUniversity($university);
+        $application->changeFaculty($faculty);
+        $application->changeCountry($country);
+        $application->changeFullName(FullName::fromValue($command->fullName));
+        $application->changePassportNumber(PassportNumber::fromValue($command->passportNumber));
         $application->changeEmail(Email::fromValue($command->email));
         $application->changePhone(Phone::fromValue($command->phone));
+        $application->changeFatherName(FatherName::fromValue($command->fatherName));
+        $application->changeMotherName(MotherName::fromValue($command->motherName));
+        $application->changeFriendPhone(FriendPhone::fromValue($command->friendPhone));
+        $application->changeHomeAddress(HomeAddress::fromValue($command->homeAddress));
         $this->statusService->changeStatus($application, Status::fromPrimitives($command->status, $command->note));
 
         $this->applicationRepository->save($application);

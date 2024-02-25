@@ -5,8 +5,16 @@ declare(strict_types=1);
 namespace Project\Domains\Public\University\Infrastructure;
 
 use App\Providers\Domains\AdminDomainServiceProvider;
+use Project\Domains\Admin\University\Domain\Country\CountryRepositoryInterface;
+use Project\Domains\Admin\University\Infrastructure\Country\Repositories\Doctrine\CountryRepository;
 use Project\Domains\Public\University\Domain\Application\Services\ApplicationService;
 use Project\Domains\Public\University\Domain\Application\Services\Contracts\ApplicationServiceInterface;
+use Project\Domains\Public\University\Domain\Country\Services\Contracts\CountryServiceInterface;
+use Project\Domains\Public\University\Domain\Country\Services\CountryService;
+use Project\Domains\Public\University\Domain\Department\Services\Contracts\DepartmentServiceInterface;
+use Project\Domains\Public\University\Domain\Department\Services\DepartmentService;
+use Project\Domains\Public\University\Domain\Faculty\Services\Contracts\FacultyServiceInterface;
+use Project\Domains\Public\University\Domain\Faculty\Services\FacultyService;
 use Project\Domains\Public\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Public\University\Infrastructure\Repositories\Doctrine\University\UniversityRepository;
 
@@ -16,11 +24,14 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     protected const SERVICES = [
         UniversityRepositoryInterface::class => [self::SERVICE_SINGLETON, UniversityRepository::class],
         ApplicationServiceInterface::class => [self::SERVICE_SINGLETON, ApplicationService::class],
+        FacultyServiceInterface::class => [self::SERVICE_SINGLETON, FacultyService::class],
+        CountryRepositoryInterface::class => [self::SERVICE_SINGLETON, CountryRepository::class],
+        DepartmentServiceInterface::class => [self::SERVICE_SINGLETON, DepartmentService::class],
+        CountryServiceInterface::class => [self::SERVICE_SINGLETON, CountryService::class],
     ];
 
     /** @var array<array-key, string> */
     protected const QUERY_HANDLERS = [
-        \Project\Domains\Public\University\Application\University\Queries\Index\QueryHandler::class,
         \Project\Domains\Public\University\Application\University\Queries\Show\QueryHandler::class,
     ];
 
@@ -52,7 +63,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     protected const ROUTE_PATHS = [
         [
             'middleware' => 'api',
-            'prefix' => 'api/public',
+            'prefix' => 'api/public/universities',
             'path' => __DIR__ . '/../Presentation/Http/API/REST/routes.php',
         ],
     ];

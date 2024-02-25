@@ -13,6 +13,7 @@ use Project\Domains\Admin\University\Application\Application\Commands\Delete\Com
 use Project\Domains\Admin\University\Application\Application\Commands\Update\Command as UpdateCommand;
 use Project\Domains\Admin\University\Application\Application\Queries\Index\Query as IndexQuery;
 use Project\Domains\Admin\University\Application\Application\Queries\Show\Query as ShowQuery;
+use Project\Domains\Admin\University\Application\Application\Queries\StatusList\Query as StatusListQuery;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
@@ -44,21 +45,21 @@ readonly class ApplicationController
     {
         $uuid = $this->uuidGenerator->generate();
 
-        $this->commandBus->dispatch(
-            new CreateCommand(
-                $uuid,
-                $request->get('email'),
-                $request->get('phone'),
-                $request->file('passport'),
-                $request->file('passport_translation'),
-                $request->file('school_attestat'),
-                $request->file('school_attestat_translation'),
-                $request->file('transcript'),
-                $request->file('transcript_translation'),
-                $request->file('equivalence_document'),
-                $request->file('biometric_photo'),
-            )
-        );
+        // $this->commandBus->dispatch(
+        //     new CreateCommand(
+        //         $uuid,
+        //         $request->get('email'),
+        //         $request->get('phone'),
+        //         $request->file('passport'),
+        //         $request->file('passport_translation'),
+        //         $request->file('school_attestat'),
+        //         $request->file('school_attestat_translation'),
+        //         $request->file('transcript'),
+        //         $request->file('transcript_translation'),
+        //         $request->file('equivalence_document'),
+        //         $request->file('biometric_photo'),
+        //     )
+        // );
 
         return $this->response->json(['uuid' => $uuid], Response::HTTP_CREATED);
     }
@@ -77,10 +78,21 @@ readonly class ApplicationController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
+                $request->get('full_name'),
+                $request->get('birthday'),
+                $request->get('passport_number'),
                 $request->get('email'),
                 $request->get('phone'),
+                $request->get('university_uuid'),
+                $request->get('faculty_uuid'),
+                $request->get('country_uuid'),
                 $request->get('status'),
                 $request->get('note'),
+
+                $request->get('father_name'),
+                $request->get('mother_name'),
+                $request->get('phone_friend'),
+                $request->get('home_address')
             )
         );
 
@@ -94,5 +106,14 @@ readonly class ApplicationController
         );
 
         return $this->response->noContent();
+    }
+
+    public function statusList(): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                new StatusListQuery()
+            )
+        );
     }
 }

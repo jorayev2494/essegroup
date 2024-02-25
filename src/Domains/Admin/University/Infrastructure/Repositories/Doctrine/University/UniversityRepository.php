@@ -9,6 +9,7 @@ use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Infrastructure\University\Filters\HttpQueryFilterDTO;
 use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
@@ -35,9 +36,16 @@ class UniversityRepository extends BaseAdminEntityRepository implements Universi
         return $this->paginator($query, $baseHttpQueryParams->paginatorHttpQueryParams);
     }
 
-    public function list(): UniversityCollection
+    public function list(HttpQueryFilterDTO $httpQueryFilterDTO): UniversityCollection
     {
-        return new UniversityCollection($this->entityRepository->findAll());
+        $query = $this->entityRepository->createQueryBuilder('u');
+
+        if ($httpQueryFilterDTO->companyUuid !== null) {
+            $query->where('u.companyUuid = :companyUuid')
+                ->setParameter('companyUuid', $httpQueryFilterDTO->companyUuid);
+        }
+
+        return new UniversityCollection($query->getQuery()->getResult());
     }
 
     #[\Override]

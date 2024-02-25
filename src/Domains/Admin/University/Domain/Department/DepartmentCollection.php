@@ -21,9 +21,9 @@ class DepartmentCollection extends Collection
         return DepartmentTranslate::class;
     }
 
-    #[\Override]
-    public function translateItems(string $locale = 'en'): Collection
-    {
-        // TODO: Implement translateItems() method.
-    }
+//    #[\Override]
+//    public function translateItems(string $locale = 'en'): Collection
+//    {
+//        // TODO: Implement translateItems() method.
+//    }
 }

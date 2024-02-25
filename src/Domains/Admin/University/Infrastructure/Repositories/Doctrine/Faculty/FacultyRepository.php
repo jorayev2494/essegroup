@@ -8,6 +8,7 @@ use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyCollection;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Infrastructure\Faculty\Filters\HttpQueryFilterDTO;
 use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
@@ -36,9 +37,16 @@ class FacultyRepository extends BaseAdminEntityRepository implements FacultyRepo
     }
 
     #[\Override]
-    public function list(): FacultyCollection
+    public function list(HttpQueryFilterDTO $httpQueryFilter): FacultyCollection
     {
-        return new FacultyCollection($this->entityRepository->findAll());
+        $query = $this->entityRepository->createQueryBuilder('f');
+
+        if ($httpQueryFilter->universityUuid !== null) {
+            $query->where('f.universityUuid = :universityUuid')
+                ->setParameter('universityUuid', $httpQueryFilter->universityUuid);
+        }
+
+        return new FacultyCollection($query->getQuery()->getResult());
     }
 
     #[\Override]

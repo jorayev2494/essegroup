@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Project\Domains\Public\University\Presentation\Http\API\REST\Controllers;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Project\Domains\Public\University\Application\University\Queries\Index\Query;
+use Illuminate\Http\Request;
+use Project\Domains\Public\University\Application\University\Queries\List\QueryHandler as ListQueryHandler;
+use Project\Domains\Public\University\Application\University\Queries\List\Query as ListQuery;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -19,12 +21,10 @@ readonly class UniversityController
 
     }
 
-    public function index(): JsonResponse
+    public function list(Request $request, ListQueryHandler $queryHandler): JsonResponse
     {
         return $this->response->json(
-            $this->queryBus->ask(
-                new Query()
-            )
+            $queryHandler(ListQuery::makeFromRequest($request))
         );
     }
 
