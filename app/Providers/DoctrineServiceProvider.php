@@ -17,24 +17,27 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class DoctrineServiceProvider extends ServiceProvider
 {
-    private array $adminConnection = [
-        'dbname' => 'admindatabase',
-        'user' => 'essegroupuser',
-        'password' => 'essegrouppassword',
-        'host' => 'postgres',
-        'driver' => 'pdo_pgsql',
-    ];
+    private array $adminConnection = [];
 
-    private array $clientConnection = [
-        'dbname' => 'clientdatabase',
-        'user' => 'essegroupuser',
-        'password' => 'essegrouppassword',
-        'host' => 'postgres',
-        'driver' => 'pdo_pgsql',
-    ];
+    private array $clientConnection = [];
 
     public function register(): void
     {
+        $this->adminConnection = [
+            'dbname' => env('ADMIN_DB_DATABASE'),
+            'user' => env('ADMIN_DB_USERNAME'),
+            'password' => env('ADMIN_DB_PASSWORD'),
+            'host' => env('ADMIN_DB_HOST'),
+            'driver' => 'pdo_pgsql',
+        ];
+
+        $this->clientConnection = [
+            'dbname' => env('CLIENT_DB_DATABASE'),
+            'user' => env('CLIENT_DB_USERNAME'),
+            'password' => env('CLIENT_DB_PASSWORD'),
+            'host' => env('CLIENT_DB_HOST'),
+            'driver' => 'pdo_pgsql',
+        ];
         $this->connectAdminEntityManager();
         $this->connectClientEntityManager();
     }
@@ -51,7 +54,6 @@ class DoctrineServiceProvider extends ServiceProvider
             isDevMode: !$this->app->environment('production'),
         );
 
-        $this->adminConnection['host'] = env('ADMIN_DB_HOST');
         $connection = DriverManager::getConnection($this->adminConnection, $config);
         $entityManager = new EntityManager($connection, $config);
 
@@ -67,7 +69,6 @@ class DoctrineServiceProvider extends ServiceProvider
             isDevMode: !$this->app->environment('production'),
         );
 
-        $this->clientConnection['host'] = env('CLIENT_DB_HOST');
         $connection = DriverManager::getConnection($this->clientConnection, $config);
         $entityManager = new EntityManager($connection, $config);
 
