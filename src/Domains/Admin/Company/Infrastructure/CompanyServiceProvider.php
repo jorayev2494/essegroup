@@ -23,6 +23,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
         // Company
         \Project\Domains\Admin\Company\Application\Company\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\Company\Application\Company\Queries\Show\QueryHandler::class,
+        \Project\Domains\Admin\Company\Application\Company\Queries\List\QueryHandler::class,
     ];
 
     /** @var array<array-key, string> */

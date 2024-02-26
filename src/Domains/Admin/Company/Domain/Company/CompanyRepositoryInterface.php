@@ -11,6 +11,8 @@ interface CompanyRepositoryInterface
 {
     public function getAll(): array;
 
+    public function list(): CompanyCollection;
+
     public function paginate(BaseHttpQueryParams $baseHttpQueryParams): array;
 
     public function findByUuid(Uuid $uuid): ?Company;

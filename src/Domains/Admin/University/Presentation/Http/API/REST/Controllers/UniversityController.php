@@ -54,6 +54,7 @@ readonly class UniversityController
         $this->commandBus->dispatch(
             new Command(
                 $uuid,
+                $request->get('company_uuid'),
                 $request->file('logo'),
                 $request->file('cover'),
                 $request->get('youtube_video_id'),
