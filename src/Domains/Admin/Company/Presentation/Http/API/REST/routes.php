@@ -8,6 +8,7 @@ Route::group(
     ['prefix' => 'companies', 'controller' => CompanyController::class],
     static function (Router $router): void {
         $router->get('/', 'index');
+        $router->get('/list', 'list');
         $router->post('/', 'store');
         $router->get('/{uuid}', 'show');
         $router->post('/{uuid}', 'update');

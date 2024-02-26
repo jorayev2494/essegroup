@@ -31,7 +31,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue('885a3665-0684-43e5-be1c-677da726bbf6'));
+        $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid));
 
         $university = University::create(
             Uuid::fromValue($command->uuid),

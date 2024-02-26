@@ -10,6 +10,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Project\Domains\Admin\Company\Application\Company\Commands\Create\Command;
 use Project\Domains\Admin\Company\Application\Company\Queries\Index\Query;
+use Project\Domains\Admin\Company\Application\Company\Queries\List\Query as ListQuery;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
@@ -33,6 +34,15 @@ readonly class CompanyController
         return $this->response->json(
             $this->queryBus->ask(
                 Query::makeFromRequest($request)
+            )
+        );
+    }
+
+    public function list(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                new ListQuery()
             )
         );
     }

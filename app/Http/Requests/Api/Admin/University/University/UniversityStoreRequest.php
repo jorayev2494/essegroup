@@ -23,17 +23,18 @@ class UniversityStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'company_uuid' => ['required', 'string', Rule::exists('pgsql_admin.company_companies', 'uuid'),],
             'logo' => [
                 'required',
                 'file',
                 'mimetypes:image/*',
-                Rule::dimensions()->width(self::LOGO_WIDTH)->height(self::LOGO_HEIGHT),
+                // Rule::dimensions()->width(self::LOGO_WIDTH)->height(self::LOGO_HEIGHT),
             ],
             'cover' => [
                 'required',
                 'file',
                 'mimetypes:image/*',
-                Rule::dimensions()->width(self::COVER_WIDTH)->height(self::COVER_HEIGHT),
+                // Rule::dimensions()->width(self::COVER_WIDTH)->height(self::COVER_HEIGHT),
             ],
             'youtube_video_id' => ['required', 'string', 'max:15'],
             'translations' => ['required', 'array'],
