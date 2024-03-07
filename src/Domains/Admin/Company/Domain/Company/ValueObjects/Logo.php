@@ -20,6 +20,6 @@ class Logo extends File implements LogoInterface
         return 'admin/domain/company/logos';
     }
 
-    #[ORM\OneToOne(targetEntity: Company::class, mappedBy: 'logo', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Company::class, mappedBy: 'logo')]
     private Company $company;
 }

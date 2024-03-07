@@ -20,9 +20,6 @@ readonly class QueryHandler implements QueryHandlerInterface
 
     public function __invoke(Query $query): array
     {
-        return $this->countryRepository->paginateByCompanyUuid(
-            $query,
-            CompanyUuid::fromValue(AuthManager::getCompanyUuid())
-        )->toArray();
+        return $this->countryRepository->paginate($query)->toArray();
     }
 }

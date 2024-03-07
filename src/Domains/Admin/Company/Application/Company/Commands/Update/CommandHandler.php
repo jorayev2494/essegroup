@@ -10,6 +10,7 @@ use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNameAlreadyEx
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNotFoundDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoServiceInterface;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Email;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
@@ -48,6 +49,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $this->logoService->update($company, $command->logo);
         $company->changeName(Name::fromValue($command->name));
+        $company->changeEmail(Email::fromValue($command->email));
         $company->changeDomain(Domain::fromValue($command->domain));
 
         $this->repository->save($company);

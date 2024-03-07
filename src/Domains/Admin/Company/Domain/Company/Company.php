@@ -10,14 +10,18 @@ use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasCreatedDomainEvent;
+use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasUpdatedDomainEvent;
+use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasDeletedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoInterface;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Email;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Logo;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Domains\Admin\Company\Domain\Status\Status;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\DomainType;
+use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\EmailType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\NameType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\UuidType;
 use Project\Domains\Admin\Company\Domain\University\University;
@@ -36,6 +40,9 @@ class Company extends AggregateRoot implements LogoableInterface
     #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'company', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'logo_uuid', referencedColumnName: 'uuid')]
     private ?Logo $logo = null;
+
+    #[ORM\Column(type: EmailType::NAME)]
+    private Email $email;
 
     #[ORM\Column(type: NameType::NAME)]
     private Name $name;
@@ -58,23 +65,25 @@ class Company extends AggregateRoot implements LogoableInterface
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 
-    private function __construct(Uuid $uuid, Name $name, Domain $domain)
+    private function __construct(Uuid $uuid, Name $name, Email $email, Domain $domain)
     {
         $this->uuid = $uuid;
         $this->name = $name;
+        $this->email = $email;
         $this->domain = $domain;
         $this->statuses = new ArrayCollection();
         $this->universities = new ArrayCollection();
     }
 
-    public static function create(Uuid $uuid, Name $name, Domain $domain): self
+    public static function create(Uuid $uuid, Name $name, Email $email, Domain $domain): self
     {
-        $company = new self($uuid, $name, $domain);
+        $company = new self($uuid, $name, $email, $domain);
         $company->addStatus(Status::fromPrimitives('new'));
         $company->record(
             new CompanyWasCreatedDomainEvent(
                 $company->getUuid()->value,
                 $company->getName()->value,
+                $company->getEmail()->value,
                 $company->getDomain()->value,
                 $company->getStatus()->getValue()->value,
             )
@@ -91,6 +100,11 @@ class Company extends AggregateRoot implements LogoableInterface
     public function getName(): Name
     {
         return $this->name;
+    }
+
+    public function getEmail(): Email
+    {
+        return $this->email;
     }
 
     public function getDomain(): Domain
@@ -112,6 +126,15 @@ class Company extends AggregateRoot implements LogoableInterface
     {
         if ($this->name->isNotEquals($name)) {
             $this->name = $name;
+        }
+
+        return $this;
+    }
+
+    public function changeEmail(Email $email): self
+    {
+        if ($this->email->isNotEquals($email)) {
+            $this->email = $email;
         }
 
         return $this;
@@ -162,6 +185,11 @@ class Company extends AggregateRoot implements LogoableInterface
         return $this;
     }
 
+    public function delete(): void
+    {
+        $this->record(new CompanyWasDeletedDomainEvent($this->uuid));
+    }
+
     #[ORM\PrePersist]
     public function prePersisting(PrePersistEventArgs $event): void
     {
@@ -181,6 +209,7 @@ class Company extends AggregateRoot implements LogoableInterface
             'uuid' => $this->uuid->value,
             'logo' => $this->logo?->toArray(),
             'name' => $this->name->value,
+            'email' => $this->email->value,
             'domain' => $this->domain->value,
             'status' => $this->getStatus()->toArray(),
             'statuses' => array_map(static fn (ArrayableInterface $status): array => $status->toArray(), $this->statuses->toArray()),

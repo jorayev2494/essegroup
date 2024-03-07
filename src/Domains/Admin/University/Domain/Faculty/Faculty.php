@@ -12,6 +12,7 @@ use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Application\Application;
+use Project\Domains\Admin\University\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Logo;
@@ -23,6 +24,7 @@ use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Facult
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoInterface;
+use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
@@ -53,6 +55,13 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
     #[ORM\OneToMany(targetEntity: FacultyTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
 
+    #[ORM\Column(name: 'company_uuid')]
+    private string $companyUuid;
+
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'faculties')]
+    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
+    private Company $company;
+
     #[ORM\Column(name: 'university_uuid')]
     private string $universityUuid;
 
@@ -63,9 +72,6 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
     #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'faculty', cascade: ['persist', 'remove'])]
     private Collection $departments;
 
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'countries')]
-    private Collection $applications;
-
     #[ORM\Column(name: 'is_active')]
     private bool $isActive;
 
@@ -75,9 +81,10 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
     protected DateTimeImmutable $updatedAt;
 
-    private function __construct(Uuid $uuid, bool $isActive)
+    private function __construct(Uuid $uuid, Company $company, bool $isActive)
     {
         $this->uuid = $uuid;
+        $this->company = $company;
         $this->name = Name::fromValue(null);
         $this->description = Description::fromValue(null);
         $this->logo = null;
@@ -111,8 +118,6 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         $this->description = $description;
     }
 
-
-
     public function getLogo(): ?LogoInterface
     {
         return $this->logo;
@@ -125,6 +130,11 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         }
 
         return $this;
+    }
+
+    public function changeCompany(Company $company): void
+    {
+        $this->company = $company;
     }
 
     public function getTranslations(): Collection
@@ -167,9 +177,14 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         $this->university = $university;
     }
 
-    public static function create(Uuid $uuid, bool $isActive): self
+    public static function create(Uuid $uuid, Company $company, bool $isActive): self
     {
-        return new self($uuid, $isActive);
+        return new self($uuid, $company, $isActive);
+    }
+
+    public function getDepartments(): Collection
+    {
+        return $this->departments;
     }
 
     public function addDepartments(Department $department): void
@@ -196,11 +211,9 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         return $this;
     }
 
-    public function changeUniversityUuid(string $uuid): void
+    public function changeUniversity(University $university): void
     {
-        if ($this->universityUuid !== $uuid) {
-            $this->universityUuid = $uuid;
-        }
+        $this->university = $university;
     }
 
     public function changeIsActive(bool $value): void
@@ -249,9 +262,13 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         return [
             'uuid' => $this->uuid->value,
             'name' => $this->name->value,
-            'university_uuid' => $this->universityUuid,
-            'logo' => $this->logo?->toArray(),
             'description' => $this->description->value,
+            'company_uuid' => $this->companyUuid,
+            'company' => $this->company->toArray(),
+            'university_uuid' => $this->universityUuid,
+            'university' => $this->university->toArray(),
+            'department_count' => $this->departments->count(),
+            'logo' => $this->logo?->toArray(),
             'is_active' => $this->isActive,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),

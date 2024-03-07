@@ -36,8 +36,6 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
-        \Project\Domains\Admin\Company\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
-
         // University
         // \Project\Domains\Admin\Company\Application\University\Subscribers\UniversityWasCreatedDomainEventSubscriber::class,
         // \Project\Domains\Admin\Company\Application\University\Subscribers\UniversityTranslationWasAddedDomainEventSubscriber::class,
@@ -49,6 +47,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\UuidType::class,
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\NameType::class,
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\DomainType::class,
+        \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\EmailType::class,
 
         // Status
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\ValueType::class,

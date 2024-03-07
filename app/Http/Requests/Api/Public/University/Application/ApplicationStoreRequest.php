@@ -23,11 +23,14 @@ class ApplicationStoreRequest extends FormRequest
                 'max:255',
                 Rule::exists('pgsql_admin.university_universities', 'uuid'),
             ],
-            'faculty_uuid' => [
+            // 'faculty_uuid' => [
+            //     'required',
+            //     'string',
+            //     'max:255',
+            //     Rule::exists('pgsql_admin.faculty_faculties', 'uuid'),
+            // ],
+            'department_uuids' => [
                 'required',
-                'string',
-                'max:255',
-                Rule::exists('pgsql_admin.faculty_faculties', 'uuid'),
             ],
             'country_uuid' => [
                 'required',
@@ -58,6 +61,12 @@ class ApplicationStoreRequest extends FormRequest
             ],
             'is_agreed_to_share_data' => ['required', 'boolean', 'in:true,1'],
 
+            'company_uuid' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::exists('pgsql_admin.university_companies', 'uuid'),
+            ],
             'father_name' => ['nullable', 'string', 'max:255'],
             'mother_name' => ['nullable', 'string', 'max:255'],
             'friend_phone' => ['nullable', 'string', 'max:255'],

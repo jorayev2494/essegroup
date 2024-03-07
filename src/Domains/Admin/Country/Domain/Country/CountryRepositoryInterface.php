@@ -14,7 +14,7 @@ interface CountryRepositoryInterface
 {
     public function list(HttpQueryFilterDTO $httpQueryFilterDTO): CountryCollection;
 
-    public function paginateByCompanyUuid(BaseHttpQueryParams $httpQueryParams, CompanyUuid $companyUuid): Paginator;
+    public function paginate(BaseHttpQueryParams $httpQueryParams): Paginator;
 
     public function findByValueAndByCompanyUuid(Value $value, CompanyUuid $companyUuid): ?Country;
 

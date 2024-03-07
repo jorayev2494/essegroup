@@ -82,7 +82,7 @@ services:
             - ./postgres/data/:/var/lib/postgresql/data
         environment:
             # POSTGRES_DB: devdb
-            POSTGRES_MULTIPLE_DATABASES: admindatabase, clientdatabase
+            POSTGRES_MULTIPLE_DATABASES: admindatabase, companydatabase, clientdatabase
             POSTGRES_USER: essegroupuser
             POSTGRES_PASSWORD: "essegrouppassword"
             PGDATA: /var/lib/postgresql/data/pgdata

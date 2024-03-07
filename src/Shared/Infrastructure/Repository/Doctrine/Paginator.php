@@ -106,7 +106,7 @@ class Paginator implements Arrayable
             'current_page' => $this->page,
             'data' => array_map(
                 static fn (ArrayableInterface $item): array => $item->toArray(),
-                iterator_to_array(($this->items))
+                iterator_to_array($this->items)
             ),
             'next_page' => $this->nextPage,
             'next_page_url' => $this->makePageUrl($this->nextPage),

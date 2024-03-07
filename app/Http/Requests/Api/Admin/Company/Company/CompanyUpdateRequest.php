@@ -9,6 +9,10 @@ use Illuminate\Validation\Rule;
 
 class CompanyUpdateRequest extends FormRequest
 {
+    private const int LOGO_WIDTH = 400;
+
+    private const int LOGO_HEIGHT = 400;
+
     public function authorize(): bool
     {
         return true;
@@ -17,8 +21,28 @@ class CompanyUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
-            'domain' => ['required', 'string', 'alpha'],
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('pgsql_admin.company_companies', 'name')->whereNot('uuid', $this->route('uuid')),
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('pgsql_admin.company_companies', 'email')->whereNot('uuid', $this->route('uuid')),
+            ],
+            'domain' => [
+                'required',
+                'string',
+                'alpha',
+                Rule::unique('pgsql_admin.company_companies', 'domain')->whereNot('uuid', $this->route('uuid')),
+            ],
+            'logo' => [
+                'nullable',
+                'file',
+                'mimetypes:image/*',
+                // Rule::dimensions()->width(self::LOGO_WIDTH)->height(self::LOGO_HEIGHT),
+            ],
         ];
     }
 }

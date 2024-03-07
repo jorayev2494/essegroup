@@ -12,6 +12,7 @@ use Project\Domains\Admin\Company\Application\Company\Commands\Create\Command;
 use Project\Domains\Admin\Company\Application\Company\Queries\Index\Query;
 use Project\Domains\Admin\Company\Application\Company\Queries\List\Query as ListQuery;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
+use Project\Infrastructure\Services\Auth\AuthManager;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -54,8 +55,9 @@ readonly class CompanyController
         $this->commandBus->dispatch(
             new Command(
                 $uuid,
-                // $request->file('logo'),
+                $request->file('logo'),
                 $request->get('name'),
+                $request->get('email'),
                 $request->get('domain'),
             )
         );
@@ -81,6 +83,7 @@ readonly class CompanyController
                 $uuid,
                 $request->file('logo'),
                 $request->get('name'),
+                $request->get('email'),
                 $request->get('domain'),
             )
         );

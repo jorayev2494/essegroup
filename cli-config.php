@@ -4,6 +4,7 @@ require_once __DIR__ . '/public/index.php';
 
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\AdminEntityManagerInterface;
+use Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\CompanyEntityManagerInterface;
 use Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\ClientEntityManagerInterface;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
@@ -15,7 +16,7 @@ $migrationsPaths = [];
 
 $entity = getenv('ENTITY');
 
-if (in_array($entity, ['admin', 'client'])) {
+if (in_array($entity, ['admin', 'company', 'client'])) {
     if ($entity === 'client')
     {
         /** @var EntityManagerInterface $entityManager */
@@ -27,6 +28,18 @@ if (in_array($entity, ['admin', 'client'])) {
             );
 
         $dbalKey = 'client_dbal_connection';
+    }
+    else if ($entity === 'company')
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $app->make(CompanyEntityManagerInterface::class);
+        $migrationsPaths = $app->make('company_doctrine_migration_paths');
+        $entityManager->getConfiguration()
+            ->setMetadataDriverImpl(
+                new AttributeDriver($app->make('company_doctrine_entity_paths')->toArray())
+            );
+
+        $dbalKey = 'company_dbal_connection';
     }
     else if ($entity === 'admin')
     {
@@ -65,12 +78,9 @@ if (in_array($entity, ['admin', 'client'])) {
     ];
 
     $config = new ConfigurationArray($conf);
-    $dbalConnection = $app->make($dbalKey);
 
-//    dd(
-//        $config,
-//        $dbalConnection,
-//    );
+    /** @var \Doctrine\DBAL\Connection $dbalConnection */
+    $dbalConnection = $app->make($dbalKey);
 
     return DependencyFactory::fromEntityManager($config, new ExistingEntityManager($entityManager));
 }

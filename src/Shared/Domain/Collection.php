@@ -11,7 +11,7 @@ use Countable;
 
 abstract class Collection implements Countable, IteratorAggregate, ArrayableInterface
 {
-    protected readonly array $items;
+    protected array $items;
 
     public function __construct(array $items = [])
     {
@@ -54,7 +54,7 @@ abstract class Collection implements Countable, IteratorAggregate, ArrayableInte
         return $this->items;
     }
 
-    public function translateItems(string $locale = 'en'): self
+    public function translateItems(string $locale = null): self
     {
         $translateClassName = $this->translatorClass();
 
@@ -63,6 +63,11 @@ abstract class Collection implements Countable, IteratorAggregate, ArrayableInte
         }
 
         return $this;
+    }
+
+    public function forEach(\Closure $callback): void
+    {
+        array_walk($this->items, $callback);
     }
 
     public function toArray(): array

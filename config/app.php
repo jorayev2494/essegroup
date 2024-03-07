@@ -179,6 +179,11 @@ return [
         Project\Domains\Admin\University\Infrastructure\UniversityServiceProvider::class,
         Project\Domains\Admin\Country\Infrastructure\CountryServiceProvider::class,
 
+        // Company
+        Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,
+        Project\Domains\Company\Company\Infrastructure\CompanyServiceProvider::class,
+        Project\Domains\Company\University\Infrastructure\UniversityServiceProvider::class,
+
         // Public
         Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,
 

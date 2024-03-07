@@ -6,6 +6,7 @@ namespace Project\Domains\Admin\University\Application\Application\Commands\Upda
 
 use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Application\Exceptions\ApplicationNotFoundDomainException;
+use Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface;
 use Project\Domains\Admin\University\Domain\Application\Services\Contracts\StatusServiceInterface;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Email;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\FatherName;
@@ -23,6 +24,7 @@ use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInter
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid as FacultyUuid;
+use DateTimeImmutable;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
@@ -31,7 +33,8 @@ readonly class CommandHandler implements CommandHandlerInterface
         private StatusServiceInterface $statusService,
         private UniversityRepositoryInterface $universityRepository,
         private FacultyRepositoryInterface $facultyRepository,
-        private CountryRepositoryInterface $countryRepository
+        private CountryRepositoryInterface $countryRepository,
+        private ApplicationServiceInterface $service
     )
     {
 
@@ -44,11 +47,11 @@ readonly class CommandHandler implements CommandHandlerInterface
         $application ?? throw new ApplicationNotFoundDomainException();
 
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
-        $faculty = $this->facultyRepository->findByUuid(FacultyUuid::fromValue($command->facultyUuid));
+        // $faculty = $this->facultyRepository->findByUuid(FacultyUuid::fromValue($command->facultyUuid));
         $country = $this->countryRepository->findByUuid($command->countryUuid);
 
         $application->changeUniversity($university);
-        $application->changeFaculty($faculty);
+        $application->changeBirthday(new DateTimeImmutable($command->birthday));
         $application->changeCountry($country);
         $application->changeFullName(FullName::fromValue($command->fullName));
         $application->changePassportNumber(PassportNumber::fromValue($command->passportNumber));
@@ -59,6 +62,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $application->changeFriendPhone(FriendPhone::fromValue($command->friendPhone));
         $application->changeHomeAddress(HomeAddress::fromValue($command->homeAddress));
         $this->statusService->changeStatus($application, Status::fromPrimitives($command->status, $command->note));
+        $this->service->updateDepartments($application, $command->departmentUuids);
 
         $this->applicationRepository->save($application);
     }

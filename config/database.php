@@ -93,6 +93,21 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'pgsql_company' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('COMPANY_DB_HOST', '127.0.0.1'),
+            'port' => env('COMPANY_DB_PORT', '5432'),
+            'database' => env('COMPANY_DB_DATABASE', 'forge'),
+            'username' => env('COMPANY_DB_USERNAME', 'forge'),
+            'password' => env('COMPANY_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
         'pgsql_client' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

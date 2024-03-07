@@ -16,19 +16,24 @@ class CreateCountryRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'company_uuid' => [
+                'required',
+                'string',
+                Rule::exists('pgsql_admin.company_companies', 'uuid'),
+            ],
             'value' => [
                 'required',
                 'alpha',
                 'max:255',
                 Rule::unique('pgsql_admin.country_countries', 'value')
-                    ->where('company_uuid', AuthManager::getCompanyUuid())
+                    ->where('company_uuid', $this->get('company_uuid'))
             ],
             'iso' => [
                 'required',
                 'alpha',
                 'max:3',
                 Rule::unique('pgsql_admin.country_countries', 'iso')
-                    ->where('company_uuid', AuthManager::getCompanyUuid())
+                    ->where('company_uuid', $this->get('company_uuid'))
             ],
             'is_active' => ['required', 'boolean'],
         ];

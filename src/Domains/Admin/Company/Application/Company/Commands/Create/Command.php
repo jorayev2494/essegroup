@@ -11,8 +11,9 @@ readonly class Command implements CommandInterface
 {
     public function __construct(
         public string $uuid,
-        // public UploadedFile $logo,
+        public UploadedFile $logo,
         public string $name,
+        public string $email,
         public string $domain,
     )
     {

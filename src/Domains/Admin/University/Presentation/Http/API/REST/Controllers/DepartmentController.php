@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers;
 
+use App\Http\Requests\Api\Admin\University\Department\DepartmentStoreRequest;
+use App\Http\Requests\Api\Admin\University\Department\DepartmentUpdateRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Project\Domains\Admin\University\Application\Department\Commands\Delete\Command;
@@ -48,13 +50,14 @@ readonly class DepartmentController
         );
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(DepartmentStoreRequest $request): JsonResponse
     {
         $uuid = $this->uuidGenerator->generate();
 
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
+                $request->get('company_uuid'),
                 $request->get('faculty_uuid'),
                 $request->get('translations'),
                 $request->boolean('is_active')
@@ -73,11 +76,13 @@ readonly class DepartmentController
         );
     }
 
-    public function update(Request $request, string $uuid): Response
+    public function update(DepartmentUpdateRequest $request, string $uuid): Response
     {
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
+                $request->get('company_uuid'),
+                $request->get('faculty_uuid'),
                 $request->get('translations'),
                 $request->boolean('is_active')
             )

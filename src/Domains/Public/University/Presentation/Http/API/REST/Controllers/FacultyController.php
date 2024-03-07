@@ -6,8 +6,10 @@ namespace Project\Domains\Public\University\Presentation\Http\API\REST\Controlle
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Project\Domains\Public\University\Application\Faculty\Queries\List\Query;
-use Project\Domains\Public\University\Application\Faculty\Queries\List\QueryHandler;
+use Project\Domains\Public\University\Application\Faculty\Queries\List\Query as ListQuery;
+use Project\Domains\Public\University\Application\Faculty\Queries\List\QueryHandler as ListQueryHandler;
+use Project\Domains\Public\University\Application\Faculty\Queries\Show\QueryHandler as ShowQueryHandler;
+use Project\Domains\Public\University\Application\Faculty\Queries\Show\Query as ShowQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 readonly class FacultyController
@@ -18,11 +20,20 @@ readonly class FacultyController
 
     }
 
-    public function list(Request $request, QueryHandler $queryHandler): JsonResponse
+    public function list(Request $request, ListQueryHandler $queryHandler): JsonResponse
     {
         return $this->response->json(
             $queryHandler(
-                Query::makeFromRequest($request)
+                ListQuery::makeFromRequest($request)
+            )
+        );
+    }
+
+    public function show(string $uuid, ShowQueryHandler $queryHandler): JsonResponse
+    {
+        return $this->response->json(
+            $queryHandler(
+                new ShowQuery($uuid)
             )
         );
     }

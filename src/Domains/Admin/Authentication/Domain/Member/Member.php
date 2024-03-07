@@ -35,8 +35,8 @@ class Member extends AggregateRoot implements AuthenticatableInterface
     #[ORM\OneToMany(targetEntity: Device::class, mappedBy: 'author', cascade: ['persist', 'remove'])]
     private Collection $devices;
 
-     #[ORM\OneToOne(targetEntity: Code::class, mappedBy: 'author', orphanRemoval: true, cascade: ['persist', 'remove'])]
-     public ?Code $code;
+    #[ORM\OneToOne(targetEntity: Code::class, mappedBy: 'author', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    public ?Code $code;
 
     private function __construct(Uuid $uuid, Email $email, Password $password)
     {

@@ -34,8 +34,10 @@ readonly class LogoService implements LogoServiceInterface
 
     public function update(LogoableInterface $logoable, ?UploadedFile $uploadedFile): void
     {
-        $this->delete($logoable);
-        $this->upload($logoable, $uploadedFile);
+        if ($uploadedFile instanceof UploadedFile) {
+            $this->delete($logoable);
+            $this->upload($logoable, $uploadedFile);
+        }
     }
 
     public function delete(LogoableInterface $logoable): void

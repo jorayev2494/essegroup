@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University;
 
+use Project\Domains\Admin\University\Application\University\Queries\Index\Query;
 use Project\Domains\Admin\University\Domain\University\UniversityCollection;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
@@ -28,12 +29,16 @@ class UniversityRepository extends BaseAdminEntityRepository implements Universi
         return (new UniversityCollection($this->entityRepository->findAll()))->translateItems();
     }
 
-    public function paginate(BaseHttpQueryParams $baseHttpQueryParams): Paginator
+    public function paginate(Query $baseHttpQueryParams): Paginator
     {
-        $query = $this->entityRepository->createQueryBuilder('u')
-            ->getQuery();
+        $query = $this->entityRepository->createQueryBuilder('u');
 
-        return $this->paginator($query, $baseHttpQueryParams->paginatorHttpQueryParams);
+        if ($baseHttpQueryParams->httpQueryFilter->companyUuid !== null) {
+            $query->where('u.companyUuid = :companyUuid')
+                ->setParameter('companyUuid', $baseHttpQueryParams->httpQueryFilter->companyUuid);
+        }
+
+        return $this->paginator($query->getQuery(), $baseHttpQueryParams->paginatorHttpQueryParams);
     }
 
     public function list(HttpQueryFilterDTO $httpQueryFilterDTO): UniversityCollection

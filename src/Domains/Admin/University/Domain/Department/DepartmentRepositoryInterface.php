@@ -11,6 +11,8 @@ interface DepartmentRepositoryInterface
 {
     public function findByUuid(Uuid $uuid): ?Department;
 
+    public function findManyByUuids(array $findManyByUuids): DepartmentCollection;
+
     public function list(HttpQueryFilterDTO $httpQueryFilter): DepartmentCollection;
 
     public function paginate(BaseHttpQueryParams $httpQueryParams): Paginator;
