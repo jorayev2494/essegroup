@@ -21,4 +21,9 @@ class AuthManager
         return app()->make(CompanyRepositoryInterface::class)
             ->findByUuid(Uuid::fromValue(self::getCompanyUuid()));
     }
+
+    public static function hasCompany(): bool
+    {
+        return JWTAuth::parseToken()->getPayload()->get('company_uuid') !== null;
+    }
 }

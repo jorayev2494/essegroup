@@ -45,6 +45,11 @@ return [
             'provider' => 'admins',
             'hash' => false,
         ],
+        'company' => [
+            'driver' => 'jwt',
+            'provider' => 'companies',
+            'hash' => false,
+        ],
         'client' => [
             'driver' => 'jwt',
             'provider' => 'clients',
@@ -77,6 +82,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+        'companies' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Company::class,
         ],
         'clients' => [
             'driver' => 'eloquent',
@@ -117,6 +126,12 @@ return [
         // ],
         'admins' => [
             'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'companies' => [
+            'provider' => 'companies',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

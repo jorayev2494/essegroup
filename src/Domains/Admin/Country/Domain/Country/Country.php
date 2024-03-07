@@ -132,6 +132,7 @@ class Country extends AggregateRoot
             'value' => $this->value->value,
             'iso' => $this->iso->value,
             'is_active' => $this->isActive,
+            'company_uuid' => $this->companyUuid->value,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];

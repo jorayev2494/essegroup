@@ -38,7 +38,7 @@ readonly class ApplicationController
                 $request->get('email'),
                 $request->get('phone'),
                 $request->get('university_uuid'),
-                $request->get('faculty_uuid'),
+                $request->get('department_uuids'),
                 $request->get('country_uuid'),
                 $request->file('passport'),
                 $request->file('passport_translation'),
@@ -50,10 +50,12 @@ readonly class ApplicationController
                 $request->file('biometric_photo'),
                 $additionalDocuments,
                 $request->boolean('is_agreed_to_share_data'),
+                'client',
+                $request->get('company_uuid'),
                 $request->get('father_name'),
                 $request->get('mother_name'),
                 $request->get('friend_phone'),
-                $request->get('home_address')
+                $request->get('home_address'),
             )
         );
 

@@ -45,21 +45,37 @@ readonly class ApplicationController
     {
         $uuid = $this->uuidGenerator->generate();
 
-        // $this->commandBus->dispatch(
-        //     new CreateCommand(
-        //         $uuid,
-        //         $request->get('email'),
-        //         $request->get('phone'),
-        //         $request->file('passport'),
-        //         $request->file('passport_translation'),
-        //         $request->file('school_attestat'),
-        //         $request->file('school_attestat_translation'),
-        //         $request->file('transcript'),
-        //         $request->file('transcript_translation'),
-        //         $request->file('equivalence_document'),
-        //         $request->file('biometric_photo'),
-        //     )
-        // );
+        ['additional_documents' => $additionalDocuments] = $request->all();
+
+        $this->commandBus->dispatch(
+            new CreateCommand(
+                $uuid,
+                $request->get('full_name'),
+                $request->get('birthday'),
+                $request->get('passport_number'),
+                $request->get('email'),
+                $request->get('phone'),
+                $request->get('university_uuid'),
+                $request->get('department_uuids'),
+                $request->get('country_uuid'),
+                $request->file('passport'),
+                $request->file('passport_translation'),
+                $request->file('school_attestat'),
+                $request->file('school_attestat_translation'),
+                $request->file('transcript'),
+                $request->file('transcript_translation'),
+                $request->file('equivalence_document'),
+                $request->file('biometric_photo'),
+                $additionalDocuments,
+                $request->boolean('is_agreed_to_share_data', true),
+                'admin',
+                $request->get('company_uuid'),
+                $request->get('father_name'),
+                $request->get('mother_name'),
+                $request->get('friend_phone'),
+                $request->get('home_address'),
+            )
+        );
 
         return $this->response->json(['uuid' => $uuid], Response::HTTP_CREATED);
     }
@@ -84,14 +100,14 @@ readonly class ApplicationController
                 $request->get('email'),
                 $request->get('phone'),
                 $request->get('university_uuid'),
-                $request->get('faculty_uuid'),
+                $request->get('department_uuids'),
                 $request->get('country_uuid'),
-                $request->get('status'),
-                $request->get('note'),
+                $request->get('status')['value'],
+                $request->get('status')['note'],
 
                 $request->get('father_name'),
                 $request->get('mother_name'),
-                $request->get('phone_friend'),
+                $request->get('friend_phone'),
                 $request->get('home_address')
             )
         );

@@ -6,6 +6,7 @@ namespace Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Description;
 
 class DescriptionType extends Type
@@ -16,7 +17,7 @@ class DescriptionType extends Type
     #[\Override]
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
-        return $platform->getStringTypeDeclarationSQL($column);
+        return $platform->getDoctrineTypeMapping(Types::TEXT);
     }
 
     /**

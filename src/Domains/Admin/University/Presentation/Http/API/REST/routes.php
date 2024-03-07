@@ -6,6 +6,7 @@ use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\Univ
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\FacultyController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\DepartmentController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\ApplicationController;
+use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\CountryController;
 
 Route::group(
     ['prefix' => 'universities', 'controller' => UniversityController::class],
@@ -15,7 +16,7 @@ Route::group(
         $router->post('/', 'store');
         $router->get('/{uuid}', 'show');
         $router->post('/{uuid}', 'update');
-            $router->delete('/{uuid}', 'delete');
+        $router->delete('/{uuid}', 'delete');
     }
 );
 
@@ -52,5 +53,13 @@ Route::group(
         $router->get('/{uuid}', 'show');
         $router->put('/{uuid}', 'update');
         $router->delete('/{uuid}', 'delete');
+    }
+);
+
+Route::group(
+    ['prefix' => 'universities/countries', 'controller' => CountryController::class],
+    static function (Router $router): void {
+        $router->get('/', 'index');
+        $router->get('/list', 'list');
     }
 );

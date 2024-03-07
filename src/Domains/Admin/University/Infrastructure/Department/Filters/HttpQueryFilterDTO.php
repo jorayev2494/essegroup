@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 readonly class HttpQueryFilterDTO implements ArrayableInterface
 {
     private function __construct(
+        public ?string $universityUuid,
         public ?string $facultyUuid
     ) {
 
@@ -18,6 +19,7 @@ readonly class HttpQueryFilterDTO implements ArrayableInterface
     public static function makeFromRequest(Request $request): self
     {
         return new self(
+            $request->query->get('filter_by_university_uuid'),
             $request->query->get('filter_by_faculty_uuid')
         );
     }
@@ -25,6 +27,7 @@ readonly class HttpQueryFilterDTO implements ArrayableInterface
     public static function makeFromArray(array $data): self
     {
         return new self(
+            $data['filter_by_university_uuid'] ?? null,
             $data['filter_by_faculty_uuid'] ?? null,
         );
     }
@@ -34,6 +37,7 @@ readonly class HttpQueryFilterDTO implements ArrayableInterface
     public function toArray(): array
     {
         return [
+            'filter_by_university_uuid' => $this->universityUuid,
             'filter_by_faculty_uuid' => $this->facultyUuid,
         ];
     }

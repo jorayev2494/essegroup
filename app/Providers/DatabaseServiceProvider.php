@@ -21,6 +21,16 @@ class DatabaseServiceProvider extends ServiceProvider
             }
         });
 
+        $this->app->singleton('company_doctrine_entity_paths', static fn (): ArrayCollection => new ArrayCollection());
+
+        \Illuminate\Foundation\Application::macro('addCompanyEntityPaths', function (array $entityPaths): void {
+            $entityPathCollect = $this->make('company_doctrine_entity_paths');
+
+            foreach ($entityPaths as $entityPath) {
+                $entityPathCollect->add($entityPath);
+            }
+        });
+
         $this->app->singleton('client_doctrine_entity_paths', static fn (): ArrayCollection => new ArrayCollection());
 
         \Illuminate\Foundation\Application::macro('addClientEntityPaths', function (array $entityPaths): void {
@@ -37,6 +47,13 @@ class DatabaseServiceProvider extends ServiceProvider
         \Illuminate\Foundation\Application::macro('addAdminMigrationPaths', function (array $migrationsPaths): void {
             $migrationPathCollection = $this->make('admin_doctrine_migration_paths');
             $this->singleton('admin_doctrine_migration_paths', static fn (): array => array_merge($migrationPathCollection, $migrationsPaths));
+        });
+
+        $this->app->singleton('company_doctrine_migration_paths', static fn (): array => []);
+
+        \Illuminate\Foundation\Application::macro('addCompanyMigrationPaths', function (array $migrationsPaths): void {
+            $migrationPathCollection = $this->make('company_doctrine_migration_paths');
+            $this->singleton('company_doctrine_migration_paths', static fn (): array => array_merge($migrationPathCollection, $migrationsPaths));
         });
 
         $this->app->singleton('client_doctrine_migration_paths', static fn (): array => []);

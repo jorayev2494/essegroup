@@ -24,10 +24,10 @@ class AuthenticationServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const COMMAND_HANDLERS = [
-        \Project\Domains\Admin\Authentication\Application\Commands\Login\CommandHandler::class,
-        \Project\Domains\Admin\Authentication\Application\Commands\RefreshToken\CommandHandler::class,
-        \Project\Domains\Admin\Authentication\Application\Commands\RestorePasswordLink\CommandHandler::class,
-        \Project\Domains\Admin\Authentication\Application\Commands\RestorePassword\CommandHandler::class,
+        \Project\Domains\Admin\Authentication\Application\Authentication\Commands\Login\CommandHandler::class,
+        \Project\Domains\Admin\Authentication\Application\Authentication\Commands\RefreshToken\CommandHandler::class,
+        \Project\Domains\Admin\Authentication\Application\Authentication\Commands\RestorePasswordLink\CommandHandler::class,
+        \Project\Domains\Admin\Authentication\Application\Authentication\Commands\RestorePassword\CommandHandler::class,
     ];
 
     /** @var array<array-key, string> */
@@ -65,6 +65,5 @@ class AuthenticationServiceProvider extends AdminDomainServiceProvider
     public function register(): void
     {
         $this->app->bind(MemberRepositoryInterface::class, MemberRepository::class);
-        // dump(__METHOD__);
     }
 }

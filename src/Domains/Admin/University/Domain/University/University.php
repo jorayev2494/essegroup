@@ -165,6 +165,11 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
         return $this;
     }
 
+    public function getCompany(): Company
+    {
+        return $this->company;
+    }
+
     public function setCompany(Company $company): self
     {
         $this->company = $company;

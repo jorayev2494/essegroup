@@ -99,6 +99,16 @@ class Handler extends ExceptionHandler
             }
         }
 
+        if ($ex instanceof ModelNotFoundException) {
+            return response()->json(
+                [
+                    'message' => 'Model not found',
+                    // 'error' => $ex->getMessage(),
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
         return response()->json([
             // 'message' => 'Unauthenticated',
             'error' => $ex->getMessage(),

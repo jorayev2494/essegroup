@@ -38,7 +38,7 @@ readonly class CommandHandler implements CommandHandlerInterface
             $command->uuid,
             Value::fromValue($command->value),
             ISO::fromValue($command->iso),
-            CompanyUuid::fromValue(AuthManager::getCompanyUuid()),
+            CompanyUuid::fromValue($command->companyUuid),
             $command->isActive
         );
 

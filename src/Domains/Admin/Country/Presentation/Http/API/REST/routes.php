@@ -8,6 +8,7 @@ Route::group(
     ['prefix' => 'countries', 'controller' => CountryController::class],
     static function (Router $router): void {
         $router->get('/', 'index');
+        $router->get('/list', 'list');
         $router->post('/', 'store');
         $router->put('/{uuid}', 'update');
     }

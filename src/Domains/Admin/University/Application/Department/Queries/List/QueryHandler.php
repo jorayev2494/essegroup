@@ -20,7 +20,7 @@ readonly class QueryHandler implements QueryHandlerInterface
     public function __invoke(Query $query): array
     {
         return $this->departmentRepository->list($query->httpQueryFilter)
-            ->translateItems(DepartmentTranslate::class)
+            ->translateItems()
             ->toArray();
     }
 }

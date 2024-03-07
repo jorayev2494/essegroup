@@ -26,9 +26,24 @@ class DepartmentRepository extends BaseAdminEntityRepository implements Departme
         return $this->entityRepository->find($uuid);
     }
 
+    public function findManyByUuids(array $uuids): DepartmentCollection
+    {
+        $query = $this->entityRepository->createQueryBuilder('d');
+
+        $query->where('d.uuid IN (:uuids)')
+            ->setParameter('uuids', $uuids);
+
+        return new DepartmentCollection($query->getQuery()->getResult());
+    }
+
     public function list(HttpQueryFilterDTO $httpQueryFilter): DepartmentCollection
     {
         $query = $this->entityRepository->createQueryBuilder('d');
+
+        if ($httpQueryFilter->universityUuid !== null) {
+            $query->where('d.universityUuid = :universityUuid')
+                ->setParameter('universityUuid', $httpQueryFilter->universityUuid);
+        }
 
         if ($httpQueryFilter->facultyUuid !== null) {
             $query->where('d.facultyUuid = :facultyUuid')

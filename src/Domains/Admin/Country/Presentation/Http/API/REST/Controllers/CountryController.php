@@ -10,7 +10,8 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Project\Domains\Admin\Country\Application\Country\Commands\Create\Command as CreateCommand;
 use Project\Domains\Admin\Country\Application\Country\Commands\Update\Command as UpdateCommand;
-use Project\Domains\Admin\Country\Application\Country\Queries\Index\Query;
+use Project\Domains\Admin\Country\Application\Country\Queries\List\Query as QueriesList;
+use Project\Domains\Admin\Country\Application\Country\Queries\Index\Query as IndexQuery;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
@@ -33,7 +34,16 @@ readonly class CountryController
     {
         return $this->response->json(
             $this->queryBus->ask(
-                Query::makeFromRequest($request)
+                IndexQuery::makeFromRequest($request)
+            )
+        );
+    }
+
+    public function list(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                QueriesList::makeFromRequest($request)
             )
         );
     }
@@ -45,6 +55,7 @@ readonly class CountryController
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
+                $request->get('company_uuid'),
                 $request->get('value'),
                 $request->get('iso'),
                 $request->get('is_active'),

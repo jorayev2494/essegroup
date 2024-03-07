@@ -48,6 +48,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\EquivalenceDocument\Contracts\EquivalenceDocumentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\EquivalenceDocument\EquivalenceDocumentService::class],
         \Project\Domains\Admin\University\Domain\Application\Services\Contracts\StatusServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\StatusService::class],
         \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\AdditionalDocumentService::class],
+        \Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\ApplicationService::class],
 
         // Country
         \Project\Domains\Admin\University\Domain\Country\CountryRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Country\Repositories\Doctrine\CountryRepository::class]
@@ -75,6 +76,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Application\Queries\StatusList\QueryHandler::class,
 
         // Country
+        \Project\Domains\Admin\University\Application\Country\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Country\Queries\List\QueryHandler::class,
     ];
 

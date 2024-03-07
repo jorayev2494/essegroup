@@ -9,4 +9,6 @@ use Project\Domains\Admin\University\Infrastructure\Faculty\Filters\HttpQueryFil
 interface FacultyServiceInterface
 {
     public function list(HttpQueryFilterDTO $httpQueryFilterDTO): array;
+
+    public function show(string $uuid): array;
 }

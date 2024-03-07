@@ -28,11 +28,14 @@ class ApplicationUpdateRequest extends FormRequest
                 'max:255',
                 Rule::exists('pgsql_admin.university_universities', 'uuid'),
             ],
-            'faculty_uuid' => [
+            // 'faculty_uuid' => [
+            //     'required',
+            //     'string',
+            //     'max:255',
+            //     Rule::exists('pgsql_admin.faculty_faculties', 'uuid'),
+            // ],
+            'department_uuids' => [
                 'required',
-                'string',
-                'max:255',
-                Rule::exists('pgsql_admin.faculty_faculties', 'uuid'),
             ],
             'country_uuid' => [
                 'required',
@@ -41,12 +44,12 @@ class ApplicationUpdateRequest extends FormRequest
                 Rule::exists('pgsql_admin.university_countries', 'uuid'),
             ],
 
-            'status' => ['required', Rule::in(StatusEnum::MANAGEMENT_NOTE_REQUIRED)],
-            'note' => [
+            'status.value' => ['required', Rule::in(StatusEnum::MANAGEMENT_NOTE_REQUIRED)],
+            'status.note' => [
                 'nullable',
                 'string',
                 'max:500',
-                Rule::requiredIf(StatusEnum::managementNoteRequired(StatusEnum::from($this->get('status'))))
+                Rule::requiredIf(StatusEnum::managementNoteRequired(StatusEnum::from($this->get('status')['value'])))
             ],
 
             'father_name' => ['nullable', 'string', 'max:255'],

@@ -35,12 +35,9 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
         return new CountryCollection($query->getQuery()->getResult());
     }
 
-    public function paginateByCompanyUuid(BaseHttpQueryParams $httpQueryParams, CompanyUuid $companyUuid): Paginator
+    public function paginate(BaseHttpQueryParams $httpQueryParams): Paginator
     {
-        $query = $this->entityRepository->createQueryBuilder('c')
-            ->where('c.companyUuid = :companyUuid')
-            ->setParameter('companyUuid', $companyUuid->value)
-            ->getQuery();
+        $query = $this->entityRepository->createQueryBuilder('c')->getQuery();
 
         return $this->paginator($query, $httpQueryParams->paginatorHttpQueryParams);
     }

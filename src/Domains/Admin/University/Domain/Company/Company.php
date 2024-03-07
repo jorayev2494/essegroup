@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Domain\Country\Country;
+use Project\Domains\Admin\University\Domain\Department\Department;
+use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\Types\DomainType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\Types\NameType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\Types\StatusType;
@@ -40,6 +43,15 @@ class Company extends AggregateRoot
 
     #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
     private Collection $universities;
+
+    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'faculty', cascade: ['persist', 'remove'])]
+    private Collection $faculties;
+
+    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'department', cascade: ['persist', 'remove'])]
+    private Collection $departments;
+
+    #[ORM\OneToMany(targetEntity: Country::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
+    private Collection $countries;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $createdAt;
@@ -96,10 +108,22 @@ class Company extends AggregateRoot
         return $this;
     }
 
+
+
     public function addUniversity(University $university): self
     {
         $this->universities->add($university);
         $university->setCompany($this);
+
+        return $this;
+    }
+
+    public function addCountry(Country $country): self
+    {
+        if (! $this->countries->contains($country)) {
+            $this->countries->add($country);
+            $country->setCompany($this);
+        }
 
         return $this;
     }

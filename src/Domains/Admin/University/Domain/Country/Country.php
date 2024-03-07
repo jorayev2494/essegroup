@@ -12,6 +12,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 use Project\Domains\Admin\University\Domain\Application\Application;
+use Project\Domains\Admin\University\Domain\Company\Company;
 use Project\Shared\Contracts\ArrayableInterface;
 
 #[ORM\Entity]
@@ -32,6 +33,10 @@ class Country implements ArrayableInterface
     #[ORM\Column(name: 'company_uuid', type: Types::STRING, nullable: false)]
     private string $companyUuid;
 
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'countries', cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid')]
+    private Company $company;
+
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'country', cascade: ['persist', 'remove'])]
     private Collection $applications;
 
@@ -44,19 +49,19 @@ class Country implements ArrayableInterface
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 
-    private function __construct(string $uuid, string $value, string $iso, string $companyUuid, bool $isActive)
+    private function __construct(string $uuid, string $value, string $iso, bool $isActive)
     {
         $this->uuid = $uuid;
         $this->value = $value;
         $this->iso = $iso;
-        $this->companyUuid = $companyUuid;
+        // $this->companyUuid = $companyUuid;
         $this->applications = new ArrayCollection();
         $this->isActive = $isActive;
     }
 
-    public static function fromPrimitives(string $uuid, string $value, string $iso, string $companyUuid, bool $isActive): self
+    public static function fromPrimitives(string $uuid, string $value, string $iso, bool $isActive): self
     {
-        return new self($uuid, $value, $iso, $companyUuid, $isActive);
+        return new self($uuid, $value, $iso, $isActive);
     }
 
     public function getUuid(): string
@@ -77,6 +82,11 @@ class Country implements ArrayableInterface
     public function setIsActive(bool $isActive): void
     {
         $this->isActive = $isActive;
+    }
+
+    public function setCompany(Company $company): void
+    {
+        $this->company = $company;
     }
 
     public function isEquals(self $other): bool
@@ -109,6 +119,8 @@ class Country implements ArrayableInterface
             'uuid' => $this->uuid,
             'value' => $this->value,
             'iso' => $this->iso,
+            'company_uuid' => $this->companyUuid,
+            // 'company' => $this->company->toArray(),
             'is_active' => $this->isActive,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),

@@ -35,6 +35,7 @@ readonly class CommandHandler implements CommandHandlerInterface
             throw new CompanyNotFoundDomainException();
         }
 
+        $company->delete();
         $this->logoService->delete($company);
         $this->repository->delete($company);
         $this->eventBus->publish(...$company->pullDomainEvents());

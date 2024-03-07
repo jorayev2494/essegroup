@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers;
 
+use App\Http\Requests\Api\Admin\University\Faculty\FacultyCreateRequest;
+use App\Http\Requests\Api\Admin\University\Faculty\FacultyUpdateRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Project\Domains\Admin\University\Application\Faculty\Commands\Create\Command as StoreCommand;
@@ -48,17 +50,18 @@ readonly class FacultyController
         );
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(FacultyCreateRequest $request): JsonResponse
     {
         $uuid = $this->uuidGenerator->generate();
 
         $this->commandBus->dispatch(
             new StoreCommand(
                 $uuid,
+                $request->get('company_uuid'),
                 $request->get('university_uuid'),
                 $request->file('logo'),
                 $request->get('translations'),
-                $request->boolean('is_active')
+                $request->boolean('is_active', true)
             )
         );
 
@@ -74,15 +77,16 @@ readonly class FacultyController
         );
     }
 
-    public function update(Request $request, string $uuid): Response
+    public function update(FacultyUpdateRequest $request, string $uuid): Response
     {
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
+                $request->get('company_uuid'),
                 $request->get('university_uuid'),
                 $request->file('logo'),
                 $request->get('translations'),
-                $request->boolean('is_active')
+                $request->boolean('is_active', true)
             )
         );
 

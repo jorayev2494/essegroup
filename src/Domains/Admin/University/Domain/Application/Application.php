@@ -31,8 +31,9 @@ use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Transcript;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\TranscriptTranslation;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Country\Country;
-use Project\Domains\Admin\University\Domain\Faculty\Faculty;
+use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\EmailType;
 use Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\FatherNameType;
@@ -112,13 +113,25 @@ class Application extends AggregateRoot implements
     #[ORM\Column(name: 'home_address', type: HomeAddressType::NAME, nullable: true)]
     private HomeAddress $homeAddress;
 
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'applications')]
+    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
+    private Company $company;
+
     #[ORM\ManyToOne(targetEntity: University::class, inversedBy: 'applications')]
     #[ORM\JoinColumn(name: 'university_uuid', referencedColumnName: 'uuid', nullable: false)]
     private University $university;
 
-    #[ORM\ManyToOne(targetEntity: Faculty::class, inversedBy: 'applications')]
-    #[ORM\JoinColumn(name: 'faculty_uuid', referencedColumnName: 'uuid', nullable: false)]
-    private Faculty $faculty;
+//    #[ORM\ManyToOne(targetEntity: Faculty::class, inversedBy: 'applications')]
+//    #[ORM\JoinColumn(name: 'faculty_uuid', referencedColumnName: 'uuid', nullable: false)]
+//    private Faculty $faculty;
+
+    #[ORM\ManyToMany(targetEntity: Department::class, inversedBy: 'applications')]
+    #[ORM\JoinTable(
+        name: 'university_applications_departments',
+        joinColumns: new ORM\JoinColumn(name: 'application_uuid', referencedColumnName: 'uuid', nullable: false),
+        inverseJoinColumns: new ORM\JoinColumn(name: 'department_uuid', referencedColumnName: 'uuid', nullable: false)
+    )]
+    private Collection $departments;
 
     #[ORM\ManyToOne(targetEntity: Passport::class, cascade: ['persist', 'remove'], inversedBy: 'application')]
     #[ORM\JoinColumn(name: 'passport_uuid', referencedColumnName: 'uuid', nullable: false)]
@@ -162,6 +175,9 @@ class Application extends AggregateRoot implements
     #[ORM\OneToMany(targetEntity: Status::class, mappedBy: 'application', cascade: ['persist', 'remove'])]
     private Collection $statuses;
 
+    #[ORM\Column(name: 'creator_role', nullable: false)]
+    private string $creatorRole;
+
     #[ORM\Column(name: 'is_agreed_to_share_data', type: Types::BOOLEAN)]
     private bool $isAgreedToShareData;
 
@@ -178,10 +194,11 @@ class Application extends AggregateRoot implements
         PassportNumber $passportNumber,
         Email $email,
         Phone $phone,
+        Company $company,
         University $university,
-        Faculty $faculty,
         Country $country,
-        bool $isAgreedToShareData
+        bool $isAgreedToShareData,
+        string $creatorRole
     ) {
         $this->uuid = $uuid;
         $this->fullName = $fullName;
@@ -189,14 +206,16 @@ class Application extends AggregateRoot implements
         $this->passportNumber = $passportNumber;
         $this->email = $email;
         $this->phone = $phone;
+        $this->company = $company;
         $this->university = $university;
-        $this->faculty = $faculty;
         $this->country = $country;
         $this->isAgreedToShareData = $isAgreedToShareData;
+        $this->creatorRole = $creatorRole;
         $this->fatherName = FatherName::fromValue(null);
         $this->motherName = MotherName::fromValue(null);
         $this->friendPhone = FriendPhone::fromValue(null);
         $this->homeAddress = HomeAddress::fromValue(null);
+        $this->departments = new ArrayCollection();
         $this->additionalDocuments = new ArrayCollection();
         $this->statuses = new ArrayCollection();
     }
@@ -208,13 +227,14 @@ class Application extends AggregateRoot implements
         PassportNumber $passportNumber,
         Email $email,
         Phone $phone,
+        Company $company,
         University $university,
-        Faculty $faculty,
         Country $country,
-        bool $isAgreedToShareData
+        bool $isAgreedToShareData,
+        string $creatorRole
     ): self
     {
-        $application = new self($uuid, $fullName, $birthday, $passportNumber, $email, $phone, $university, $faculty, $country, $isAgreedToShareData);
+        $application = new self($uuid, $fullName, $birthday, $passportNumber, $email, $phone, $company, $university, $country, $isAgreedToShareData, $creatorRole);
         $application->addStatues(Status::fromPrimitives(StatusEnum::PENDING->value));
 
         return $application;
@@ -224,6 +244,13 @@ class Application extends AggregateRoot implements
     {
         if ($this->fullName->isNotEquals($fullName)) {
             $this->fullName = $fullName;
+        }
+    }
+
+    public function changeBirthday(DateTimeImmutable $birthday): void
+    {
+        if ($this->birthday->getTimestamp() !== $birthday->getTimestamp()) {
+            $this->birthday = $birthday;
         }
     }
 
@@ -282,6 +309,13 @@ class Application extends AggregateRoot implements
         $this->homeAddress = $homeAddress;
     }
 
+    public function changeCompany(Company $company): void
+    {
+        if ($this->company->getUuid()->value !== $company->getUuid()->value) {
+            $this->company = $company;
+        }
+    }
+
     public function changeUniversity(University $university): void
     {
         if ($this->university->isNotEquals($university)) {
@@ -289,10 +323,24 @@ class Application extends AggregateRoot implements
         }
     }
 
-    public function changeFaculty(Faculty $faculty): void
+    public function getDepartments(): Collection
     {
-        if ($this->faculty->isNotEquals($faculty)) {
-            $this->faculty = $faculty;
+        return $this->departments;
+    }
+
+    public function addDepartment(Department $department): void
+    {
+        if (! $this->departments->contains($department)) {
+            $this->departments->add($department);
+            // $department->addApplication($this);
+        }
+    }
+
+    public function removeDepartment(Department $department): void
+    {
+        if ($this->departments->contains($department)) {
+            // $department->removeApplication($this);
+            $this->departments->removeElement($department);
         }
     }
 
@@ -550,12 +598,15 @@ class Application extends AggregateRoot implements
             'father_name' => $this->fatherName->value,
             'mother_name' => $this->motherName->value,
             'passport_number' => $this->passportNumber->value,
+            'company_uuid' => $this->company->getUuid()->value,
+            'company' => $this->company->toArray(),
             'country_uuid' => $this->country->getUuid(),
             'country' => $this->country->toArray(),
             'university_uuid' => $this->university->getUuid()->value,
             'university' => $this->university->toArray(),
-            'faculty_uuid' => $this->faculty->getUuid()->value,
-            'faculty' => $this->faculty->toArray(),
+//            'faculty_uuid' => $this->faculty->getUuid()->value,
+//            'faculty' => $this->faculty->toArray(),
+            'departments' => array_map(static fn (ArrayableInterface $item): array => $item->toArray(), $this->departments->toArray()),
             'phone' => $this->phone->value,
             'friend_phone' => $this->friendPhone->value,
             'home_address' => $this->homeAddress->value,

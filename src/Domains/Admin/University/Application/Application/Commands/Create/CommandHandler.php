@@ -6,6 +6,7 @@ namespace Project\Domains\Admin\University\Application\Application\Commands\Crea
 
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Email;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\FatherName;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\FriendPhone;
@@ -15,10 +16,9 @@ use Project\Domains\Admin\University\Domain\Application\ValueObjects\MotherName;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\PassportNumber;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Phone;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
-use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid as FacultyUuid;
-use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentServiceInterface;
 use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\BiometricPhoto\Contracts\BiometricPhotoServiceInterface;
@@ -32,13 +32,14 @@ use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\T
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use DateTimeImmutable;
 use Project\Shared\Domain\Bus\Event\EventBusInterface;
+use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid as CompanyUuid;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
+        private CompanyRepositoryInterface $companyRepository,
         private ApplicationRepositoryInterface $applicationRepository,
         private UniversityRepositoryInterface $universityRepository,
-        private FacultyRepositoryInterface $facultyRepository,
         private CountryRepositoryInterface $countryRepository,
         private PassportServiceInterface $passportService,
         private PassportTranslationServiceInterface $passportTranslationService,
@@ -49,6 +50,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private EquivalenceDocumentServiceInterface $equivalenceDocumentService,
         private BiometricPhotoServiceInterface $biometricPhotoService,
         private AdditionalDocumentServiceInterface $additionalDocumentService,
+        private ApplicationServiceInterface $service,
         private EventBusInterface $eventBus
     )
     {
@@ -58,7 +60,7 @@ readonly class CommandHandler implements CommandHandlerInterface
     public function __invoke(Command $command): void
     {
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
-        $faculty = $this->facultyRepository->findByUuid(FacultyUuid::fromValue($command->facultyUuid));
+        $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid ?? $university->getCompany()->getUuid()->value));
         $country = $this->countryRepository->findByUuid($command->countryUuid);
 
         $application = Application::create(
@@ -68,11 +70,14 @@ readonly class CommandHandler implements CommandHandlerInterface
             PassportNumber::fromValue($command->passportNumber),
             Email::fromValue($command->email),
             Phone::fromValue($command->phone),
+            $company,
             $university,
-            $faculty,
             $country,
             $command->isAgreedToShareData,
+            $command->creatorRole
         );
+
+        $this->service->addDepartments($application, $command->departmentUuids);
 
         $this->passportService->upload($application, $command->passport);
         $this->passportTranslationService->upload($application, $command->passportTranslation);
@@ -90,6 +95,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $application->setHomeAddress(HomeAddress::fromValue($command->homeAddress));
 
         // dd($application);
+
         $this->applicationRepository->save($application);
         $this->eventBus->publish(...$application->pullDomainEvents());
     }

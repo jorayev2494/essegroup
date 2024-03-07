@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Project\Shared\Infrastructure\Repository\Doctrine;
 
+use Project\Shared\Contracts\ArrayableInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-readonly class PaginatorHttpQueryParams
+readonly class PaginatorHttpQueryParams implements ArrayableInterface
 {
     private function __construct(
         public ?int $page,
@@ -33,6 +34,15 @@ readonly class PaginatorHttpQueryParams
             perPage: $data['perPage'] ?? 15,
             cursor: $data['cursor'] ?? null
         );
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'page' => $this->page,
+            'per_page' => $this->perPage,
+            'cursor' => $this->cursor,
+        ];
     }
 
 }

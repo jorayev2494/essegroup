@@ -19,7 +19,7 @@ readonly class ApplicationService implements ApplicationServiceInterface
     #[\Override]
     public function create(Command $command): void
     {
-        dd($command);
+//        dd($command);
         $this->commandBus->dispatch(
             new CreateCommand(
                 $command->uuid,
@@ -33,6 +33,7 @@ readonly class ApplicationService implements ApplicationServiceInterface
                 $command->transcriptTranslation,
                 $command->equivalenceDocument,
                 $command->biometricPhoto,
+                'client'
             )
         );
     }

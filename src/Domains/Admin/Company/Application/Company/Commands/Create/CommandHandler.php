@@ -10,6 +10,7 @@ use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyDomainAlready
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNameAlreadyExistsDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoServiceInterface;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Email;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
@@ -43,8 +44,11 @@ readonly class CommandHandler implements CommandHandlerInterface
         $company = Company::create(
             Uuid::fromValue($command->uuid),
             Name::fromValue($command->name),
+            Email::fromValue($command->email),
             Domain::fromValue($command->domain)
         );
+
+        $this->logoService->upload($company, $command->logo);
 
         $this->repository->save($company);
         $this->eventBus->publish(...$company->pullDomainEvents());

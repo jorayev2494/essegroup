@@ -34,6 +34,7 @@ Route::group(
     ['prefix' => 'faculties', 'controller' => FacultyController::class],
     static function (Router $router): void {
         $router->get('/list', 'list');
+        $router->get('/{uuid}', 'show');
     }
 );
 
