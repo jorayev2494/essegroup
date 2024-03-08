@@ -12,7 +12,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Project\Domains\Admin\Authentication\Domain\Member\Member;
 
 #[ORM\Entity]
-#[ORM\Table('auth_codes')]
+#[ORM\Table(name: 'auth_codes')]
 #[ORM\HasLifecycleCallbacks]
 class Code
 {
