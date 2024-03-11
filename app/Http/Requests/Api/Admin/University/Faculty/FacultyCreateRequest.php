@@ -37,7 +37,7 @@ class FacultyCreateRequest extends FormRequest
             ],
             'translations' => ['required', 'array'],
             'translations.*.name' => ['required'],
-            'translations.*.label' => ['required'],
+            // 'translations.*.label' => ['required'],
             'translations.*.description' => ['required'],
             // 'is_active' => [
             //     'required',
