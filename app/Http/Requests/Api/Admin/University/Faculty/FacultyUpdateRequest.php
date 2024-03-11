@@ -22,12 +22,12 @@ class FacultyUpdateRequest extends FormRequest
             'company_uuid' => [
                 'required',
                 'string',
-                Rule::exists('pgsql_admin.company_companies', 'uuid'),
+                Rule::exists('admin_db.company_companies', 'uuid'),
             ],
             'university_uuid' => [
                 'required',
                 'string',
-                Rule::exists('pgsql_admin.university_universities', 'uuid'),
+                Rule::exists('admin_db.university_universities', 'uuid'),
             ],
             'logo' => [
                 'required',

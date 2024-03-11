@@ -8,5 +8,5 @@ use App\Models\Auth\Authenticatable;
 
 class Admin extends Authenticatable
 {
-    protected $connection = 'pgsql_admin';
+    protected $connection = 'admin_db';
 }

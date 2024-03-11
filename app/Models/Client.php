@@ -8,5 +8,5 @@ use App\Models\Auth\Authenticatable;
 
 class Client extends Authenticatable
 {
-    protected $connection = 'pgsql_client';
+    protected $connection = 'client_db';
 }

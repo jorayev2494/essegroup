@@ -21,18 +21,18 @@ class CompanyStoreRequest extends FormRequest
             'name' => [
                 'required',
                 'string',
-                Rule::unique('pgsql_admin.company_companies', 'name'),
+                Rule::unique('admin_db.company_companies', 'name'),
             ],
             'email' => [
                 'required',
                 'email',
-                Rule::unique('pgsql_admin.company_companies', 'email'),
+                Rule::unique('admin_db.company_companies', 'email'),
             ],
             'domain' => [
                 'required',
                 'string',
                 'alpha',
-                Rule::unique('pgsql_admin.company_companies', 'domain'),
+                Rule::unique('admin_db.company_companies', 'domain'),
             ],
             'logo' => [
                 'required',

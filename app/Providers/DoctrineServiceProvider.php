@@ -34,7 +34,7 @@ class DoctrineServiceProvider extends ServiceProvider
             'user' => env('ADMIN_DB_USERNAME'),
             'password' => env('ADMIN_DB_PASSWORD'),
             'host' => env('ADMIN_DB_HOST'),
-            'driver' => 'pdo_pgsql',
+            'driver' => 'pdo_mysql',
         ];
 
         $this->companyConnection = [
@@ -42,7 +42,7 @@ class DoctrineServiceProvider extends ServiceProvider
             'user' => env('COMPANY_DB_USERNAME'),
             'password' => env('COMPANY_DB_PASSWORD'),
             'host' => env('COMPANY_DB_HOST'),
-            'driver' => 'pdo_pgsql',
+            'driver' => 'pdo_mysql',
         ];
 
         $this->clientConnection = [
@@ -50,7 +50,7 @@ class DoctrineServiceProvider extends ServiceProvider
             'user' => env('CLIENT_DB_USERNAME'),
             'password' => env('CLIENT_DB_PASSWORD'),
             'host' => env('CLIENT_DB_HOST'),
-            'driver' => 'pdo_pgsql',
+            'driver' => 'pdo_mysql',
         ];
 
         $this->connectAdminEntityManager();
@@ -60,7 +60,7 @@ class DoctrineServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->app->singleton(Comparator::class, ProjectVersionComparator::class);
+//        $this->app->singleton(Comparator::class, ProjectVersionComparator::class);
     }
 
     private function connectAdminEntityManager(): void

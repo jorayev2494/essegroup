@@ -18,12 +18,12 @@ class DepartmentStoreRequest extends FormRequest
             'company_uuid' => [
                 'required',
                 'string',
-                Rule::exists('pgsql_admin.company_companies', 'uuid'),
+                Rule::exists('admin_db.company_companies', 'uuid'),
             ],
             'faculty_uuid' => [
                 'required',
                 'string',
-                Rule::exists('pgsql_admin.faculty_faculties', 'uuid'),
+                Rule::exists('admin_db.faculty_faculties', 'uuid'),
             ],
             'translations' => ['required', 'array'],
             'translations.*.name' => ['required'],

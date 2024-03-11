@@ -15,7 +15,7 @@ class RestorePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'token' => ['required', 'string', Rule::exists('pgsql_admin.auth_codes', 'value')],
+            'token' => ['required', 'string', Rule::exists('admin_db.auth_codes', 'value')],
             'password' => ['required', 'string', 'confirmed'],
         ];
     }

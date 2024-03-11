@@ -82,5 +82,9 @@ if (in_array($entity, ['admin', 'company', 'client'])) {
     /** @var \Doctrine\DBAL\Connection $dbalConnection */
     $dbalConnection = $app->make($dbalKey);
 
-    return DependencyFactory::fromEntityManager($config, new ExistingEntityManager($entityManager));
+    $di = DependencyFactory::fromEntityManager($config, new ExistingEntityManager($entityManager));
+
+    // $di->setService(\Doctrine\Migrations\Version\Comparator::class, new \Project\Shared\Infrastructure\Repository\Doctrine\ProjectVersionComparator());
+
+    return $di;
 }
