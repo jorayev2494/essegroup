@@ -60,7 +60,7 @@ readonly class DepartmentController
                 $request->get('company_uuid'),
                 $request->get('faculty_uuid'),
                 $request->get('translations'),
-                $request->boolean('is_active')
+                $request->boolean('is_active', true)
             )
         );
 
@@ -84,7 +84,7 @@ readonly class DepartmentController
                 $request->get('company_uuid'),
                 $request->get('faculty_uuid'),
                 $request->get('translations'),
-                $request->boolean('is_active')
+                $request->boolean('is_active', true)
             )
         );
 

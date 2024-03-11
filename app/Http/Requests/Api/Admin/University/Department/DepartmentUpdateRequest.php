@@ -28,9 +28,9 @@ class DepartmentUpdateRequest extends FormRequest
             'translations' => ['required', 'array'],
             'translations.*.name' => ['required'],
             'translations.*.description' => ['required'],
-            'is_active' => [
-                'required',
-            ],
+//            'is_active' => [
+//                'required',
+//            ],
         ];
     }
 }
