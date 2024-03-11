@@ -31,8 +31,6 @@ readonly class CommandHandler implements CommandHandlerInterface
         $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid));
         $university = $this->repository->findByUuid(Uuid::fromValue($command->universityUuid));
 
-        // $university ?? throw new ModelNotFoundException();
-
         $faculty = Faculty::create(
             FacultyUuid::fromValue($command->uuid),
             $company,
