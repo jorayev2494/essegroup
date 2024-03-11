@@ -8,5 +8,5 @@ use App\Models\Auth\Authenticatable;
 
 class Company extends Authenticatable
 {
-    protected $connection = 'pgsql_company';
+    protected $connection = 'company_db';
 }

@@ -26,13 +26,13 @@ class ApplicationUpdateRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::exists('pgsql_admin.university_universities', 'uuid'),
+                Rule::exists('admin_db.university_universities', 'uuid'),
             ],
             // 'faculty_uuid' => [
             //     'required',
             //     'string',
             //     'max:255',
-            //     Rule::exists('pgsql_admin.faculty_faculties', 'uuid'),
+            //     Rule::exists('admin_db.faculty_faculties', 'uuid'),
             // ],
             'department_uuids' => [
                 'required',
@@ -41,7 +41,7 @@ class ApplicationUpdateRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::exists('pgsql_admin.university_countries', 'uuid'),
+                Rule::exists('admin_db.university_countries', 'uuid'),
             ],
 
             'status.value' => ['required', Rule::in(StatusEnum::MANAGEMENT_NOTE_REQUIRED)],

@@ -13,15 +13,17 @@ RUN apt-get update \
     && apt-get install -y git \
     && apt-get install -y curl \
     && apt-get install -y nano \
+    && apt-get install -y php-mysql \
     # Extensions
     && docker-php-ext-install pdo_pgsql \
     && docker-php-ext-install pgsql \
     && docker-php-ext-install zip \
     # Enable extensions
     && docker-php-ext-enable pdo_pgsql \
+    && docker-php-ext-enable pdo_mysql \
     && docker-php-ext-enable pgsql \
     # install
-    && apt-get -y install imagemagick php8.3-imagick php8.3-pcntl php8.3-gd php8.3-pgsql php8.3-sqlite nano php8.3-redis php-bcmath php8.3-zmq, pdo_pgsql pdo \
+    && apt-get -y install imagemagick php8.3-imagick php8.3-pcntl php8.3-gd php8.3-pgsql php8.3-mysql php8.3-sqlite nano php8.3-redis php-bcmath php8.3-zmq, pdo_pgsql pdo_mysql pdo \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Xdebug
@@ -29,6 +31,12 @@ RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+
+# Install MySQLi
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+
+# Install PDO
+RUN docker-php-ext-install pdo_mysql
 
 #region Amqp
 RUN apt-get update && apt-get install -y librabbitmq-dev libssh-dev \

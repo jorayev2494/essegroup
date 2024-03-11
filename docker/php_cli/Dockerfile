@@ -41,7 +41,7 @@ RUN apt-get update \
     && docker-php-ext-configure gd --with-jpeg \
     && docker-php-ext-install gd \
     # Install
-    && apt-get -y --no-install-recommends install imagemagick php8.3-imagick php8.3-pgsql pdo_pgsql pdo nano php8.3-gd php8.3-redis php8.3-bcmath php8.3-zmq \
+    && apt-get -y --no-install-recommends install imagemagick php8.3-imagick php8.3-pgsql pdo_pgsql php8.3-mysql pdo nano php8.3-gd php8.3-redis php8.3-bcmath php8.3-zmq \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Create image
@@ -57,6 +57,12 @@ RUN docker-php-ext-install pdo pdo_pgsql
 
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 #endregion
+
+# Install MySQLi
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+
+# Install PDO
+RUN docker-php-ext-install pdo_mysql
 
 # Composer installing
 RUN curl -sS https://getcomposer.org/installer | php \

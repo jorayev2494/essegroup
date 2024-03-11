@@ -24,18 +24,18 @@ class CompanyUpdateRequest extends FormRequest
             'name' => [
                 'required',
                 'string',
-                Rule::unique('pgsql_admin.company_companies', 'name')->whereNot('uuid', $this->route('uuid')),
+                Rule::unique('admin_db.company_companies', 'name')->whereNot('uuid', $this->route('uuid')),
             ],
             'email' => [
                 'required',
                 'email',
-                Rule::unique('pgsql_admin.company_companies', 'email')->whereNot('uuid', $this->route('uuid')),
+                Rule::unique('admin_db.company_companies', 'email')->whereNot('uuid', $this->route('uuid')),
             ],
             'domain' => [
                 'required',
                 'string',
                 'alpha',
-                Rule::unique('pgsql_admin.company_companies', 'domain')->whereNot('uuid', $this->route('uuid')),
+                Rule::unique('admin_db.company_companies', 'domain')->whereNot('uuid', $this->route('uuid')),
             ],
             'logo' => [
                 'nullable',

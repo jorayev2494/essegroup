@@ -20,7 +20,7 @@ class UpdateCountryRequest extends FormRequest
                 'required',
                 'alpha',
                 'max:255',
-                Rule::unique('pgsql_admin.country_countries', 'value')
+                Rule::unique('admin_db.country_countries', 'value')
                     ->where('company_uuid', AuthManager::getCompanyUuid())
                     ->ignore($this->route()->parameter('id'), 'id'),
             ],
@@ -28,7 +28,7 @@ class UpdateCountryRequest extends FormRequest
                 'required',
                 'alpha',
                 'max:3',
-                Rule::unique('pgsql_admin.country_countries', 'iso')
+                Rule::unique('admin_db.country_countries', 'iso')
                     ->where('company_uuid', AuthManager::getCompanyUuid())
                     ->ignore($this->route()->parameter('id'), 'id'),
             ],
