@@ -60,7 +60,7 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'faculties')]
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
-    private Company $company;
+    private ?Company $company;
 
     #[ORM\Column(name: 'university_uuid')]
     private string $universityUuid;
@@ -116,6 +116,11 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
     public function setDescription(Description $description): void
     {
         $this->description = $description;
+    }
+
+    public function setCompany(?Company $company): void
+    {
+        $this->company = $company;
     }
 
     public function getLogo(): ?LogoInterface

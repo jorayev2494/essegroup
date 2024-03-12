@@ -42,6 +42,11 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
         return $this->paginator($query, $httpQueryParams->paginatorHttpQueryParams);
     }
 
+    public function findByUuid(string $uuid): ?Country
+    {
+        return $this->entityRepository->find($uuid);
+    }
+
     public function findByValueAndByCompanyUuid(Value $value, CompanyUuid $companyUuid): ?Country
     {
         return $this->entityRepository->createQueryBuilder('c')
@@ -51,6 +56,20 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
             ->setParameter('companyUuid', $companyUuid->value)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @return CountryCollection<int, Country>
+     */
+    public function findByCompanyUuid(CompanyUuid $companyUuid): CountryCollection
+    {
+        return new CountryCollection(
+            $this->entityRepository->createQueryBuilder('c')
+                ->where('c.companyUuid = :companyUuid')
+                ->setParameter('companyUuid', $companyUuid->value)
+                ->getQuery()
+                ->getResult()
+        );
     }
 
     public function findByUuidAndByCompanyUuid(string $uuid, CompanyUuid $companyUuid): ?Country
@@ -67,6 +86,12 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
     public function save(Country $country): void
     {
         $this->entityRepository->getEntityManager()->persist($country);
+        $this->entityRepository->getEntityManager()->flush();
+    }
+
+    public function delete(Country $country): void
+    {
+        $this->entityRepository->getEntityManager()->remove($country);
         $this->entityRepository->getEntityManager()->flush();
     }
 }

@@ -76,7 +76,7 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'universities')]
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
-    private Company $company;
+    private ?Company $company;
 
     #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'university', cascade: ['persist', 'remove'])]
     private Collection $faculties;
@@ -170,7 +170,7 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
         return $this->company;
     }
 
-    public function setCompany(Company $company): self
+    public function setCompany(?Company $company): self
     {
         $this->company = $company;
 
@@ -333,6 +333,7 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
             'logo' => $this->logo?->toArray(),
             'cover' => $this->cover?->toArray(),
             'youtube_video_id' => $this->youTubeVideoId->value,
+            'company_uuid' => $this->company->getUuid()->value,
             'company' => $this->company->toArray(),
             'description' => $this->description->value,
             'created_at' => $this->createdAt->getTimestamp(),

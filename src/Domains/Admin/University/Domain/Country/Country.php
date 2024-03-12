@@ -35,7 +35,7 @@ class Country implements ArrayableInterface
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'countries', cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid')]
-    private Company $company;
+    private ?Company $company;
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'country', cascade: ['persist', 'remove'])]
     private Collection $applications;
@@ -84,7 +84,7 @@ class Country implements ArrayableInterface
         $this->isActive = $isActive;
     }
 
-    public function setCompany(Company $company): void
+    public function setCompany(?Company $company): void
     {
         $this->company = $company;
     }

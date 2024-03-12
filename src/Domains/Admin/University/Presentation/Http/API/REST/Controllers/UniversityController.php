@@ -79,6 +79,7 @@ readonly class UniversityController
         $this->commandBus->dispatch(
             new \Project\Domains\Admin\University\Application\University\Commands\Update\Command(
                 $uuid,
+                $request->get('company_uuid'),
                 $request->file('logo'),
                 $request->file('cover'),
                 $request->get('youtube_video_id'),

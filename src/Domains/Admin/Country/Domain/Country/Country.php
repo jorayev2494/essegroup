@@ -13,6 +13,7 @@ use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedIsActiv
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedISODomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedValueDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasCreatedDomainEvent;
+use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasDeleteDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\CompanyUuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\ISO;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
@@ -73,6 +74,11 @@ class Country extends AggregateRoot
         return $country;
     }
 
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
     public function changeValue(Value $value): void
     {
         if ($this->value->isNotEquals($value)) {
@@ -99,6 +105,11 @@ class Country extends AggregateRoot
         }
     }
 
+    public function setCompanyUuid(CompanyUuid $companyUuid): void
+    {
+        $this->companyUuid = $companyUuid;
+    }
+
     public function changeIsActive(bool $isActive): void
     {
         if ($this->isActive !== $isActive) {
@@ -110,6 +121,11 @@ class Country extends AggregateRoot
                 )
             );
         }
+    }
+
+    public function delete(): void
+    {
+        $this->record(new CountryWasDeleteDomainEvent($this->uuid));
     }
 
     #[ORM\PrePersist]

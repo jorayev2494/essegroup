@@ -240,6 +240,11 @@ class Application extends AggregateRoot implements
         return $application;
     }
 
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
+    }
+
     public function changeFullName(FullName $fullName): void
     {
         if ($this->fullName->isNotEquals($fullName)) {

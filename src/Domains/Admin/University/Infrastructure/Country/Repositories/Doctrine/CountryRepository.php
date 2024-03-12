@@ -57,4 +57,10 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
         $this->entityRepository->getEntityManager()->persist($country);
         $this->entityRepository->getEntityManager()->flush();
     }
+
+    public function delete(Country $country): void
+    {
+        $this->entityRepository->getEntityManager()->remove($country);
+        $this->entityRepository->getEntityManager()->flush();
+    }
 }

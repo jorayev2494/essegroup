@@ -145,11 +145,13 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
 
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasCreatedDomainEventSubscriber::class,
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedValueDomainEventSubscriber::class,
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedISODomainEventSubscriber::class,
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedIsActiveDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasDeleteDomainEventSubscriber::class,
     ];
 
     /** @var array<array-key, string> */

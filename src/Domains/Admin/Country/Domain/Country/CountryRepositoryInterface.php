@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\Country\Domain\Country;
 
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\CompanyUuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
 use Project\Domains\Admin\Country\Infrastructure\Country\Filters\HttpQueryFilterDTO;
@@ -16,9 +17,18 @@ interface CountryRepositoryInterface
 
     public function paginate(BaseHttpQueryParams $httpQueryParams): Paginator;
 
+    public function findByUuid(string $uuid): ?Country;
+
+    /**
+     * @return CountryCollection<int, Country>
+     */
+    public function findByCompanyUuid(CompanyUuid $companyUuid): CountryCollection;
+
     public function findByValueAndByCompanyUuid(Value $value, CompanyUuid $companyUuid): ?Country;
 
     public function findByUuidAndByCompanyUuid(string $uuid, CompanyUuid $companyUuid): ?Country;
 
     public function save(Country $country): void;
+
+    public function delete(Country $country): void;
 }
