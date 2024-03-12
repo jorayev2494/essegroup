@@ -30,7 +30,7 @@ class FacultyUpdateRequest extends FormRequest
                 Rule::exists('admin_db.university_universities', 'uuid'),
             ],
             'logo' => [
-                'required',
+                'nullable',
                 'file',
                 'mimetypes:image/*',
                 // Rule::dimensions()->width(self::LOGO_WIDTH)->height(self::LOGO_HEIGHT),

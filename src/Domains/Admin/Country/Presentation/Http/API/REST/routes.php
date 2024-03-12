@@ -9,8 +9,10 @@ Route::group(
     static function (Router $router): void {
         $router->get('/', 'index');
         $router->get('/list', 'list');
+        $router->get('/{uuid}', 'show');
         $router->post('/', 'store');
         $router->put('/{uuid}', 'update');
+        $router->delete('/{uuid}', 'delete');
     }
 );
 

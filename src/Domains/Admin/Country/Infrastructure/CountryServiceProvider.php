@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\Country\Infrastructure;
 
 use App\Providers\Domains\AdminDomainServiceProvider;
-use Project\Domains\Admin\Country\Application\Country\Commands\Update\CommandHandler;
 
 class CountryServiceProvider extends AdminDomainServiceProvider
 {
@@ -18,16 +17,20 @@ class CountryServiceProvider extends AdminDomainServiceProvider
     protected const QUERY_HANDLERS = [
         \Project\Domains\Admin\Country\Application\Country\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\Country\Application\Country\Queries\List\QueryHandler::class,
+        \Project\Domains\Admin\Country\Application\Country\Queries\Show\QueryHandler::class,
     ];
 
     /** @var array<array-key, string> */
     protected const COMMAND_HANDLERS = [
         \Project\Domains\Admin\Country\Application\Country\Commands\Update\CommandHandler::class,
         \Project\Domains\Admin\Country\Application\Country\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\Country\Application\Country\Commands\Delete\CommandHandler::class,
     ];
 
     /** @var array<array-key, string> */
-    protected const DOMAIN_EVENT_SUBSCRIBERS = [];
+    protected const DOMAIN_EVENT_SUBSCRIBERS = [
+        \Project\Domains\Admin\Country\Application\Country\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+    ];
 
     /** @var array<string, string> */
     protected const ENTITY_TYPES = [

@@ -59,7 +59,7 @@ class Department implements ArrayableInterface, TranslatableInterface
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'departments')]
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
-    private Company $company;
+    private ?Company $company;
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'departments')]
     private Collection $applications;
@@ -100,6 +100,11 @@ class Department implements ArrayableInterface, TranslatableInterface
     public static function fromPrimitives(string $uuid, Company $company, University $university, bool $isActive): self
     {
         return new self(Uuid::fromValue($uuid), $company, $university, $isActive);
+    }
+
+    public function getUuid(): UUid
+    {
+        return $this->uuid;
     }
 
     public function getName(): Name
@@ -156,7 +161,7 @@ class Department implements ArrayableInterface, TranslatableInterface
         }
     }
 
-    public function setCompany(Company $company): void
+    public function setCompany(?Company $company): void
     {
         $this->company = $company;
     }

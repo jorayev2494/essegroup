@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid;
@@ -44,14 +45,17 @@ class Company extends AggregateRoot
     #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
     private Collection $universities;
 
-    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'faculty', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
     private Collection $faculties;
 
-    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'department', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
     private Collection $departments;
 
     #[ORM\OneToMany(targetEntity: Country::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
     private Collection $countries;
+
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
+    private Collection $applications;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $createdAt;
@@ -108,7 +112,13 @@ class Company extends AggregateRoot
         return $this;
     }
 
-
+    /**
+     * @return Collection<int, University>
+     */
+    public function getUniversities(): Collection
+    {
+        return $this->universities;
+    }
 
     public function addUniversity(University $university): self
     {
@@ -116,6 +126,18 @@ class Company extends AggregateRoot
         $university->setCompany($this);
 
         return $this;
+    }
+
+    public function removeUniversity(University $university): void
+    {
+        if ($this->universities->contains($university)) {
+            $this->universities->removeElement($university);
+        }
+    }
+
+    public function getCountries(): Collection
+    {
+        return $this->countries;
     }
 
     public function addCountry(Country $country): self
@@ -126,6 +148,30 @@ class Company extends AggregateRoot
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Faculty>
+     */
+    public function getFaculties(): Collection
+    {
+        return $this->faculties;
+    }
+
+    /**
+     * @return Collection<int, Department>
+     */
+    public function getDepartments(): Collection
+    {
+        return $this->departments;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
     }
 
     #[ORM\PrePersist]

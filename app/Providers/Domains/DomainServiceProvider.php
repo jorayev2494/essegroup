@@ -97,7 +97,6 @@ abstract class DomainServiceProvider extends ServiceProvider implements AppServi
     {
         foreach (static::SERVICES as $abstractClassName => $data) {
             [$registerType, $service] = $data;
-            // dd($registerType, $abstractClassName, $service);
             $this->app->$registerType($abstractClassName, $service);
         }
     }

@@ -17,4 +17,6 @@ interface CountryRepositoryInterface
     public function list(HttpQueryFilterDTO $queryFilterDTO): CountryCollection;
 
     public function save(Country $country): void;
+
+    public function delete(Country $country): void;
 }

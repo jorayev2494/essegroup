@@ -9,9 +9,11 @@ use App\Http\Requests\Api\Admin\Country\UpdateCountryRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Project\Domains\Admin\Country\Application\Country\Commands\Create\Command as CreateCommand;
+use Project\Domains\Admin\Country\Application\Country\Commands\Delete\Command as DeleteCommand;
 use Project\Domains\Admin\Country\Application\Country\Commands\Update\Command as UpdateCommand;
 use Project\Domains\Admin\Country\Application\Country\Queries\List\Query as QueriesList;
 use Project\Domains\Admin\Country\Application\Country\Queries\Index\Query as IndexQuery;
+use Project\Domains\Admin\Country\Application\Country\Queries\Show\Query as QueriesShow;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
@@ -48,6 +50,15 @@ readonly class CountryController
         );
     }
 
+    public function show(string $uuid): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                new QueriesShow($uuid)
+            )
+        );
+    }
+
     public function store(CreateCountryRequest $request): JsonResponse
     {
         $uuid = $this->uuidGenerator->generate();
@@ -70,6 +81,7 @@ readonly class CountryController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
+                $request->get('company_uuid'),
                 $request->get('value'),
                 $request->get('iso'),
                 $request->boolean('is_active')
@@ -77,5 +89,14 @@ readonly class CountryController
         );
 
         return $this->response->noContent(Response::HTTP_ACCEPTED);
+    }
+
+    public function delete(string $uuid): Response
+    {
+        $this->commandBus->dispatch(
+            new DeleteCommand($uuid)
+        );
+
+        return $this->response->noContent();
     }
 }
