@@ -33,11 +33,7 @@ class Country implements ArrayableInterface
     #[ORM\Column(name: 'company_uuid', type: Types::STRING, nullable: false)]
     private string $companyUuid;
 
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'countries', cascade: ['persist'])]
-    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid')]
-    private ?Company $company;
-
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'country', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'country', cascade: ['persist'])]
     private Collection $applications;
 
     #[ORM\Column(name: 'is_active', type: Types::BOOLEAN)]
@@ -49,19 +45,19 @@ class Country implements ArrayableInterface
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 
-    private function __construct(string $uuid, string $value, string $iso, bool $isActive)
+    private function __construct(string $uuid, string $value, string $companyUuid, string $iso, bool $isActive)
     {
         $this->uuid = $uuid;
         $this->value = $value;
+        $this->companyUuid = $companyUuid;
         $this->iso = $iso;
-        // $this->companyUuid = $companyUuid;
         $this->applications = new ArrayCollection();
         $this->isActive = $isActive;
     }
 
-    public static function fromPrimitives(string $uuid, string $value, string $iso, bool $isActive): self
+    public static function fromPrimitives(string $uuid, string $value, string $companyUuid, string $iso, bool $isActive): self
     {
-        return new self($uuid, $value, $iso, $isActive);
+        return new self($uuid, $value, $companyUuid, $iso, $isActive);
     }
 
     public function getUuid(): string
@@ -84,9 +80,9 @@ class Country implements ArrayableInterface
         $this->isActive = $isActive;
     }
 
-    public function setCompany(?Company $company): void
+    public function setCompanyUuid(string $companyUuid): void
     {
-        $this->company = $company;
+        $this->companyUuid = $companyUuid;
     }
 
     public function isEquals(self $other): bool

@@ -37,6 +37,11 @@ class ApplicationUpdateRequest extends FormRequest
             'department_uuids' => [
                 'required',
             ],
+            'department_uuids.*' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.university_departments', 'uuid'),
+            ],
             'country_uuid' => [
                 'required',
                 'string',
@@ -45,7 +50,8 @@ class ApplicationUpdateRequest extends FormRequest
             ],
 
             'status.value' => ['required', Rule::in(StatusEnum::MANAGEMENT_NOTE_REQUIRED)],
-            'status.note' => [
+            'status.notes' => ['array'],
+            'status.translations.*.note' => [
                 'nullable',
                 'string',
                 'max:500',

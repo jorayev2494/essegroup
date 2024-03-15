@@ -20,11 +20,7 @@ readonly class CompanyWasDeletedDomainEventSubscriber implements DomainEventSubs
 {
 
     public function __construct(
-        private CompanyRepositoryInterface $companyRepository,
-        private ApplicationDeleteCommandHandler $applicationDeleteCommandHandler,
-        private DepartmentDeleteCommandHandler $departmentDeleteCommandHandler,
-        private FacultyDeleteCommandHandler $facultyDeleteCommandHandler,
-        private UniversityDeleteCommandHandler $universityDeleteCommandHandler
+        private CompanyRepositoryInterface $companyRepository
     )
     {
 
@@ -46,21 +42,24 @@ readonly class CompanyWasDeletedDomainEventSubscriber implements DomainEventSubs
             return;
         }
 
-        foreach ($company->getApplications() as $application) {
-            call_user_func($this->applicationDeleteCommandHandler, new ApplicationDeleteCommand($application->getUuid()->value));
-        }
-
-        foreach ($company->getDepartments() as $department) {
-            call_user_func($this->departmentDeleteCommandHandler, new DepartmentDeleteCommand($department->getUuid()->value));
-        }
-
-        foreach ($company->getFaculties() as $faculty) {
-            call_user_func($this->facultyDeleteCommandHandler, new FacultyDeleteCommand($faculty->getUuid()->value));
-        }
-
-        foreach ($company->getUniversities() as $university) {
-            call_user_func($this->universityDeleteCommandHandler, new UniversityDeleteCommand($university->getUuid()->value));
-        }
+//        /** @var CommandBusInterface $commandBus */
+//        $commandBus = resolve(CommandBusInterface::class);
+//
+////        foreach ($company->getApplications() as $application) {
+////            $commandBus->dispatch(new ApplicationDeleteCommand($application->getUuid()->value));
+////        }
+////
+////        foreach ($company->getDepartments() as $department) {
+////            $commandBus->dispatch(new DepartmentDeleteCommand($department->getUuid()->value));
+////        }
+////
+////        foreach ($company->getFaculties() as $faculty) {
+////            $commandBus->dispatch(new FacultyDeleteCommand($faculty->getUuid()->value));
+////        }
+//
+//        foreach ($company->getUniversities() as $university) {
+//            $commandBus->dispatch(new UniversityDeleteCommand($university->getUuid()->value));
+//        }
 
         $this->companyRepository->delete($company);
     }

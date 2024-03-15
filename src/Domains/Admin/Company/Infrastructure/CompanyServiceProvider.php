@@ -8,6 +8,8 @@ use App\Providers\Domains\AdminDomainServiceProvider;
 use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoServiceInterface;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\LogoService;
+use Project\Domains\Admin\Company\Domain\Company\Services\Status\Contracts\StatusServiceInterface;
+use Project\Domains\Admin\Company\Domain\Company\Services\Status\StatusService;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\CompanyRepository;
 
 class CompanyServiceProvider extends AdminDomainServiceProvider
@@ -16,6 +18,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
     protected const SERVICES = [
         CompanyRepositoryInterface::class => [self::SERVICE_BIND, CompanyRepository::class],
         LogoServiceInterface::class => [self::SERVICE_BIND, LogoService::class],
+        StatusServiceInterface::class => [self::SERVICE_SINGLETON, StatusService::class],
     ];
 
     /** @var array<array-key, string> */
@@ -36,9 +39,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
-        // University
-        // \Project\Domains\Admin\Company\Application\University\Subscribers\UniversityWasCreatedDomainEventSubscriber::class,
-        // \Project\Domains\Admin\Company\Application\University\Subscribers\UniversityTranslationWasAddedDomainEventSubscriber::class,
+
     ];
 
     /** @var array<string, string> */
@@ -52,11 +53,6 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
         // Status
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\ValueType::class,
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\NoteType::class,
-
-        // University
-        \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\University\Types\UuidType::class,
-        \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\University\Types\SlugType::class,
-        \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\University\Types\NameType::class,
     ];
 
     /** @var array<array-key, string> */
@@ -69,7 +65,6 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
         __DIR__ . '/../Domain/Company',
         __DIR__ . '/../Domain/Company/ValueObjects',
         __DIR__ . '/../Domain/Status',
-        __DIR__ . '/../Domain/University',
     ];
 
     /** @var array<string, string> */

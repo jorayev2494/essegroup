@@ -32,7 +32,6 @@ readonly class CommandHandler implements CommandHandlerInterface
         private ApplicationRepositoryInterface $applicationRepository,
         private StatusServiceInterface $statusService,
         private UniversityRepositoryInterface $universityRepository,
-        private FacultyRepositoryInterface $facultyRepository,
         private CountryRepositoryInterface $countryRepository,
         private ApplicationServiceInterface $service
     )
@@ -47,7 +46,6 @@ readonly class CommandHandler implements CommandHandlerInterface
         $application ?? throw new ApplicationNotFoundDomainException();
 
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
-        // $faculty = $this->facultyRepository->findByUuid(FacultyUuid::fromValue($command->facultyUuid));
         $country = $this->countryRepository->findByUuid($command->countryUuid);
 
         $application->changeUniversity($university);
@@ -61,7 +59,8 @@ readonly class CommandHandler implements CommandHandlerInterface
         $application->changeMotherName(MotherName::fromValue($command->motherName));
         $application->changeFriendPhone(FriendPhone::fromValue($command->friendPhone));
         $application->changeHomeAddress(HomeAddress::fromValue($command->homeAddress));
-        $this->statusService->changeStatus($application, Status::fromPrimitives($command->status, $command->note));
+
+        $this->statusService->changeStatus($application, Status::fromPrimitives($command->status), $command->statusNotes);
         $this->service->updateDepartments($application, $command->departmentUuids);
 
         $this->applicationRepository->save($application);

@@ -7,6 +7,7 @@ namespace Project\Domains\Admin\University\Application\Application\Commands\Dele
 use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Application\Exceptions\ApplicationNotFoundDomainException;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentServiceInterface;
 use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\BiometricPhoto\Contracts\BiometricPhotoServiceInterface;
 use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\EquivalenceDocument\Contracts\EquivalenceDocumentServiceInterface;
 use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\Passport\Contracts\PassportServiceInterface;
@@ -29,6 +30,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private TranscriptTranslationServiceInterface $transcriptTranslationService,
         private EquivalenceDocumentServiceInterface $equivalenceDocumentService,
         private BiometricPhotoServiceInterface $biometricPhotoService,
+        private AdditionalDocumentServiceInterface $additionalDocumentService,
     )
     {
 
@@ -49,6 +51,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $this->transcriptTranslationService->delete($application);
         $this->equivalenceDocumentService->delete($application);
         $this->biometricPhotoService->delete($application);
+        $this->additionalDocumentService->deleteDocuments($application);
 
         $this->applicationRepository->delete($application);
     }

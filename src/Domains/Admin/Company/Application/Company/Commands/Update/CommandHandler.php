@@ -29,18 +29,6 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $company = $this->repository->findByName(Name::fromValue($command->name));
-
-        if ($company !== null && $company->getUuid()->value !== $command->uuid) {
-            throw new CompanyNameAlreadyExistsDomainException();
-        }
-
-        $company = $this->repository->findByDomain(Domain::fromValue($command->domain));
-
-        if ($company !== null && $company->getUuid()->value !== $command->uuid) {
-            throw new CompanyDomainAlreadyExistsDomainException();
-        }
-
         $company = $this->repository->findByUuid(Uuid::fromValue($command->uuid));
 
         if ($company === null) {

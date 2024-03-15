@@ -13,6 +13,12 @@ interface DepartmentRepositoryInterface
 
     public function findManyByUuids(array $findManyByUuids): DepartmentCollection;
 
+    public function findManyByCompanyUuid(string $companyUuid): DepartmentCollection;
+
+    public function findManyByUniversityUuid(string $universityUuid): DepartmentCollection;
+
+    public function findManyByFacultyUuid(string $facultyUuid): DepartmentCollection;
+
     public function list(HttpQueryFilterDTO $httpQueryFilter): DepartmentCollection;
 
     public function paginate(BaseHttpQueryParams $httpQueryParams): Paginator;

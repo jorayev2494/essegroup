@@ -6,13 +6,13 @@ namespace Project\Domains\Admin\University\Application\Department\Commands\Updat
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid as CompanyUuid;
 use Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
-use Project\Domains\Admin\University\Domain\Department\Services\Translation\Contracts\TranslationColumnServiceInterface;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
-use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid as FacultyUuid;
-use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid as CompanyUuid;
+use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {

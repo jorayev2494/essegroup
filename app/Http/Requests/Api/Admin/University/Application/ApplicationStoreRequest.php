@@ -31,6 +31,11 @@ class ApplicationStoreRequest extends FormRequest
             'department_uuids' => [
                 'required',
             ],
+            'department_uuids.*' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.university_departments', 'uuid'),
+            ],
             'country_uuid' => [
                 'required',
                 'string',
@@ -56,7 +61,8 @@ class ApplicationStoreRequest extends FormRequest
                 'max:255',
             ],
             'additional_documents.*.document' => [
-                'file', 'mimetypes:application/pdf'
+                'file',
+                // 'mimetypes:application/pdf',
             ],
             // 'is_agreed_to_share_data' => ['required', 'boolean', 'in:true,1'],
 

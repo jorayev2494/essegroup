@@ -8,8 +8,6 @@ use App\Providers\Domains\AdminDomainServiceProvider;
 use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
-use Project\Domains\Admin\University\Domain\University\Services\Translation\Contracts\TranslationColumnServiceInterface;
-use Project\Domains\Admin\University\Domain\University\Services\Translation\TranslationColumnService;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\CompanyRepository;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\DepartmentRepository;
@@ -29,12 +27,9 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         DepartmentRepositoryInterface::class => [self::SERVICE_SINGLETON, DepartmentRepository::class],
         CoverServiceInterface::class => [self::SERVICE_SINGLETON, CoverService::class],
         LogoServiceInterface::class => [self::SERVICE_SINGLETON, LogoService::class],
-        TranslationColumnServiceInterface::class => [self::SERVICE_SINGLETON, TranslationColumnService::class],
         FacultyRepositoryInterface::class => [self::SERVICE_SINGLETON, FacultyRepository::class],
         \Project\Domains\Admin\University\Domain\Faculty\Services\Logo\Contracts\LogoServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Faculty\Services\Logo\LogoService::class],
         // \Project\Domains\Admin\University\Domain\Faculty\Services\Logo\Contracts\LogoServiceInterface::class => [self::SERVICE_SINGLETON, LogoService::class],
-        \Project\Domains\Admin\University\Domain\Faculty\Services\Translation\Contracts\TranslationColumnServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Faculty\Services\Translation\TranslationColumnService::class],
-        \Project\Domains\Admin\University\Domain\Department\Services\Translation\Contracts\TranslationColumnServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Department\Services\Translation\TranslationColumnService::class],
 
         // Application
         \Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\ApplicationRepository::class],
@@ -143,20 +138,40 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     ];
 
     /** @var array<array-key, string> */
+    protected const MIGRATION_PATHS = [
+        // 'Project\Domains\Admin\Country\Infrastructure\Repositories\Doctrine\Migrations' => __DIR__ . '/Repositories/Doctrine/Migrations',
+    ];
+
+    /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
         \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
 
+        // Country
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasCreatedDomainEventSubscriber::class,
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedValueDomainEventSubscriber::class,
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedISODomainEventSubscriber::class,
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedIsActiveDomainEventSubscriber::class,
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasDeleteDomainEventSubscriber::class,
-    ];
+        \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedCompanyDomainEventSubscriber::class,
 
-    /** @var array<array-key, string> */
-    protected const MIGRATION_PATHS = [
-        // 'Project\Domains\Admin\Country\Infrastructure\Repositories\Doctrine\Migrations' => __DIR__ . '/Repositories/Doctrine/Migrations',
+        // University
+        \Project\Domains\Admin\University\Application\University\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+
+        // Faculty
+        \Project\Domains\Admin\University\Application\Faculty\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Faculty\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
+
+        // Department
+        \Project\Domains\Admin\University\Application\Department\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Department\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Department\Subscribers\Faculty\FacultyWasDeletedDomainEventSubscriber::class,
+
+        // Application
+        \Project\Domains\Admin\University\Application\Application\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Application\Subscribers\Country\CountryWasDeleteDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Application\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Application\Subscribers\Department\ApplicationWasDeletedFromDepartmentDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */

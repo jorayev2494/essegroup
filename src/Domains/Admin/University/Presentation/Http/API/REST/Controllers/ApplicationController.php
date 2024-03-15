@@ -91,6 +91,11 @@ readonly class ApplicationController
 
     public function update(ApplicationUpdateRequest $request, string $uuid): Response
     {
+        [
+            'value' => $statusValue,
+            'translations' => $statusTranslations,
+        ] = $request->get('status');
+
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
@@ -102,8 +107,8 @@ readonly class ApplicationController
                 $request->get('university_uuid'),
                 $request->get('department_uuids'),
                 $request->get('country_uuid'),
-                $request->get('status')['value'],
-                $request->get('status')['note'],
+                $statusValue,
+                $statusTranslations ?? [],
 
                 $request->get('father_name'),
                 $request->get('mother_name'),

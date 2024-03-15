@@ -14,6 +14,14 @@ interface ApplicationRepositoryInterface
 
     public function findByUuid(Uuid $uuid): ?Application;
 
+    public function findManyByCompanyUuid(string $companyUuid): ApplicationCollection;
+
+    public function findManyByUniversityUuid(string $universityUuid): ApplicationCollection;
+
+    public function findManyByDepartmentUuid(string $departmentUuid): ApplicationCollection;
+
+    public function findManyByCountryUuid(string $countryUuid): ApplicationCollection;
+
     public function save(Application $application): void;
 
     public function delete(Application $application): void;

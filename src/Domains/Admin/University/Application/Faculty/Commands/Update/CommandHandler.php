@@ -10,10 +10,10 @@ use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid as Company
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Faculty\Services\Logo\Contracts\LogoServiceInterface;
-use Project\Domains\Admin\University\Domain\Faculty\Services\Translation\Contracts\TranslationColumnServiceInterface;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {

@@ -14,11 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Department\Department;
+use Project\Domains\Admin\University\Domain\Faculty\Events\FacultyWasDeletedDomainEvent;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Logo;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\University\University;
+use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\DescriptionType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\NameType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType;
@@ -142,11 +144,6 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         $this->company = $company;
     }
 
-    public function getTranslations(): Collection
-    {
-        return $this->translations;
-    }
-
     public function translationDomainEvent(AbstractTranslation $translation, TranslationDomainEventTypeEnum $type): void
     {
 //        $domainEvent = match ($type) {
@@ -185,6 +182,11 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
     public static function create(Uuid $uuid, Company $company, bool $isActive): self
     {
         return new self($uuid, $company, $isActive);
+    }
+
+    public function delete(): void
+    {
+        $this->record(new FacultyWasDeletedDomainEvent($this->uuid->value));
     }
 
     public function getDepartments(): Collection
@@ -248,6 +250,11 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         return $this->uuid !== $other->uuid;
     }
 
+    public function getTranslationClass(): string
+    {
+        return FacultyTranslation::class;
+    }
+
     #[ORM\PrePersist]
     public function prePersist(PrePersistEventArgs $event): void
     {
@@ -271,7 +278,7 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
             'company_uuid' => $this->companyUuid,
             'company' => $this->company->toArray(),
             'university_uuid' => $this->universityUuid,
-            'university' => $this->university->toArray(),
+            'university' => UniversityTranslate::execute($this->university)->toArray(),
             'department_count' => $this->departments->count(),
             'logo' => $this->logo?->toArray(),
             'is_active' => $this->isActive,

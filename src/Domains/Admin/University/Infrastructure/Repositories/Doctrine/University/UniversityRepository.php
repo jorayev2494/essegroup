@@ -63,6 +63,18 @@ class UniversityRepository extends BaseAdminEntityRepository implements Universi
     }
 
     #[\Override]
+    public function findManyByCompanyUuid(string $companyUuid): UniversityCollection
+    {
+        return new UniversityCollection(
+            $this->entityRepository->createQueryBuilder('c')
+                ->where('c.companyUuid = :companyUuid')
+                ->setParameter('companyUuid', $companyUuid)
+                ->getQuery()
+                ->getResult()
+        );
+    }
+
+    #[\Override]
     public function save(University $university): void
     {
         $this->entityRepository->getEntityManager()->persist($university);

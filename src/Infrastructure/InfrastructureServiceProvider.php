@@ -9,12 +9,12 @@ use Project\Infrastructure\Generators\TokenGenerator;
 use Project\Infrastructure\Generators\UuidGenerator;
 use Project\Infrastructure\Hashers\Contracts\PasswordHasherInterface;
 use Project\Infrastructure\Hashers\PasswordHasher;
-use Project\Infrastructure\Services\Auth\AuthManager;
-use Project\Infrastructure\Services\Auth\Contracts\AuthManagerInterface;
 use Project\Infrastructure\Services\Authentication\AuthenticationService;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticationServiceInterface;
 use Project\Shared\Domain\File\FileSystemInterface;
 use Project\Shared\Infrastructure\File\Laravel\FileSystem;
+use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
+use Project\Shared\Domain\Translation\TranslationColumnService;
 
 class InfrastructureServiceProvider extends ServiceProvider
 {
@@ -26,5 +26,6 @@ class InfrastructureServiceProvider extends ServiceProvider
         $this->app->singleton(UuidGeneratorInterface::class, UuidGenerator::class);
         $this->app->singleton(TokenGeneratorInterface::class, TokenGenerator::class);
         $this->app->singleton(PasswordHasherInterface::class, PasswordHasher::class);
+        $this->app->singleton(TranslationColumnServiceInterface::class, TranslationColumnService::class);
     }
 }

@@ -18,6 +18,7 @@ use Project\Domains\Admin\University\Domain\University\Events\Translation\Univer
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasChangedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasDeletedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\UniversityWasCreatedDomainEvent;
+use Project\Domains\Admin\University\Domain\University\Events\UniversityWasDeletedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Cover;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Label;
@@ -54,7 +55,7 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     #[ORM\Column(name: 'youtube_video_id', type: YouTubeVideoIdType::NAME, nullable: true)]
     private YouTubeVideoId $youTubeVideoId;
 
-    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'university', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'university', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'logo_uuid', referencedColumnName: 'uuid', unique: true, nullable: true)]
     private ?Logo $logo;
 
@@ -122,6 +123,11 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
         return $university;
     }
 
+    public function delete(): void
+    {
+        $this->record(new UniversityWasDeletedDomainEvent($this->uuid->value));
+    }
+
     public function getUuid(): Uuid
     {
         return $this->uuid;
@@ -175,11 +181,6 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
         $this->company = $company;
 
         return $this;
-    }
-
-    public function getTranslations(): Collection
-    {
-        return $this->translations;
     }
 
     public function getLogo(): ?LogoInterface
@@ -305,6 +306,11 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     public function isNotEquals(self $other): bool
     {
         return $this->uuid !== $other->uuid;
+    }
+
+    public function getTranslationClass(): string
+    {
+        return UniversityTranslation::class;
     }
 
     #[ORM\PrePersist]
