@@ -21,6 +21,6 @@ class Cover extends File implements CoverInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/university/covers';
+        return 'admin/domain/university/university/covers';
     }
 }

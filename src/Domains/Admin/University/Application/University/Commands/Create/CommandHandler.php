@@ -6,7 +6,6 @@ namespace Project\Domains\Admin\University\Application\University\Commands\Creat
 
 use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid as CompanyUuid;
-use Project\Domains\Admin\University\Domain\University\Services\Translation\Contracts\TranslationColumnServiceInterface;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\YouTubeVideoId;
@@ -14,16 +13,16 @@ use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contrac
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoServiceInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Shared\Domain\Bus\Event\EventBusInterface;
+use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        // private UniversityRepositoryInterface $repository,
-        private CompanyRepositoryInterface        $companyRepository,
+        private CompanyRepositoryInterface $companyRepository,
         private TranslationColumnServiceInterface $translationColumnService,
-        private LogoServiceInterface          $logoService,
-        private CoverServiceInterface             $coverService,
-        private EventBusInterface                 $eventBus
+        private LogoServiceInterface $logoService,
+        private CoverServiceInterface $coverService,
+        private EventBusInterface $eventBus
     )
     {
 

@@ -15,5 +15,7 @@ interface TranslatableInterface
 
     public function getTranslations(): Collection;
 
+    public function getTranslationClass(): string;
+
     // public function translationDomainEvent(AbstractTranslation $translation, TranslationDomainEventTypeEnum $type): void;
 }

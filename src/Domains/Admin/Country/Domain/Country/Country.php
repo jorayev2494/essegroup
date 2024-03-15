@@ -9,6 +9,7 @@ use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
+use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedCompanyDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedIsActiveDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedISODomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedValueDomainEvent;
@@ -105,9 +106,12 @@ class Country extends AggregateRoot
         }
     }
 
-    public function setCompanyUuid(CompanyUuid $companyUuid): void
+    public function changeCompanyUuid(CompanyUuid $companyUuid): void
     {
-        $this->companyUuid = $companyUuid;
+        if ($this->companyUuid !== $companyUuid) {
+            $this->companyUuid = $companyUuid;
+            $this->record(new CountryWasChangedCompanyDomainEvent($this->uuid, $this->companyUuid->value));
+        }
     }
 
     public function changeIsActive(bool $isActive): void

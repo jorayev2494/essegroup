@@ -9,8 +9,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\Company\Domain\Company\Events\CompanyDomainWasChangedDomainEvent;
+use Project\Domains\Admin\Company\Domain\Company\Events\CompanyEmailWasChangedDomainEvent;
+use Project\Domains\Admin\Company\Domain\Company\Events\CompanyNameWasChangedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasCreatedDomainEvent;
-use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasUpdatedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasDeletedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoInterface;
@@ -24,7 +26,6 @@ use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\T
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\EmailType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\NameType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\UuidType;
-use Project\Domains\Admin\Company\Domain\University\University;
 use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 
@@ -56,9 +57,6 @@ class Company extends AggregateRoot implements LogoableInterface
     #[ORM\OneToMany(targetEntity: Status::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
     private Collection $statuses;
 
-    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
-    private Collection $universities;
-
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $createdAt;
 
@@ -72,7 +70,6 @@ class Company extends AggregateRoot implements LogoableInterface
         $this->email = $email;
         $this->domain = $domain;
         $this->statuses = new ArrayCollection();
-        $this->universities = new ArrayCollection();
     }
 
     public static function create(Uuid $uuid, Name $name, Email $email, Domain $domain): self
@@ -126,6 +123,7 @@ class Company extends AggregateRoot implements LogoableInterface
     {
         if ($this->name->isNotEquals($name)) {
             $this->name = $name;
+            $this->record(new CompanyNameWasChangedDomainEvent($this->uuid->value, $this->name->value));
         }
 
         return $this;
@@ -135,6 +133,7 @@ class Company extends AggregateRoot implements LogoableInterface
     {
         if ($this->email->isNotEquals($email)) {
             $this->email = $email;
+            $this->record(new CompanyEmailWasChangedDomainEvent($this->uuid->value, $this->email->value));
         }
 
         return $this;
@@ -144,6 +143,7 @@ class Company extends AggregateRoot implements LogoableInterface
     {
         if ($this->domain->isNotEquals($domain)) {
             $this->domain = $domain;
+            $this->record(new CompanyDomainWasChangedDomainEvent($this->uuid->value, $this->domain->value));
         }
 
         return $this;
@@ -153,14 +153,6 @@ class Company extends AggregateRoot implements LogoableInterface
     {
         $status->setCompany($this);
         $this->statuses->add($status);
-
-        return $this;
-    }
-
-    public function addUniversity(University $university): self
-    {
-        $this->universities->add($university);
-        $university->setCompany($this);
 
         return $this;
     }
@@ -213,7 +205,6 @@ class Company extends AggregateRoot implements LogoableInterface
             'domain' => $this->domain->value,
             'status' => $this->getStatus()->toArray(),
             'statuses' => array_map(static fn (ArrayableInterface $status): array => $status->toArray(), $this->statuses->toArray()),
-            'universities' => $this->universities->toArray(),
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];

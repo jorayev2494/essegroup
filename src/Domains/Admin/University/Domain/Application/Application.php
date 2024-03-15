@@ -34,6 +34,8 @@ use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Country\Country;
 use Project\Domains\Admin\University\Domain\Department\Department;
+use Project\Domains\Admin\University\Domain\Department\DepartmentCollection;
+use Project\Domains\Admin\University\Domain\Department\DepartmentTranslate;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\EmailType;
 use Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\FatherNameType;
@@ -113,9 +115,15 @@ class Application extends AggregateRoot implements
     #[ORM\Column(name: 'home_address', type: HomeAddressType::NAME, nullable: true)]
     private HomeAddress $homeAddress;
 
+    #[ORM\Column(name: 'company_uuid', nullable: false)]
+    private string $companyUuid;
+
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'applications')]
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
     private Company $company;
+
+    #[ORM\Column(name: 'university_uuid', nullable: false)]
+    private string $universityUuid;
 
     #[ORM\ManyToOne(targetEntity: University::class, inversedBy: 'applications')]
     #[ORM\JoinColumn(name: 'university_uuid', referencedColumnName: 'uuid', nullable: false)]
@@ -168,6 +176,9 @@ class Application extends AggregateRoot implements
     #[ORM\OneToMany(targetEntity: AdditionalDocument::class, mappedBy: 'application', cascade: ['persist', 'remove'])]
     private Collection $additionalDocuments;
 
+    #[ORM\Column(name: 'country_uuid')]
+    private string $countryUuid;
+
     #[ORM\ManyToOne(targetEntity: Country::class, cascade: ['persist'], inversedBy: 'application')]
     #[ORM\JoinColumn(name: 'country_uuid', referencedColumnName: 'uuid')]
     private Country $country;
@@ -217,7 +228,7 @@ class Application extends AggregateRoot implements
         $this->homeAddress = HomeAddress::fromValue(null);
         $this->departments = new ArrayCollection();
         $this->additionalDocuments = new ArrayCollection();
-        $this->statuses = new ArrayCollection();
+        $this->statuses = new StatusCollection();
     }
 
     public static function create(
@@ -611,7 +622,7 @@ class Application extends AggregateRoot implements
             'university' => $this->university->toArray(),
 //            'faculty_uuid' => $this->faculty->getUuid()->value,
 //            'faculty' => $this->faculty->toArray(),
-            'departments' => array_map(static fn (ArrayableInterface $item): array => $item->toArray(), $this->departments->toArray()),
+            'departments' => array_map(static fn (ArrayableInterface $item): array => DepartmentTranslate::execute($item)->toArray(), $this->departments->toArray()),
             'phone' => $this->phone->value,
             'friend_phone' => $this->friendPhone->value,
             'home_address' => $this->homeAddress->value,
@@ -628,7 +639,7 @@ class Application extends AggregateRoot implements
                 static fn (AdditionalDocument $additionalDocument): array => $additionalDocument->toArray(),
                 $this->additionalDocuments->toArray()
             ),
-            'status' => $this->getStatus()->toArray(),
+            'status' => StatusTranslate::execute($this->getStatus())->toArrayWithTranslations(),
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];

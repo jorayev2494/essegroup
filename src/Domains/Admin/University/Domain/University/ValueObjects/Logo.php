@@ -17,7 +17,7 @@ class Logo extends File implements LogoInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/university/logos';
+        return 'admin/domain/university/university/logos';
     }
 
     #[ORM\OneToOne(targetEntity: University::class, mappedBy: 'logo')]

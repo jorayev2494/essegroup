@@ -13,8 +13,7 @@ readonly class CountryWasCreatedDomainEventSubscriber implements DomainEventSubs
 {
 
     public function __construct(
-        private CountryRepositoryInterface $countryRepository,
-         private CompanyRepositoryInterface $companyRepository
+        private CountryRepositoryInterface $countryRepository
     )
     {
 
@@ -30,20 +29,14 @@ readonly class CountryWasCreatedDomainEventSubscriber implements DomainEventSubs
 
     public function __invoke(CountryWasCreatedDomainEvent $event): void
     {
-        $company = $this->companyRepository->findByUuid(Uuid::fromValue($event->companyUuid));
-
-        if ($company === null) {
-            return;
-        }
-
         $country = Country::fromPrimitives(
             $event->uuid,
             $event->value,
+            $event->companyUuid,
             $event->iso,
             $event->isActive
         );
 
-        $company->addCountry($country);
         $this->countryRepository->save($country);
     }
 }

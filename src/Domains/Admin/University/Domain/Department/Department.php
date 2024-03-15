@@ -12,16 +12,21 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Company\Company;
+use Project\Domains\Admin\University\Domain\Department\Events\ApplicationWasDeletedFromDepartmentDomainEvent;
+use Project\Domains\Admin\University\Domain\Department\Events\DepartmentWasDeletedDomainEvent;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
 use DateTimeImmutable;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
+use Project\Domains\Admin\University\Domain\Faculty\FacultyTranslate;
 use Project\Domains\Admin\University\Domain\University\University;
+use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\NameType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType;
 use Project\Shared\Contracts\ArrayableInterface;
+use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
 use Project\Shared\Domain\Translation\TranslatableInterface;
@@ -30,7 +35,7 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'university_departments')]
 #[ORM\HasLifecycleCallbacks]
-class Department implements ArrayableInterface, TranslatableInterface
+class Department extends AggregateRoot implements TranslatableInterface
 {
     use TranslatableTrait;
 
@@ -61,7 +66,7 @@ class Department implements ArrayableInterface, TranslatableInterface
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
     private ?Company $company;
 
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'departments')]
+    #[ORM\ManyToMany(targetEntity: Application::class, mappedBy: 'departments')]
     private Collection $applications;
 
     #[ORM\Column(name: 'faculty_uuid', type: Types::STRING)]
@@ -100,6 +105,11 @@ class Department implements ArrayableInterface, TranslatableInterface
     public static function fromPrimitives(string $uuid, Company $company, University $university, bool $isActive): self
     {
         return new self(Uuid::fromValue($uuid), $company, $university, $isActive);
+    }
+
+    public function delete(): void
+    {
+        $this->record(new DepartmentWasDeletedDomainEvent($this->uuid->value));
     }
 
     public function getUuid(): UUid
@@ -154,10 +164,16 @@ class Department implements ArrayableInterface, TranslatableInterface
         }
     }
 
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
     public function removeApplication(Application $application): void
     {
         if ($this->applications->contains($application)) {
             $this->applications->removeElement($application);
+            $this->record(new ApplicationWasDeletedFromDepartmentDomainEvent($this->getUuid()->value, $application->getUuid()->value));
         }
     }
 
@@ -174,12 +190,6 @@ class Department implements ArrayableInterface, TranslatableInterface
     public function setFaculty(Faculty $faculty): void
     {
         $this->faculty = $faculty;
-    }
-
-    #[\Override]
-    public function getTranslations(): Collection
-    {
-        return $this->translations;
     }
 
     public function getIsActive(): bool
@@ -217,6 +227,11 @@ class Department implements ArrayableInterface, TranslatableInterface
 //        $this->record($domainEvent);
     }
 
+    public function getTranslationClass(): string
+    {
+        return DepartmentTranslation::class;
+    }
+
     #[ORM\PrePersist]
     public function prePersist(PrePersistEventArgs $event): void
     {
@@ -238,9 +253,9 @@ class Department implements ArrayableInterface, TranslatableInterface
             'company_uuid' => $this->companyUuid,
             'company' => $this->company->toArray(),
             'university_uuid' => $this->universityUuid,
-            'university' => $this->university->toArray(),
+            'university' => UniversityTranslate::execute($this->university)->toArray(),
             'faculty_uuid' => $this->facultyUuid,
-            'faculty' => $this->faculty->toArray(),
+            'faculty' => FacultyTranslate::execute($this->faculty)->toArray(),
             'name' => $this->name->value,
             'description' => $this->description->value,
             'is_active' => $this->isActive,

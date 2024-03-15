@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 readonly class AdditionalDocumentService implements AdditionalDocumentServiceInterface
 {
     function __construct(
-        private FileSystemInterface $fileSystem,
+        private FileSystemInterface $fileSystem
     )
     {
 
@@ -36,7 +36,7 @@ readonly class AdditionalDocumentService implements AdditionalDocumentServiceInt
     public function deleteDocuments(AdditionalDocumentableInterface $additionalDocumentable): void
     {
         foreach ($additionalDocumentable->getAdditionalDocuments() as $additonalDoc) {
-            $additionalDocumentable->deleteAdditionalDocument($additonalDoc);
+            // $additionalDocumentable->deleteAdditionalDocument($additonalDoc);
             $this->fileSystem->delete($additonalDoc);
         }
     }

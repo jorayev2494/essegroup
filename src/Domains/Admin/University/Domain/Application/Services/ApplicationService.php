@@ -31,8 +31,10 @@ readonly class ApplicationService implements ApplicationServiceInterface
             )
         );
 
-        $departments->forEach(static function (Department $department) use ($application): void {
+        $departments->forAll(static function (int $idx, Department $department) use ($application): bool {
             $application->addDepartment($department);
+
+            return true;
         });
     }
 
@@ -44,6 +46,10 @@ readonly class ApplicationService implements ApplicationServiceInterface
 
     public function removeDepartments(Application $application, Collection $departments): void
     {
-        $departments->forAll(static fn (int $idx, Department $department) => $application->removeDepartment($department));
+        $departments->forAll(static function (int $idx, Department $department) use($application): bool {
+            $application->removeDepartment($department);
+
+            return true;
+        });
     }
 }

@@ -13,7 +13,6 @@ use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid;
-use Project\Domains\Admin\University\Domain\Country\Country;
 use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\Types\DomainType;
@@ -42,19 +41,16 @@ class Company extends AggregateRoot
     #[ORM\Column(type: StatusType::NAME)]
     private Status $status;
 
-    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'company', cascade: ['persist'])]
     private Collection $universities;
 
-    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'company', cascade: ['persist'])]
     private Collection $faculties;
 
-    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'company', cascade: ['persist'])]
     private Collection $departments;
 
-    #[ORM\OneToMany(targetEntity: Country::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
-    private Collection $countries;
-
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'company', cascade: ['persist'])]
     private Collection $applications;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
@@ -70,6 +66,9 @@ class Company extends AggregateRoot
         $this->domain = $domain;
         $this->status = $status;
         $this->universities = new ArrayCollection();
+        $this->faculties = new ArrayCollection();
+        $this->departments = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
     public static function fromPrimitives(string $uuid, string $name, string $domain, string $status): self
@@ -133,21 +132,6 @@ class Company extends AggregateRoot
         if ($this->universities->contains($university)) {
             $this->universities->removeElement($university);
         }
-    }
-
-    public function getCountries(): Collection
-    {
-        return $this->countries;
-    }
-
-    public function addCountry(Country $country): self
-    {
-        if (! $this->countries->contains($country)) {
-            $this->countries->add($country);
-            $country->setCompany($this);
-        }
-
-        return $this;
     }
 
     /**

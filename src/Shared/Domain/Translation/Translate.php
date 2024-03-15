@@ -2,6 +2,9 @@
 
 namespace Project\Shared\Domain\Translation;
 
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\TypeRegistry;
+
 abstract class Translate
 {
     private const DEFAULT_LOCALE = 'en';
@@ -23,8 +26,11 @@ abstract class Translate
                         $el->getField() === $column && $el->getLocale() === self::getLocale($locale)
                 );
 
+                $content = $trans?->getContent();
+                $value = array_key_exists($columnType, Type::getTypesMap()) ? $content : $columnType::fromValue($content);
+
                 $setMethodName = 'set' . ucwords($column);
-                $item->$setMethodName($columnType::fromValue($trans?->getContent()));
+                $item->$setMethodName($value);
             }
         }
 

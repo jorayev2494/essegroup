@@ -9,5 +9,5 @@ use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
 
 interface StatusServiceInterface
 {
-    public function changeStatus(Application $application, Status $status): void;
+    public function changeStatus(Application $application, Status $status, array $noteTranslations): void;
 }

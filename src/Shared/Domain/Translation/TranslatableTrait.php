@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace Project\Shared\Domain\Translation;
 
+use Doctrine\Common\Collections\Collection;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
 
 trait TranslatableTrait
 {
+    #[\Override]
+    public function getTranslations(): Collection
+    {
+        return $this->translations;
+    }
+
     public function addTranslation(AbstractTranslation $t): void
     {
         $trans = $this->translations->findFirst(

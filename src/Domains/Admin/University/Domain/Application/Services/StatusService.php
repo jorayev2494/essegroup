@@ -7,16 +7,25 @@ namespace Project\Domains\Admin\University\Domain\Application\Services;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Application\Services\Contracts\StatusServiceInterface;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
+use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
 
 class StatusService implements StatusServiceInterface
 {
+    public function __construct(
+        private readonly TranslationColumnServiceInterface $translationColumnService
+    )
+    {
+
+    }
+
     #[\Override]
-    public function changeStatus(Application $application, Status $status): void
+    public function changeStatus(Application $application, Status $status, array $noteTranslations): void
     {
         if ($application->getStatus()->isNotEqualsValue($status->getValue())) {
+            $this->translationColumnService->addTranslations($status, $noteTranslations);
             $application->addStatues($status);
-        } else if ($application->getStatus()->isNotEqualsNote($status->getNote())) {
-            $application->getStatus()->setNote($status->getNote());
+        } else {
+            $this->translationColumnService->addTranslations($application->getStatus(), $noteTranslations);
         }
     }
 }

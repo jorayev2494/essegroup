@@ -37,6 +37,5 @@ readonly class LogoService implements LogoServiceInterface
     public function delete(LogoableInterface $logoable): void
     {
         $this->fileSystem->delete($logoable->getLogo());
-        $logoable->deleteLogo();
     }
 }

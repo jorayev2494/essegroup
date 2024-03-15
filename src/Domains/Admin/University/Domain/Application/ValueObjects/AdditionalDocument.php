@@ -28,7 +28,7 @@ class AdditionalDocument extends File implements AdditionalDocumentInterface
     #[ORM\JoinColumn(name: 'application_uuid', referencedColumnName: 'uuid')]
     private Application $application;
 
-    public function setApplication(Application $application)
+    public function setApplication(?Application $application)
     {
         $this->application = $application;
     }

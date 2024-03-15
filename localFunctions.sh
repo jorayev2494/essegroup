@@ -48,13 +48,16 @@ function migrate() {
     CONNECTION=$1
     COMMAND=$2
 
-    if [[ $COMMAND == 'migrate' ]]; then
+    # if [[ $COMMAND == 'migrate' ]]; then
         MIG_COMMAND=$COMMAND;
-    fi
+    # fi
 
-    if [[ -z $COMMAND ]]; then
-        MIG_COMMAND='-h';
-    fi
+#    if [[ ]]; then
+#    if
+#
+#    if [[ -z $COMMAND ]]; then
+#        MIG_COMMAND='-h';
+#    fi
 
     docker compose --file $SERVER_COMPOSE_FILE_PATH run --rm php-cli bash -c "ENTITY=${CONNECTION} php ./vendor/bin/doctrine-migrations ${MIG_COMMAND}"
 }
