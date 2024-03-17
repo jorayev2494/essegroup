@@ -73,7 +73,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $connection = DriverManager::getConnection($this->adminConnection, $config, $this->getEventManager());
         $entityManager = new EntityManager($connection, $config);
 
-        $this->app->instance(AdminEntityManagerInterface::class, $entityManager);
+        $this->app->singleton(AdminEntityManagerInterface::class, static fn () => $entityManager);
         $this->app->instance('admin_dbal_connection', $connection);
     }
 
@@ -87,7 +87,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $connection = DriverManager::getConnection($this->companyConnection, $config, $this->getEventManager());
         $entityManager = new EntityManager($connection, $config);
 
-        $this->app->instance(CompanyEntityManagerInterface::class, $entityManager);
+        $this->app->singleton(CompanyEntityManagerInterface::class, static fn () => $entityManager);
         $this->app->instance('company_dbal_connection', $connection);
     }
 
@@ -101,7 +101,7 @@ class DoctrineServiceProvider extends ServiceProvider
         $connection = DriverManager::getConnection($this->clientConnection, $config, $this->getEventManager());
         $entityManager = new EntityManager($connection, $config);
 
-        $this->app->instance(ClientEntityManagerInterface::class, $entityManager);
+        $this->app->singleton(ClientEntityManagerInterface::class, static fn () => $entityManager);
         $this->app->instance('client_dbal_connection', $connection);
     }
 

@@ -5,8 +5,6 @@ namespace Project\Shared\Domain;
 use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
 use Project\Shared\Contracts\ArrayableInterface;
-use Traversable;
-use ArrayIterator;
 use IteratorAggregate;
 use Countable;
 
@@ -37,6 +35,13 @@ abstract class Collection extends ArrayCollection implements Countable, Iterator
     abstract protected function type(): string;
 
     abstract protected function translatorClass(): string;
+
+    public function forEach(\Closure $p): void
+    {
+        foreach ($this->getIterator() as $key => $element) {
+            $p($element, $key);
+        }
+    }
 
     public function translateItems(string $locale = null): self
     {

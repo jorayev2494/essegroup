@@ -233,9 +233,9 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
     #[\Override]
     public function deleteLogo(): static
     {
-        if ($this->logo !== null) {
-            $this->logo = null;
-        }
+        // if ($this->logo !== null) {
+        //     $this->logo = null;
+        // }
 
         return $this;
     }

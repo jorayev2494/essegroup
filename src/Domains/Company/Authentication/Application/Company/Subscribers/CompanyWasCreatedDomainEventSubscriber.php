@@ -28,8 +28,8 @@ readonly class CompanyWasCreatedDomainEventSubscriber implements DomainEventSubs
 
     public function __invoke(CompanyWasCreatedDomainEvent $event): void
     {
-        $this->companyRepository->save(
-            Company::fromPrimitives($event->uuid)
-        );
+        $company = Company::fromPrimitives($event->uuid);
+
+        $this->companyRepository->save($company);
     }
 }

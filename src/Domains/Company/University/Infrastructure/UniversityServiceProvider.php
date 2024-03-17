@@ -27,7 +27,7 @@ class UniversityServiceProvider extends CompanyDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
-        // \Project\Domains\Company\Authentication\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
+
     ];
 
     /** @var array<string, string> */

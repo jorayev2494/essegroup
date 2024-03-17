@@ -6,6 +6,7 @@ namespace Project\Domains\Company\Company\Application\Company\Queries\Show;
 
 use Project\Domains\Company\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Company\Company\Domain\Company\Exceptions\CompanyNotFoundDomainException;
+use Project\Domains\Company\Company\Domain\Company\Services\Contracts\CompanyServiceInterface;
 use Project\Domains\Company\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Infrastructure\Services\Auth\AuthManager;
 use Project\Shared\Domain\Bus\Query\QueryHandlerInterface;
@@ -13,7 +14,7 @@ use Project\Shared\Domain\Bus\Query\QueryHandlerInterface;
 readonly class QueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-         private CompanyRepositoryInterface $repository
+        private CompanyServiceInterface $service,
     )
     {
 
@@ -21,6 +22,6 @@ readonly class QueryHandler implements QueryHandlerInterface
 
     public function __invoke(Query $query): array
     {
-        return $this->repository->findByUuid(Uuid::fromValue(AuthManager::getCompanyUuid()))->toArray();
+        return $this->service->show(AuthManager::getCompanyUuid());
     }
 }

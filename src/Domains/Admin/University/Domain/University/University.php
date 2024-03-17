@@ -241,9 +241,9 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     #[\Override]
     public function deleteLogo(): static
     {
-        if ($this->logo !== null) {
-            $this->logo = null;
-        }
+//        if ($this->logo !== null) {
+//            $this->logo = null;
+//        }
 
         return $this;
     }
@@ -291,9 +291,7 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     #[\Override]
     public function deleteCover(): static
     {
-        if ($this->cover !== null) {
-            $this->cover = null;
-        }
+        // $this->cover = null;
 
         return $this;
     }

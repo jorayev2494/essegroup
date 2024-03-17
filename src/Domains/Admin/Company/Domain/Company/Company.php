@@ -38,7 +38,7 @@ class Company extends AggregateRoot implements LogoableInterface
     #[ORM\Column(type: UuidType::NAME)]
     private Uuid $uuid;
 
-    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'company', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'company', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'logo_uuid', referencedColumnName: 'uuid')]
     private ?Logo $logo = null;
 
@@ -170,9 +170,7 @@ class Company extends AggregateRoot implements LogoableInterface
     #[\Override]
     public function deleteLogo(): static
     {
-        if ($this->logo !== null) {
-            $this->logo = null;
-        }
+        // $this->logo = null;
 
         return $this;
     }
