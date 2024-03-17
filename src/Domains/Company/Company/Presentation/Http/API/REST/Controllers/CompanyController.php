@@ -40,9 +40,11 @@ readonly class CompanyController
                 $uuid,
                 $request->file('logo'),
                 $request->get('name'),
+                $request->get('email'),
                 $request->get('domain'),
             )
         );
+
         return $this->response->noContent(Response::HTTP_ACCEPTED);
     }
 }

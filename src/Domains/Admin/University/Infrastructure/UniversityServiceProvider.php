@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\University\Infrastructure;
 
 use App\Providers\Domains\AdminDomainServiceProvider;
+use Project\Domains\Admin\University\Application\Company\Subscribers\CompanyNameWasChangedDomainEventSubscriber;
 use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
@@ -144,8 +145,23 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
-        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
+        // Application
+        \Project\Domains\Admin\University\Application\Application\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Application\Subscribers\Country\CountryWasDeleteDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Application\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Application\Subscribers\Department\ApplicationWasDeletedFromDepartmentDomainEventSubscriber::class,
+
+        // Department
+        \Project\Domains\Admin\University\Application\Department\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Department\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Department\Subscribers\Faculty\FacultyWasDeletedDomainEventSubscriber::class,
+
+        // Faculty
+        \Project\Domains\Admin\University\Application\Faculty\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Faculty\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
+
+        // University
+        \Project\Domains\Admin\University\Application\University\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
 
         // Country
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasCreatedDomainEventSubscriber::class,
@@ -155,23 +171,11 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasDeleteDomainEventSubscriber::class,
         \Project\Domains\Admin\University\Application\Country\Subscribers\CountryWasChangedCompanyDomainEventSubscriber::class,
 
-        // University
-        \Project\Domains\Admin\University\Application\University\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-
-        // Faculty
-        \Project\Domains\Admin\University\Application\Faculty\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Faculty\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
-
-        // Department
-        \Project\Domains\Admin\University\Application\Department\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Department\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Department\Subscribers\Faculty\FacultyWasDeletedDomainEventSubscriber::class,
-
-        // Application
-        \Project\Domains\Admin\University\Application\Application\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Application\Subscribers\Country\CountryWasDeleteDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Application\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Application\Subscribers\Department\ApplicationWasDeletedFromDepartmentDomainEventSubscriber::class,
+        // Company
+        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyNameWasChangedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyDomainWasChangedDomainEventSubscriber::class,
+        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */

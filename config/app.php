@@ -183,6 +183,7 @@ return [
         Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,
         Project\Domains\Company\Company\Infrastructure\CompanyServiceProvider::class,
         Project\Domains\Company\University\Infrastructure\UniversityServiceProvider::class,
+        Project\Domains\Company\Manager\Infrastructure\ManagerServiceProvider::class,
 
         // Public
         Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,

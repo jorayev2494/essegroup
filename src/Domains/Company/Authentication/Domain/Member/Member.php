@@ -39,12 +39,12 @@ class Member extends AggregateRoot implements AuthenticatableInterface
     #[ORM\OneToOne(targetEntity: Code::class, mappedBy: 'author', orphanRemoval: true, cascade: ['persist', 'remove'])]
     public ?Code $code;
 
-    #[ORM\Column(name: 'company_uuid', nullable: true)]
-    private ?string $companyUuid;
+    #[ORM\Column(name: 'company_uuid')]
+    private string $companyUuid;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'managers')]
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid')]
-    private ?Company $company;
+    private Company $company;
 
     private function __construct(Uuid $uuid, Email $email, Password $password)
     {
@@ -66,6 +66,11 @@ class Member extends AggregateRoot implements AuthenticatableInterface
     public function changePassword(Password $password): void
     {
         $this->password = $password;
+    }
+
+    public function setCompany(Company $company): void
+    {
+        $this->company = $company;
     }
 
     public function getDevices(): Collection

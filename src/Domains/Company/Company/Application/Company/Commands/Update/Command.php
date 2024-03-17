@@ -13,6 +13,7 @@ readonly class Command implements CommandInterface
         public string $uuid,
         public UploadedFile $logo,
         public string $name,
+        public string $email,
         public string $domain,
     )
     {

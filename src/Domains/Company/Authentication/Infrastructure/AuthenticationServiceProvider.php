@@ -27,6 +27,8 @@ class AuthenticationServiceProvider extends CompanyDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const COMMAND_HANDLERS = [
+        \Project\Domains\Company\Authentication\Application\Authentication\Commands\Create\CommandHandler::class,
+        \Project\Domains\Company\Authentication\Application\Authentication\Commands\Delete\CommandHandler::class,
         \Project\Domains\Company\Authentication\Application\Authentication\Commands\Login\CommandHandler::class,
         \Project\Domains\Company\Authentication\Application\Authentication\Commands\RefreshToken\CommandHandler::class,
         \Project\Domains\Company\Authentication\Application\Authentication\Commands\RestorePasswordLink\CommandHandler::class,
@@ -35,8 +37,13 @@ class AuthenticationServiceProvider extends CompanyDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
+        // Company
         \Project\Domains\Company\Authentication\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
         \Project\Domains\Company\Authentication\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
+
+        // Authentication
+        \Project\Domains\Company\Authentication\Application\Authentication\Subscribers\Manager\ManagerWasCreatedDomainEventSubscriber::class,
+        \Project\Domains\Company\Authentication\Application\Authentication\Subscribers\Manager\ManagerWasDeletedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */

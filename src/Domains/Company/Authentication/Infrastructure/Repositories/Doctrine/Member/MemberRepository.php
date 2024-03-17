@@ -7,6 +7,7 @@ namespace Project\Domains\Company\Authentication\Infrastructure\Repositories\Doc
 use Project\Domains\Company\Authentication\Domain\Member\Member;
 use Project\Domains\Company\Authentication\Domain\Member\MemberRepositoryInterface;
 use Project\Domains\Company\Authentication\Domain\Member\ValueObjects\Email;
+use Project\Domains\Company\Authentication\Domain\Member\ValueObjects\Uuid;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseCompanyEntityRepository;
 
 class MemberRepository extends BaseCompanyEntityRepository implements MemberRepositoryInterface
@@ -19,6 +20,11 @@ class MemberRepository extends BaseCompanyEntityRepository implements MemberRepo
     public function findByEmail(Email $email): ?Member
     {
         return $this->entityRepository->findOneBy(['email' => $email]);
+    }
+
+    public function findByUuid(Uuid $uuid): ?Member
+    {
+        return $this->entityRepository->find($uuid);
     }
 
     public function save(Member $member): void
