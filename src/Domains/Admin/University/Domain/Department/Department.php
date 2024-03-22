@@ -25,8 +25,8 @@ use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\NameType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType;
-use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Traits\ActivableTrait;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
 use Project\Shared\Domain\Translation\TranslatableInterface;
@@ -37,7 +37,8 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\HasLifecycleCallbacks]
 class Department extends AggregateRoot implements TranslatableInterface
 {
-    use TranslatableTrait;
+    use ActivableTrait,
+        TranslatableTrait;
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
@@ -75,9 +76,6 @@ class Department extends AggregateRoot implements TranslatableInterface
     #[ORM\ManyToOne(targetEntity: Faculty::class, inversedBy: 'departments')]
     #[ORM\JoinColumn(name: 'faculty_uuid', referencedColumnName: 'uuid', nullable: false)]
     private Faculty $faculty;
-
-    #[ORM\Column(name: 'is_active')]
-    private bool $isActive;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     protected DateTimeImmutable $createdAt;

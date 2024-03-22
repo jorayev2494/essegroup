@@ -7,7 +7,7 @@ namespace Project\Domains\Public\University\Domain\Department\Services;
 use Project\Domains\Admin\University\Application\Department\Queries\List\Query;
 use Project\Domains\Public\University\Domain\Department\Services\Contracts\DepartmentServiceInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
-use Project\Domains\Admin\University\Infrastructure\Department\Filters\HttpQueryFilterDTO;
+use Project\Domains\Admin\University\Infrastructure\Department\Filters\QueryFilter;
 
 readonly class DepartmentService implements DepartmentServiceInterface
 {
@@ -18,10 +18,10 @@ readonly class DepartmentService implements DepartmentServiceInterface
 
     }
 
-    public function list(HttpQueryFilterDTO $httpQueryFilterDTO): array
+    public function list(QueryFilter $queryFilter): array
     {
         return $this->queryBus->ask(
-            Query::makeFromArray($httpQueryFilterDTO->toArray())
+            Query::makeFromArray($queryFilter->toArray())
         );
     }
 }

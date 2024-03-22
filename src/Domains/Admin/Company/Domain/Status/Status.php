@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\Company\Domain\Status;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
 use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\Company\Domain\Status\ValueObjects\Note;
 use Project\Domains\Admin\Company\Domain\Status\ValueObjects\Value;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\NoteType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\ValueType;
 use Project\Shared\Contracts\ArrayableInterface;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
 #[ORM\Table('company_statuses')]
 #[ORM\HasLifecycleCallbacks]
 class Status implements ArrayableInterface
 {
+    use CreatedAtAndUpdatedAtTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -43,12 +43,6 @@ class Status implements ArrayableInterface
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'companies')]
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
     private Company $company;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $updatedAt;
 
     private function __construct(Value $value, Note $note)
     {
@@ -74,19 +68,6 @@ class Status implements ArrayableInterface
         $this->company = $company;
 
         return $this;
-    }
-
-    #[ORM\PrePersist]
-    public function prePersisting(PrePersistEventArgs $event): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdating(PreUpdateEventArgs $event): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function toArray(): array

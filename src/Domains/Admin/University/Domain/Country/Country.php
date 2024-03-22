@@ -7,19 +7,20 @@ namespace Project\Domains\Admin\University\Domain\Country;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
 use Project\Domains\Admin\University\Domain\Application\Application;
-use Project\Domains\Admin\University\Domain\Company\Company;
 use Project\Shared\Contracts\ArrayableInterface;
+use Project\Shared\Domain\Traits\ActivableTrait;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'university_countries')]
 #[ORM\HasLifecycleCallbacks]
 class Country implements ArrayableInterface
 {
+    use ActivableTrait,
+        CreatedAtAndUpdatedAtTrait;
+
     #[ORM\Id]
     #[ORM\Column]
     private string $uuid;
@@ -35,15 +36,6 @@ class Country implements ArrayableInterface
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'country', cascade: ['persist'])]
     private Collection $applications;
-
-    #[ORM\Column(name: 'is_active', type: Types::BOOLEAN)]
-    private bool $isActive;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $updatedAt;
 
     private function __construct(string $uuid, string $value, string $companyUuid, string $iso, bool $isActive)
     {
@@ -93,19 +85,6 @@ class Country implements ArrayableInterface
     public function isNotEquals(self $other): bool
     {
         return $this->uuid !== $other->uuid;
-    }
-
-    #[ORM\PrePersist]
-    public function prePersisting(PrePersistEventArgs $event): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdating(PreUpdateEventArgs $event): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
     }
 
     #[\Override]

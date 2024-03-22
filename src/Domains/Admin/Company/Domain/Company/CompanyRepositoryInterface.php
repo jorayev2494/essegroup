@@ -2,10 +2,10 @@
 
 namespace Project\Domains\Admin\Company\Domain\Company;
 
+use Project\Domains\Admin\Company\Application\Company\Queries\Index\Query;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
-use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
 
 interface CompanyRepositoryInterface
 {
@@ -13,7 +13,7 @@ interface CompanyRepositoryInterface
 
     public function list(): CompanyCollection;
 
-    public function paginate(BaseHttpQueryParams $baseHttpQueryParams): array;
+    public function paginate(Query $httpQuery): array;
 
     public function findByUuid(Uuid $uuid): ?Company;
 

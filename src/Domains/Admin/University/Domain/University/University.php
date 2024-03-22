@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Domain\University;
 
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Company\Company;
@@ -36,6 +32,7 @@ use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contrac
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
 use Project\Shared\Domain\Translation\TranslatableInterface;
@@ -46,7 +43,8 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\HasLifecycleCallbacks]
 class University extends AggregateRoot implements TranslatableInterface, LogoableInterface, CoverableInterface
 {
-    use TranslatableTrait;
+    use CreatedAtAndUpdatedAtTrait,
+        TranslatableTrait;
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
@@ -90,12 +88,6 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'universities')]
     private Collection $applications;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
-    protected DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
-    protected DateTimeImmutable $updatedAt;
 
     private function __construct(Uuid $uuid, YouTubeVideoId $youTubeVideoId)
     {
@@ -309,19 +301,6 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     public function getTranslationClass(): string
     {
         return UniversityTranslation::class;
-    }
-
-    #[ORM\PrePersist]
-    public function prePersist(PrePersistEventArgs $event): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdate(PreUpdateEventArgs $event): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
     }
 
     /**

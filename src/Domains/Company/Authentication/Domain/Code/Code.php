@@ -7,15 +7,16 @@ namespace Project\Domains\Company\Authentication\Domain\Code;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Project\Domains\Company\Authentication\Domain\Member\Member;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
 #[ORM\Table('auth_codes')]
 #[ORM\HasLifecycleCallbacks]
 class Code
 {
+    use CreatedAtAndUpdatedAtTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
@@ -33,12 +34,6 @@ class Code
 
     #[ORM\Column(name: 'expired_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $expiredAt;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $updatedAt;
 
     private function __construct(string $value, DateTimeImmutable $expiredAt)
     {
@@ -90,19 +85,6 @@ class Code
     public function getAuthorUuid(): string
     {
         return $this->authorUuid;
-    }
-
-    #[ORM\PrePersist]
-    public function prePersisting(PrePersistEventArgs $event): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdating(PreUpdateEventArgs $event): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function toArray(): array

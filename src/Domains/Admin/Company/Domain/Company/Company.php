@@ -28,12 +28,15 @@ use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\T
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\UuidType;
 use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
 #[ORM\Table('company_companies')]
 #[ORM\HasLifecycleCallbacks]
 class Company extends AggregateRoot implements LogoableInterface
 {
+    use CreatedAtAndUpdatedAtTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
     private Uuid $uuid;
@@ -56,12 +59,6 @@ class Company extends AggregateRoot implements LogoableInterface
 
     #[ORM\OneToMany(targetEntity: Status::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
     private Collection $statuses;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $updatedAt;
 
     private function __construct(Uuid $uuid, Name $name, Email $email, Domain $domain)
     {
@@ -178,19 +175,6 @@ class Company extends AggregateRoot implements LogoableInterface
     public function delete(): void
     {
         $this->record(new CompanyWasDeletedDomainEvent($this->uuid));
-    }
-
-    #[ORM\PrePersist]
-    public function prePersisting(PrePersistEventArgs $event): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdating(PreUpdateEventArgs $event): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function toArray(): array
