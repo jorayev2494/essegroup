@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department;
 
+use Project\Domains\Admin\University\Application\Department\Queries\Index\Query;
 use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Department\DepartmentCollection;
 use Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
-use Project\Domains\Admin\University\Infrastructure\Department\Filters\HttpQueryFilterDTO;
-use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
+use Project\Domains\Admin\University\Infrastructure\Department\Filters\QueryFilter;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
@@ -69,28 +69,28 @@ class DepartmentRepository extends BaseAdminEntityRepository implements Departme
         );
     }
 
-    public function list(HttpQueryFilterDTO $httpQueryFilter): DepartmentCollection
+    public function list(QueryFilter $queryFilter): DepartmentCollection
     {
         $query = $this->entityRepository->createQueryBuilder('d');
 
-        if ($httpQueryFilter->universityUuid !== null) {
+        if ($queryFilter->universityUuid !== null) {
             $query->where('d.universityUuid = :universityUuid')
-                ->setParameter('universityUuid', $httpQueryFilter->universityUuid);
+                ->setParameter('universityUuid', $queryFilter->universityUuid);
         }
 
-        if ($httpQueryFilter->facultyUuid !== null) {
-            $query->where('d.facultyUuid = :facultyUuid')
-                ->setParameter('facultyUuid', $httpQueryFilter->facultyUuid);
+        if ($queryFilter->facultyUuid !== null) {
+            $query->andWhere('d.facultyUuid = :facultyUuid')
+                ->setParameter('facultyUuid', $queryFilter->facultyUuid);
         }
 
         return new DepartmentCollection($query->getQuery()->getResult());
     }
 
-    public function paginate(BaseHttpQueryParams $httpQueryParams): Paginator
+    public function paginate(Query $httpQuery): Paginator
     {
         $query = $this->entityRepository->createQueryBuilder('d')->getQuery();
 
-        return $this->paginator($query, $httpQueryParams->paginatorHttpQueryParams);
+        return $this->paginator($query, $httpQuery->paginator);
     }
 
     public function save(Department $department): void

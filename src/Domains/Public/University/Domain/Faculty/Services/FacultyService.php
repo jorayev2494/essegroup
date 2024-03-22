@@ -8,7 +8,7 @@ use Project\Domains\Admin\University\Application\Faculty\Queries\List\Query as L
 use Project\Domains\Admin\University\Application\Faculty\Queries\Show\Query as ShowQuery;
 use Project\Domains\Public\University\Domain\Faculty\Services\Contracts\FacultyServiceInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
-use Project\Domains\Admin\University\Infrastructure\Faculty\Filters\HttpQueryFilterDTO;
+use Project\Domains\Admin\University\Infrastructure\Faculty\Filters\QueryFilter;
 
 readonly class FacultyService implements FacultyServiceInterface
 {
@@ -18,10 +18,10 @@ readonly class FacultyService implements FacultyServiceInterface
 
     }
 
-    public function list(HttpQueryFilterDTO $httpQueryFilterDTO): array
+    public function list(QueryFilter $queryFilter): array
     {
         return $this->queryBus->ask(
-            ListQuery::makeFromArray($httpQueryFilterDTO->toArray())
+            ListQuery::makeFromArray($queryFilter->toArray())
         );
     }
 

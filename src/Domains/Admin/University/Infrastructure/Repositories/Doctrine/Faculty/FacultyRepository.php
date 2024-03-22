@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty;
 
+use Project\Domains\Admin\University\Application\Faculty\Queries\Index\Query;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyCollection;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid;
-use Project\Domains\Admin\University\Infrastructure\Faculty\Filters\HttpQueryFilterDTO;
-use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
+use Project\Domains\Admin\University\Infrastructure\Faculty\Filters\QueryFilter;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
@@ -51,21 +51,21 @@ class FacultyRepository extends BaseAdminEntityRepository implements FacultyRepo
     }
 
     #[\Override]
-    public function paginate(BaseHttpQueryParams $httpQueryParams): Paginator
+    public function paginate(Query $httpQuery): Paginator
     {
         $query = $this->entityRepository->createQueryBuilder('f')->getQuery();
 
-        return $this->paginator($query, $httpQueryParams->paginatorHttpQueryParams);
+        return $this->paginator($query, $httpQuery->paginator);
     }
 
     #[\Override]
-    public function list(HttpQueryFilterDTO $httpQueryFilter): FacultyCollection
+    public function list(QueryFilter $queryFilter): FacultyCollection
     {
         $query = $this->entityRepository->createQueryBuilder('f');
 
-        if ($httpQueryFilter->universityUuid !== null) {
+        if ($queryFilter->universityUuid !== null) {
             $query->where('f.universityUuid = :universityUuid')
-                ->setParameter('universityUuid', $httpQueryFilter->universityUuid);
+                ->setParameter('universityUuid', $queryFilter->universityUuid);
         }
 
         return new FacultyCollection($query->getQuery()->getResult());

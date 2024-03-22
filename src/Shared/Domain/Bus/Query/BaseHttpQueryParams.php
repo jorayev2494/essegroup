@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Project\Shared\Domain\Bus\Query;
 
-use Project\Shared\Infrastructure\Repository\Doctrine\PaginatorHttpQueryParams;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 abstract readonly class BaseHttpQueryParams implements QueryInterface
 {
     private function __construct(
-        public PaginatorHttpQueryParams $paginatorHttpQueryParams,
+        // public PaginatorHttpQueryParams $paginatorHttpQueryParams,
         // public array $filters,
         // public readonly ?string $search,
         // public readonly ?string $searchBy,
@@ -23,7 +22,7 @@ abstract readonly class BaseHttpQueryParams implements QueryInterface
     public static function makeFromRequest(SymfonyRequest $request): static
     {
         return (new static(
-            paginatorHttpQueryParams: PaginatorHttpQueryParams::make($request),
+            // paginatorHttpQueryParams: PaginatorHttpQueryParams::makeFromRequest($request),
             // filters: self::makeFilters($request->get('filters', [])),
             // search: $request->query->get('search'),
             // searchBy: $request->query->get('search_by'),
@@ -32,20 +31,12 @@ abstract readonly class BaseHttpQueryParams implements QueryInterface
         ))->fromRequest($request);
     }
 
-    protected function fromRequest(SymfonyRequest $request): static
-    {
-        return $this;
-    }
+    abstract protected function fromRequest(SymfonyRequest $request): static;
 
     public static function makeFromArray(array $data): static
     {
-        return (new static(
-            paginatorHttpQueryParams: PaginatorHttpQueryParams::makeFromArray($data),
-        ))->fromArray($data);
+        return (new static())->fromArray($data);
     }
 
-    protected function fromArray(array $data): static
-    {
-        return $this;
-    }
+    abstract protected function fromArray(array $data): static;
 }

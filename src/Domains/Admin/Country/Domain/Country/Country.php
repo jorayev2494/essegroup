@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\Country\Domain\Country;
 
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
+use Project\Domains\Admin\Country\Domain\City\City;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedCompanyDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedIsActiveDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedISODomainEvent;
@@ -22,12 +21,17 @@ use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\T
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ISOType;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ValueType;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Traits\ActivableTrait;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'country_countries')]
 #[ORM\HasLifecycleCallbacks]
 class Country extends AggregateRoot
 {
+    use ActivableTrait,
+        CreatedAtAndUpdatedAtTrait;
+
     #[ORM\Id]
     #[ORM\Column]
     private string $uuid;
@@ -41,14 +45,8 @@ class Country extends AggregateRoot
     #[ORM\Column(name: 'company_uuid', type: CompanyUuidType::NAME, nullable: false)]
     private CompanyUuid $companyUuid;
 
-    #[ORM\Column(name: 'is_active', type: Types::BOOLEAN)]
-    private bool $isActive;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $updatedAt;
+    #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'country', cascade: ['persist', 'remove'])]
+    private Collection $cities;
 
     private function __construct(string $uuid, Value $value, ISO $iso, CompanyUuid $companyUuid, bool $isActive)
     {
@@ -56,6 +54,7 @@ class Country extends AggregateRoot
         $this->value = $value;
         $this->iso = $iso;
         $this->companyUuid = $companyUuid;
+        $this->cities = new ArrayCollection();
         $this->isActive = $isActive;
     }
 
@@ -114,6 +113,21 @@ class Country extends AggregateRoot
         }
     }
 
+    public function getCities(): Collection
+    {
+        return $this->cities;
+    }
+
+    public function addCity(City $city): self
+    {
+        if (! $this->cities->contains($city)) {
+            $this->cities->add($city);
+            $city->setCountry($this);
+        }
+
+        return $this;
+    }
+
     public function changeIsActive(bool $isActive): void
     {
         if ($this->isActive !== $isActive) {
@@ -130,19 +144,6 @@ class Country extends AggregateRoot
     public function delete(): void
     {
         $this->record(new CountryWasDeleteDomainEvent($this->uuid));
-    }
-
-    #[ORM\PrePersist]
-    public function prePersisting(PrePersistEventArgs $event): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdating(PreUpdateEventArgs $event): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function toArray(): array

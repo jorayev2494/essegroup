@@ -2,12 +2,8 @@
 
 namespace Project\Domains\Admin\University\Domain\Company;
 
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Domain;
@@ -22,12 +18,15 @@ use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Compan
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Status;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
 #[ORM\Table('university_companies')]
 #[ORM\HasLifecycleCallbacks]
 class Company extends AggregateRoot
 {
+    use CreatedAtAndUpdatedAtTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
     private Uuid $uuid;
@@ -52,12 +51,6 @@ class Company extends AggregateRoot
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'company', cascade: ['persist'])]
     private Collection $applications;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $updatedAt;
 
     private function __construct(Uuid $uuid, Name $name, Domain $domain, Status $status)
     {
@@ -156,19 +149,6 @@ class Company extends AggregateRoot
     public function getApplications(): Collection
     {
         return $this->applications;
-    }
-
-    #[ORM\PrePersist]
-    public function prePersisting(PrePersistEventArgs $event): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdating(PreUpdateEventArgs $event): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function toArray(): array

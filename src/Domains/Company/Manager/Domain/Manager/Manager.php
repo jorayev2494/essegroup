@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Project\Domains\Company\Manager\Domain\Manager;
 
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Project\Domains\Company\Manager\Domain\Manager\Events\ManagerWasCreatedDomainEvent;
 use Project\Domains\Company\Manager\Domain\Manager\Events\ManagerWasDeletedDomainEvent;
 use Project\Domains\Company\Manager\Domain\Manager\ValueObjects\CompanyUuid;
@@ -21,13 +18,15 @@ use Project\Domains\Company\Manager\Infrastructure\Manager\Repositories\Doctrine
 use Project\Domains\Company\Manager\Infrastructure\Manager\Repositories\Doctrine\Types\UuidType;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeImmutable;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'company_managers')]
 #[ORM\HasLifecycleCallbacks]
 class Manager extends AggregateRoot
 {
+    use CreatedAtAndUpdatedAtTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
     private Uuid $uuid;
@@ -43,12 +42,6 @@ class Manager extends AggregateRoot
 
     #[ORM\Column(name: 'company_uuid', type: CompanyUuidType::NAME)]
     private CompanyUuid $companyUuid;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
-    private DateTimeImmutable $updatedAt;
 
     private function __construct(Uuid $uuid, Email $email, CompanyUuid $companyUuid)
     {
@@ -102,19 +95,6 @@ class Manager extends AggregateRoot
     public function getCompanyUuid(): CompanyUuid
     {
         return $this->companyUuid;
-    }
-
-    #[ORM\PrePersist]
-    public function prePersisting(PrePersistEventArgs $event): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdating(PreUpdateEventArgs $event): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function toArray(): array

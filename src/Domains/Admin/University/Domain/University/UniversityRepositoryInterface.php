@@ -6,17 +6,16 @@ namespace Project\Domains\Admin\University\Domain\University;
 
 use Project\Domains\Admin\University\Application\University\Queries\Index\Query;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
-use Project\Domains\Admin\University\Infrastructure\University\Filters\HttpQueryFilterDTO;
-use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
+use Project\Domains\Admin\University\Infrastructure\University\Filters\QueryFilter;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
 interface UniversityRepositoryInterface
 {
     public function get(): UniversityCollection;
 
-    public function paginate(Query $baseHttpQueryParams): Paginator;
+    public function paginate(Query $httpQuery): Paginator;
 
-    public function list(HttpQueryFilterDTO $httpQueryFilterDTO): UniversityCollection;
+    public function list(QueryFilter $httpQueryFilterDTO): UniversityCollection;
 
     public function findByUuid(Uuid $uuid): ?University;
 

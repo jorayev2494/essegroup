@@ -11,7 +11,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\Events\FacultyWasDeletedDomainEvent;
@@ -26,8 +25,8 @@ use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Facult
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoInterface;
-use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Traits\ActivableTrait;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
 use Project\Shared\Domain\Translation\TranslatableInterface;
@@ -38,7 +37,8 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\HasLifecycleCallbacks]
 class Faculty extends AggregateRoot implements TranslatableInterface, LogoableInterface
 {
-    use TranslatableTrait;
+    use ActivableTrait,
+        TranslatableTrait;
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
@@ -73,9 +73,6 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
 
     #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'faculty', cascade: ['persist', 'remove'])]
     private Collection $departments;
-
-    #[ORM\Column(name: 'is_active')]
-    private bool $isActive;
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     protected DateTimeImmutable $createdAt;

@@ -2,30 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Project\Domains\Admin\University\Infrastructure\Faculty\Filters;
+namespace Project\Domains\Admin\University\Infrastructure\Country\Filters;
 
 use Project\Shared\Contracts\ArrayableInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-readonly class HttpQueryFilterDTO implements ArrayableInterface
+readonly class QueryFilter implements ArrayableInterface
 {
     private function __construct(
-        public ?string $universityUuid
+        public ?string $companyUuid
     ) {
 
     }
 
     public static function makeFromRequest(Request $request): self
     {
-        return new self(
-            $request->query->get('filter_by_university_uuid')
-        );
+        return self::makeFromArray($request->query->all('filters'));
     }
 
     public static function makeFromArray(array $data): self
     {
         return new self(
-            $data['filter_by_university_uuid'] ?? null,
+            $data['company_uuid'] ?? null,
         );
     }
 
@@ -34,7 +32,7 @@ readonly class HttpQueryFilterDTO implements ArrayableInterface
     public function toArray(): array
     {
         return [
-            'filter_by_university_uuid' => $this->universityUuid,
+            'company_uuid' => $this->companyUuid,
         ];
     }
 }

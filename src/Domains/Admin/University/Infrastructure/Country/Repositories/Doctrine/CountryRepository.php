@@ -8,7 +8,7 @@ use Project\Domains\Admin\University\Application\Country\Queries\Index\Query;
 use Project\Domains\Admin\University\Domain\Country\Country;
 use Project\Domains\Admin\University\Domain\Country\CountryCollection;
 use Project\Domains\Admin\University\Domain\Country\CountryRepositoryInterface;
-use Project\Domains\Admin\University\Infrastructure\Country\Filters\HttpQueryFilterDTO;
+use Project\Domains\Admin\University\Infrastructure\Country\Filters\QueryFilter;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
@@ -29,24 +29,24 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
     {
         $query = $this->entityRepository->createQueryBuilder('c');
 
-        if ($httpQuery->httpQueryFilter->companyUuid !== null) {
+        if ($httpQuery->filter->companyUuid !== null) {
             $query->andWhere('c.companyUuid = :companyUuid')
-                ->setParameter('companyUuid', $httpQuery->httpQueryFilter->companyUuid);
+                ->setParameter('companyUuid', $httpQuery->filter->companyUuid);
         }
 
-        return $this->paginator($query, $httpQuery->paginatorHttpQueryParams);
+        return $this->paginator($query, $httpQuery->paginator);
     }
 
-    public function list(HttpQueryFilterDTO $queryFilterDTO): CountryCollection
+    public function list(QueryFilter $queryFilter): CountryCollection
     {
         $query = $this->entityRepository->createQueryBuilder('c');
 
         $query->where('c.isActive = :isActive')
             ->setParameter('isActive', true);
 
-        if ($queryFilterDTO->companyUuid !== null) {
+        if ($queryFilter->companyUuid !== null) {
             $query->andWhere('c.companyUuid = :companyUuid')
-                ->setParameter('companyUuid', $queryFilterDTO->companyUuid);
+                ->setParameter('companyUuid', $queryFilter->companyUuid);
         }
 
         return new CountryCollection($query->getQuery()->getResult());

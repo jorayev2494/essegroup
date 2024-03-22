@@ -18,6 +18,6 @@ readonly class QueryHandler implements QueryHandlerInterface
 
     public function __invoke(Query $query): array
     {
-        return $this->facultyService->list($query->httpQueryFilter);
+        return $this->facultyService->list($query->filter);
     }
 }

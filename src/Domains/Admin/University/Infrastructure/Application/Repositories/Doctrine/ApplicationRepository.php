@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine;
 
+use Project\Domains\Admin\University\Application\Application\Queries\Index\Query;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Application\ApplicationCollection;
 use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
-use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
@@ -20,11 +20,11 @@ class ApplicationRepository extends BaseAdminEntityRepository implements Applica
         return Application::class;
     }
 
-    public function paginate(BaseHttpQueryParams $httpQueryParams): Paginator
+    public function paginate(Query $httpQuery): Paginator
     {
-        $query = $this->entityRepository->createQueryBuilder('a')->getQuery();
+        $query = $this->entityRepository->createQueryBuilder('a');
 
-        return $this->paginator($query, $httpQueryParams->paginatorHttpQueryParams);
+        return $this->paginator($query->getQuery(), $httpQuery->paginator);
     }
 
     public function findByUuid(Uuid $uuid): ?Application

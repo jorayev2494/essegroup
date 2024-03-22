@@ -18,7 +18,7 @@ readonly class PaginatorHttpQueryParams implements ArrayableInterface
 
     }
 
-    public static function make(SymfonyRequest $request): self
+    public static function makeFromRequest(SymfonyRequest $request): self
     {
         return new self(
             page: $request->query->getInt('page', 1),

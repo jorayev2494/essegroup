@@ -10,8 +10,7 @@ use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
-use Project\Domains\Admin\University\Infrastructure\University\Filters\HttpQueryFilterDTO;
-use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
+use Project\Domains\Admin\University\Infrastructure\University\Filters\QueryFilter;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
@@ -29,19 +28,19 @@ class UniversityRepository extends BaseAdminEntityRepository implements Universi
         return (new UniversityCollection($this->entityRepository->findAll()))->translateItems();
     }
 
-    public function paginate(Query $baseHttpQueryParams): Paginator
+    public function paginate(Query $httpQuery): Paginator
     {
         $query = $this->entityRepository->createQueryBuilder('u');
 
-        if ($baseHttpQueryParams->httpQueryFilter->companyUuid !== null) {
+        if ($httpQuery->filter->companyUuid !== null) {
             $query->where('u.companyUuid = :companyUuid')
-                ->setParameter('companyUuid', $baseHttpQueryParams->httpQueryFilter->companyUuid);
+                ->setParameter('companyUuid', $httpQuery->filter->companyUuid);
         }
 
-        return $this->paginator($query->getQuery(), $baseHttpQueryParams->paginatorHttpQueryParams);
+        return $this->paginator($query->getQuery(), $httpQuery->paginator);
     }
 
-    public function list(HttpQueryFilterDTO $httpQueryFilterDTO): UniversityCollection
+    public function list(QueryFilter $httpQueryFilterDTO): UniversityCollection
     {
         $query = $this->entityRepository->createQueryBuilder('u');
 

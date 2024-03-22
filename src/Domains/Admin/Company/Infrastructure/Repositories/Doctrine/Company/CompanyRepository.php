@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company;
 
+use Project\Domains\Admin\Company\Application\Company\Queries\Index\Query;
 use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\Company\Domain\Company\CompanyCollection;
 use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
-use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 
 class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepositoryInterface
@@ -26,12 +26,11 @@ class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepo
         return $this->entityRepository->find($uuid);
     }
 
-    public function paginate(BaseHttpQueryParams $baseHttpQueryParams): array
+    public function paginate(Query $httpQuery): array
     {
-        $query = $this->entityRepository->createQueryBuilder('c')
-            ->getQuery();
+        $query = $this->entityRepository->createQueryBuilder('c');
 
-        return $this->paginator($query, $baseHttpQueryParams->paginatorHttpQueryParams)->toArray();
+        return $this->paginator($query->getQuery(), $httpQuery->paginator)->toArray();
     }
 
     #[\Override]
