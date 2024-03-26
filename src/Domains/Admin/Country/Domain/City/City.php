@@ -14,6 +14,7 @@ use Project\Domains\Admin\Country\Domain\Country\Country;
 use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\CompanyUuidType;
 use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\ValueType;
 use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\UuidType;
+use Project\Domains\Admin\University\Domain\University\University;
 use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Traits\ActivableTrait;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
@@ -41,9 +42,15 @@ class City implements ArrayableInterface, TranslatableInterface
     #[ORM\Column(name: 'company_uuid', type: CompanyUuidType::NAME, nullable: false)]
     private CompanyUuid $companyUuid;
 
+    #[ORM\Column(name: 'country_uuid')]
+    private string $countryUuid;
+
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'cities')]
     #[ORM\JoinColumn(name: 'country_uuid', referencedColumnName: 'uuid')]
     private Country $country;
+
+    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'country', cascade: ['persist'])]
+    private Collection $universities;
 
     /**
      * @var CityTranslation[] $translations
@@ -56,6 +63,7 @@ class City implements ArrayableInterface, TranslatableInterface
         $this->uuid = $uuid;
         $this->companyUuid = $companyUuid;
         $this->value = new Value(null);
+        $this->universities = new ArrayCollection();
         $this->translations = new ArrayCollection();
         $this->isActive = $isActive;
     }
@@ -135,6 +143,16 @@ class City implements ArrayableInterface, TranslatableInterface
         // };
         //
         // $this->record($domainEvent);
+    }
+
+    public function isEquals(self $other): bool
+    {
+        return $this->value === $other->value;
+    }
+
+    public function isNotEquals(self $other): bool
+    {
+        return $this->value !== $other->value;
     }
 
     public function toArray(): array

@@ -10,7 +10,7 @@ use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contract
 use Project\Shared\Domain\File\File;
 
 #[ORM\Entity]
-#[ORM\Table('university_logos')]
+#[ORM\Table(name: 'university_logos')]
 #[ORM\HasLifecycleCallbacks]
 class Logo extends File implements LogoInterface
 {

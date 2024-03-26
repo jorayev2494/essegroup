@@ -21,6 +21,15 @@ readonly class Query extends BaseHttpQueryParams
 
     protected function fromArray(array $data): static
     {
+        $this->filter = QueryFilter::makeFromArray($data);
+
         return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            ...$this->filter->toArray(),
+        ];
     }
 }

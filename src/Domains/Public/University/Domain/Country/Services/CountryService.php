@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Domains\Public\University\Domain\Country\Services;
 
-use Project\Domains\Admin\University\Infrastructure\Country\Filters\QueryFilter;
-use Project\Domains\Admin\University\Application\Country\Queries\List\Query;
+use Project\Domains\Admin\Country\Infrastructure\Country\Filters\QueryFilter;
+use Project\Domains\Admin\Country\Application\Country\Queries\List\Query;
 use Project\Domains\Public\University\Domain\Country\Services\Contracts\CountryServiceInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 

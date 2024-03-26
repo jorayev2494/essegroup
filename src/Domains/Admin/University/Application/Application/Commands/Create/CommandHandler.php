@@ -17,7 +17,7 @@ use Project\Domains\Admin\University\Domain\Application\ValueObjects\PassportNum
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Phone;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
-use Project\Domains\Admin\University\Domain\Country\CountryRepositoryInterface;
+use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentServiceInterface;

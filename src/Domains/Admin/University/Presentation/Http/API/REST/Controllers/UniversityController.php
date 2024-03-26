@@ -9,8 +9,11 @@ use App\Http\Requests\Api\Admin\University\University\UniversityUpdateRequest;
 use Project\Domains\Admin\University\Application\University\Queries\List\Query as ListQuery;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Project\Domains\Admin\University\Application\University\Commands\Create\Command;
-use Project\Domains\Admin\University\Application\University\Queries\Show\Query;
+use Project\Domains\Admin\University\Application\University\Commands\Create\Command as CreateCommand;
+use Project\Domains\Admin\University\Application\University\Queries\Search\Query as SearchQuery;
+use Project\Domains\Admin\University\Application\University\Queries\Show\Query as ShowQuery;
+use Project\Domains\Admin\University\Application\University\Commands\Update\Command as UpdateCommand;
+use Project\Domains\Admin\University\Application\University\Commands\Delete\Command as DeleteCommand;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
@@ -47,14 +50,25 @@ readonly class UniversityController
         );
     }
 
+    public function search(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                SearchQuery::makeFromRequest($request)
+            )
+        );
+    }
+
     public function store(UniversityStoreRequest $request): JsonResponse
     {
         $uuid = $this->uuidGenerator->generate();
 
         $this->commandBus->dispatch(
-            new Command(
+            new CreateCommand(
                 $uuid,
                 $request->get('company_uuid'),
+                $request->get('country_uuid'),
+                $request->get('city_uuid'),
                 $request->file('logo'),
                 $request->file('cover'),
                 $request->get('youtube_video_id'),
@@ -69,7 +83,7 @@ readonly class UniversityController
     {
         return $this->response->json(
             $this->queryBus->ask(
-                new Query($uuid)
+                new ShowQuery($uuid)
             )
         );
     }
@@ -77,9 +91,11 @@ readonly class UniversityController
     public function update(UniversityUpdateRequest $request, string $uuid): Response
     {
         $this->commandBus->dispatch(
-            new \Project\Domains\Admin\University\Application\University\Commands\Update\Command(
+            new UpdateCommand(
                 $uuid,
                 $request->get('company_uuid'),
+                $request->get('country_uuid'),
+                $request->get('city_uuid'),
                 $request->file('logo'),
                 $request->file('cover'),
                 $request->get('youtube_video_id'),
@@ -93,9 +109,7 @@ readonly class UniversityController
     public function delete(string $uuid): Response
     {
         $this->commandBus->dispatch(
-            new \Project\Domains\Admin\University\Application\University\Commands\Delete\Command(
-                $uuid,
-            )
+            new DeleteCommand($uuid)
         );
 
         return $this->response->noContent(Response::HTTP_ACCEPTED);

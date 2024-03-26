@@ -10,7 +10,7 @@ use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\E
 use Project\Shared\Domain\File\File;
 
 #[ORM\Entity]
-#[ORM\Table('university_application_equivalence_documents')]
+#[ORM\Table(name: 'university_application_equivalence_documents')]
 #[ORM\HasLifecycleCallbacks]
 class EquivalenceDocument extends File implements EquivalenceDocumentInterface
 {

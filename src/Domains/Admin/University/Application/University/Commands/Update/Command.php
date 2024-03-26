@@ -16,8 +16,10 @@ class Command implements CommandInterface
     public array $translations;
 
     public function __construct(
-        public string $uuid,
-        public string $companyUuid,
+        public readonly string $uuid,
+        public readonly string $companyUuid,
+        public readonly string $countryUuid,
+        public readonly string $cityUuid,
         public readonly ?UploadedFile $logo,
         public readonly ?UploadedFile $cover,
         public readonly string $youtubeVideoId,

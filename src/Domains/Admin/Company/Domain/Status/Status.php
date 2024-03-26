@@ -15,7 +15,7 @@ use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
-#[ORM\Table('company_statuses')]
+#[ORM\Table(name: 'company_statuses')]
 #[ORM\HasLifecycleCallbacks]
 class Status implements ArrayableInterface
 {

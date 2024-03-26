@@ -23,7 +23,21 @@ class UniversityStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_uuid' => ['required', 'string', Rule::exists('admin_db.company_companies', 'uuid')],
+            'company_uuid' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.company_companies', 'uuid'),
+            ],
+            'country_uuid' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.country_countries', 'uuid'),
+            ],
+            'city_uuid' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.country_cities', 'uuid'),
+            ],
             'logo' => [
                 'required',
                 'file',

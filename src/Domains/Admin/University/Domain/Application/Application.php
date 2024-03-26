@@ -32,9 +32,8 @@ use Project\Domains\Admin\University\Domain\Application\ValueObjects\Transcript;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\TranscriptTranslation;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Company\Company;
-use Project\Domains\Admin\University\Domain\Country\Country;
+use Project\Domains\Admin\Country\Domain\Country\Country;
 use Project\Domains\Admin\University\Domain\Department\Department;
-use Project\Domains\Admin\University\Domain\Department\DepartmentCollection;
 use Project\Domains\Admin\University\Domain\Department\DepartmentTranslate;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\EmailType;
@@ -605,8 +604,6 @@ class Application extends AggregateRoot implements
     #[\Override]
     public function toArray(): array
     {
-        // $this->additionalDocuments->forAll(static fn (int $k, AdditionalDocument $additionalDocument): array => $additionalDocument->toArray());
-
         return [
             'uuid' => $this->uuid->value,
             'full_name' => $this->fullName->value,
@@ -620,8 +617,6 @@ class Application extends AggregateRoot implements
             'country' => $this->country->toArray(),
             'university_uuid' => $this->university->getUuid()->value,
             'university' => $this->university->toArray(),
-//            'faculty_uuid' => $this->faculty->getUuid()->value,
-//            'faculty' => $this->faculty->toArray(),
             'departments' => array_map(static fn (ArrayableInterface $item): array => DepartmentTranslate::execute($item)->toArray(), $this->departments->toArray()),
             'phone' => $this->phone->value,
             'friend_phone' => $this->friendPhone->value,

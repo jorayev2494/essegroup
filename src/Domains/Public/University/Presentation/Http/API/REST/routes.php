@@ -7,11 +7,13 @@ use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\Uni
 use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\FacultyController;
 use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\DepartmentController;
 use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\CountryController;
+use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\CityController;
 
 Route::group(
     ['prefix' => 'universities', 'controller' => UniversityController::class],
     static function (Router $router): void {
         $router->get('/list', 'list');
+        $router->get('/search', 'search');
         $router->get('/{uuid}', 'show');
     }
 );
@@ -40,6 +42,13 @@ Route::group(
 
 Route::group(
     ['prefix' => 'countries', 'controller' => CountryController::class],
+    static function (Router $router): void {
+        $router->get('/list', 'list');
+    }
+);
+
+Route::group(
+    ['prefix' => 'countries/cities', 'controller' => CityController::class],
     static function (Router $router): void {
         $router->get('/list', 'list');
     }

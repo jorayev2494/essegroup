@@ -8,6 +8,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Project\Domains\Public\University\Application\University\Queries\List\QueryHandler as ListQueryHandler;
 use Project\Domains\Public\University\Application\University\Queries\List\Query as ListQuery;
+use Project\Domains\Public\University\Application\University\Queries\Search\Query;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -25,6 +26,15 @@ readonly class UniversityController
     {
         return $this->response->json(
             $queryHandler(ListQuery::makeFromRequest($request))
+        );
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                Query::makeFromRequest($request)
+            )
         );
     }
 

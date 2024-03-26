@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\University\Application\University\Commands\Update;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Project\Domains\Admin\Country\Domain\City\CityRepositoryInterface;
+use Project\Domains\Admin\Country\Domain\City\ValueObjects\Uuid as CityUuid;
+use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
@@ -19,6 +22,8 @@ readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private UniversityRepositoryInterface $repository,
+        private CountryRepositoryInterface $countryRepository,
+        private CityRepositoryInterface $cityRepository,
         private TranslationColumnServiceInterface $translationColumnService,
         private LogoServiceInterface $logoService,
         private CoverServiceInterface $coverService,
@@ -32,10 +37,14 @@ readonly class CommandHandler implements CommandHandlerInterface
     {
         $university = $this->repository->findByUuid(Uuid::fromValue($command->uuid));
         $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid));
+        $country = $this->countryRepository->findByUuid($command->countryUuid);
+        $city = $this->cityRepository->findByUuid(CityUuid::fromValue($command->cityUuid));
 
         $university ?? throw new ModelNotFoundException();
 
         $university->setCompany($company);
+        $university->changeCountry($country);
+        $university->changeCity($city);
         $university->changeYouTubeVideoId(YouTubeVideoId::fromValue($command->youtubeVideoId));
         $this->translationColumnService->addTranslations($university, $command->translations);
 

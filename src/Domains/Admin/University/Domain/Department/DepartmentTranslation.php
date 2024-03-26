@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 
 #[ORM\Entity]
-#[ORM\Table('university_department_translations')]
+#[ORM\Table(name: 'university_department_translations')]
 #[ORM\UniqueConstraint(name: 'university_department_translation_idx', columns: ['locale', 'field', 'department_uuid'])]
 class DepartmentTranslation extends AbstractTranslation
 {

@@ -11,7 +11,9 @@ readonly class UniversityWasCreatedDomainEvent extends DomainEvent
 
     public function __construct(
         public string $uuid,
-        public string $slug,
+        public string $countryUuid,
+        public string $cityUuid,
+        public string $youTubeVideoId,
         string $eventId = null,
         string $occurredOn = null
     )
@@ -24,10 +26,12 @@ readonly class UniversityWasCreatedDomainEvent extends DomainEvent
     {
         [
             'uuid' => $uuid,
-            'slug' => $slug,
+            'country_uuid' => $countryUuid,
+            'city_uuid' => $cityUuid,
+            'youtube_video_id' => $youTubeVideoId,
         ] = $body;
 
-        return new self($uuid, $slug, $eventId, $occurredOn);
+        return new self($uuid, $countryUuid, $cityUuid, $youTubeVideoId, $eventId, $occurredOn);
     }
 
     #[\Override]
@@ -43,7 +47,9 @@ readonly class UniversityWasCreatedDomainEvent extends DomainEvent
             'aggregate_id' => $this->aggregateId(),
             'body' => [
                 'uuid' => $this->uuid,
-                'slug' => $this->slug,
+                'country_uuid' => $this->uuid,
+                'city_uuid' => $this->uuid,
+                'youtube_video_id' => $this->youTubeVideoId,
             ],
             'event_id' => $this->eventId(),
             'occurred_on' => $this->occurredOn(),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Public\University\Application\Country\Queries\List;
 
-use Project\Domains\Admin\University\Infrastructure\Country\Filters\QueryFilter;
+use Project\Domains\Admin\Country\Infrastructure\Country\Filters\QueryFilter;
 use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
@@ -22,5 +22,12 @@ readonly class Query extends BaseHttpQueryParams
     protected function fromArray(array $data): static
     {
         return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            ...$this->filter->toArray(),
+        ];
     }
 }

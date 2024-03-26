@@ -11,7 +11,7 @@ use Project\Shared\Domain\Translation\AbstractTranslation;
  * @property Faculty $objectClass
  */
 #[ORM\Entity]
-#[ORM\Table('faculty_faculty_translations')]
+#[ORM\Table(name: 'faculty_faculty_translations')]
 #[ORM\UniqueConstraint(name: 'faculty_faculty_translation_idx', columns: ['locale', 'field', 'faculty_uuid'])]
 class FacultyTranslation extends AbstractTranslation
 {

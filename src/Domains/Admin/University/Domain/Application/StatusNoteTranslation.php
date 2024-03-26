@@ -10,7 +10,7 @@ use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 
 #[ORM\Entity]
-#[ORM\Table('university_application_status_note_translations')]
+#[ORM\Table(name: 'university_application_status_note_translations')]
 #[ORM\UniqueConstraint(name: 'university_application_status_note_translation_idx', columns: ['locale', 'field', 'status_uuid'])]
 class StatusNoteTranslation extends AbstractTranslation
 {

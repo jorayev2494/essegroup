@@ -21,7 +21,7 @@ use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
-#[ORM\Table('university_companies')]
+#[ORM\Table(name: 'university_companies')]
 #[ORM\HasLifecycleCallbacks]
 class Company extends AggregateRoot
 {

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Project\Shared\Domain\Bus\Query;
 
+use Project\Shared\Contracts\ArrayableInterface;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-abstract readonly class BaseHttpQueryParams implements QueryInterface
+abstract readonly class BaseHttpQueryParams implements QueryInterface, ArrayableInterface
 {
     private function __construct(
         // public PaginatorHttpQueryParams $paginatorHttpQueryParams,

@@ -10,7 +10,7 @@ use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\S
 use Project\Shared\Domain\File\File;
 
 #[ORM\Entity]
-#[ORM\Table('university_application_school_attestats')]
+#[ORM\Table(name: 'university_application_school_attestats')]
 #[ORM\HasLifecycleCallbacks]
 class SchoolAttestat extends File implements SchoolAttestatInterface
 {

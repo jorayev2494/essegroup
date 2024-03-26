@@ -10,19 +10,26 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 readonly class Query extends BaseHttpQueryParams
 {
-    public QueryFilter $httpQueryFilter;
+    public QueryFilter $filter;
 
     protected function fromRequest(SymfonyRequest $request): static
     {
-        $this->httpQueryFilter = QueryFilter::makeFromRequest($request);
+        $this->filter = QueryFilter::makeFromRequest($request);
 
         return $this;
     }
 
     protected function fromArray(array $data): static
     {
-        $this->httpQueryFilter = QueryFilter::makeFromArray($data);
+        $this->filter = QueryFilter::makeFromArray($data);
 
         return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+
+        ];
     }
 }

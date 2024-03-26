@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 readonly class QueryFilter implements ArrayableInterface
 {
     private function __construct(
-        public ?string $companyUuid
+        public ?string $companyUuid,
+        public array $countryUuids
     ) {
 
     }
@@ -24,6 +25,7 @@ readonly class QueryFilter implements ArrayableInterface
     {
         return new self(
             $data['company_uuid'] ?? null,
+            $data['country_uuids'] ?? [],
         );
     }
 
@@ -32,6 +34,7 @@ readonly class QueryFilter implements ArrayableInterface
     {
         return [
             'company_uuid' => $this->companyUuid,
+            'country_uuids' => $this->countryUuids,
         ];
     }
 }
