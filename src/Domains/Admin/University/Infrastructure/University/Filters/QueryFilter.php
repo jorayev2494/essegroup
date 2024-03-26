@@ -10,7 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 readonly class QueryFilter extends BaseQueryFilter
 {
     private function __construct(
-        public ?string $companyUuid
+        public ?string $companyUuid,
+        public ?array $countryUuids,
+        public ?array $cityUuids,
+        public ?array $facultyUuids,
     ) {
 
     }
@@ -24,6 +27,9 @@ readonly class QueryFilter extends BaseQueryFilter
     {
         return new self(
             $data['company_uuid'] ?? null,
+            $data['country_uuids'] ?? [],
+            $data['city_uuids'] ?? [],
+            $data['faculty_uuids'] ?? [],
         );
     }
 
@@ -31,6 +37,9 @@ readonly class QueryFilter extends BaseQueryFilter
     {
         return [
             'company_uuid' => $this->companyUuid,
+            'country_uuids' => $this->countryUuids,
+            'city_uuids' => $this->cityUuids,
+            'faculty_uuids' => $this->facultyUuids,
         ];
     }
 }

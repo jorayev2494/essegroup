@@ -11,7 +11,7 @@ use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\A
 use Project\Shared\Domain\File\File;
 
 #[ORM\Entity]
-#[ORM\Table('university_application_additional_documents')]
+#[ORM\Table(name: 'university_application_additional_documents')]
 #[ORM\HasLifecycleCallbacks]
 class AdditionalDocument extends File implements AdditionalDocumentInterface
 {

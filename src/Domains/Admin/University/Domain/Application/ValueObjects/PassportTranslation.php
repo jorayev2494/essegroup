@@ -10,7 +10,7 @@ use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\P
 use Project\Shared\Domain\File\File;
 
 #[ORM\Entity]
-#[ORM\Table('university_application_passport_translations')]
+#[ORM\Table(name: 'university_application_passport_translations')]
 #[ORM\HasLifecycleCallbacks]
 class PassportTranslation extends File implements PassportTranslationInterface
 {

@@ -31,7 +31,7 @@ use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
-#[ORM\Table('company_companies')]
+#[ORM\Table(name: 'company_companies')]
 #[ORM\HasLifecycleCallbacks]
 class Company extends AggregateRoot implements LogoableInterface
 {

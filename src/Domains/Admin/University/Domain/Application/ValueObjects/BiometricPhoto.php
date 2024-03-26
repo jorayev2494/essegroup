@@ -11,7 +11,7 @@ use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\P
 use Project\Shared\Domain\File\File;
 
 #[ORM\Entity]
-#[ORM\Table('university_application_biometric_photos')]
+#[ORM\Table(name: 'university_application_biometric_photos')]
 #[ORM\HasLifecycleCallbacks]
 class BiometricPhoto extends File implements BiometricPhotoInterface
 {

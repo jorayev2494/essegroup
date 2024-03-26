@@ -10,7 +10,7 @@ use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoInt
 use Project\Shared\Domain\File\File;
 
 #[ORM\Entity]
-#[ORM\Table('company_logos')]
+#[ORM\Table(name: 'company_logos')]
 #[ORM\HasLifecycleCallbacks]
 class Logo extends File implements LogoInterface
 {

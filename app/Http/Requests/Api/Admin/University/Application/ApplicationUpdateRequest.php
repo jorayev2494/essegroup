@@ -46,7 +46,7 @@ class ApplicationUpdateRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::exists('admin_db.university_countries', 'uuid'),
+                Rule::exists('admin_db.country_countries', 'uuid'),
             ],
 
             'status.value' => ['required', Rule::in(StatusEnum::MANAGEMENT_NOTE_REQUIRED)],

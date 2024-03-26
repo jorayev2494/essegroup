@@ -33,7 +33,7 @@ use Project\Shared\Domain\Translation\TranslatableInterface;
 use Project\Shared\Domain\Translation\TranslatableTrait;
 
 #[ORM\Entity]
-#[ORM\Table('faculty_faculties')]
+#[ORM\Table(name: 'faculty_faculties')]
 #[ORM\HasLifecycleCallbacks]
 class Faculty extends AggregateRoot implements TranslatableInterface, LogoableInterface
 {

@@ -21,4 +21,11 @@ readonly class Query extends BaseHttpQueryParams
     {
         return $this;
     }
+
+    public function toArray(): array
+    {
+        return [
+
+        ];
+    }
 }

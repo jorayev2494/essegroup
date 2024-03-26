@@ -11,7 +11,7 @@ use Project\Domains\Company\Authentication\Domain\Member\Member;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
-#[ORM\Table('auth_codes')]
+#[ORM\Table(name: 'auth_codes')]
 #[ORM\HasLifecycleCallbacks]
 class Code
 {

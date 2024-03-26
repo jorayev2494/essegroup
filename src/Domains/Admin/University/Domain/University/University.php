@@ -7,12 +7,16 @@ namespace Project\Domains\Admin\University\Domain\University;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\Country\Domain\City\City;
+use Project\Domains\Admin\Country\Domain\Country\Country;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasAddedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasChangedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasDeletedDomainEvent;
+use Project\Domains\Admin\University\Domain\University\Events\UniversityCityWasChangedDomainEvent;
+use Project\Domains\Admin\University\Domain\University\Events\UniversityCountryWasChangedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\UniversityWasCreatedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\UniversityWasDeletedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Cover;
@@ -39,7 +43,7 @@ use Project\Shared\Domain\Translation\TranslatableInterface;
 use Project\Shared\Domain\Translation\TranslatableTrait;
 
 #[ORM\Entity]
-#[ORM\Table('university_universities')]
+#[ORM\Table(name: 'university_universities')]
 #[ORM\HasLifecycleCallbacks]
 class University extends AggregateRoot implements TranslatableInterface, LogoableInterface, CoverableInterface
 {
@@ -77,6 +81,20 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
     private ?Company $company;
 
+    #[ORM\Column(name: 'country_uuid')]
+    private string $countryUuid;
+
+    #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'universities')]
+    #[ORM\JoinColumn(name: 'country_uuid', referencedColumnName: 'uuid')]
+    private Country $country;
+
+    #[ORM\Column(name: 'city_uuid')]
+    private string $cityUuid;
+
+    #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'universities')]
+    #[ORM\JoinColumn(name: 'city_uuid', referencedColumnName: 'uuid')]
+    private City $city;
+
     #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'university', cascade: ['persist', 'remove'])]
     private Collection $faculties;
 
@@ -89,9 +107,11 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'universities')]
     private Collection $applications;
 
-    private function __construct(Uuid $uuid, YouTubeVideoId $youTubeVideoId)
+    private function __construct(Uuid $uuid, Country $country, City $city, YouTubeVideoId $youTubeVideoId)
     {
         $this->uuid = $uuid;
+        $this->country = $country;
+        $this->city = $city;
         $this->youTubeVideoId = $youTubeVideoId;
         $this->name = Name::fromValue(null);
         $this->label = Label::fromValue(null);
@@ -102,12 +122,14 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
         $this->faculties = new ArrayCollection();
     }
 
-    public static function create(Uuid $uuid, YouTubeVideoId $youTubeVideoId): self
+    public static function create(Uuid $uuid, Country $country, City $city, YouTubeVideoId $youTubeVideoId): self
     {
-        $university = new self($uuid, $youTubeVideoId);
+        $university = new self($uuid, $country, $city, $youTubeVideoId);
         $university->record(
             new UniversityWasCreatedDomainEvent(
                 $university->getUuid()->value,
+                $university->getCountry()->getUuid(),
+                $university->getCity()->getUuid()->value,
                 $university->getYouTubeVideoId()->value
             )
         );
@@ -123,6 +145,46 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     public function getUuid(): Uuid
     {
         return $this->uuid;
+    }
+
+    public function getCountry(): Country
+    {
+        return $this->country;
+    }
+
+    public function changeCountry(Country $country): self
+    {
+        if ($this->country->isNotEquals($country)) {
+            $this->country = $country;
+            $this->record(
+                new UniversityCountryWasChangedDomainEvent(
+                    $this->uuid->value,
+                    $this->getCountry()->getUuid()
+                )
+            );
+        }
+
+        return $this;
+    }
+
+    public function getCity(): City
+    {
+        return $this->city;
+    }
+
+    public function changeCity(City $city): self
+    {
+        if ($this->city->isNotEquals($city)) {
+            $this->city = $city;
+            $this->record(
+                new UniversityCityWasChangedDomainEvent(
+                    $this->uuid->value,
+                    $this->city->getUuid()->value
+                )
+            );
+        }
+
+        return $this;
     }
 
     public function getYouTubeVideoId(): YouTubeVideoId
@@ -318,6 +380,10 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
             'youtube_video_id' => $this->youTubeVideoId->value,
             'company_uuid' => $this->company->getUuid()->value,
             'company' => $this->company->toArray(),
+            'country_uuid' => $this->country->getUuid(),
+            'country' => $this->country->toArray(),
+            'city_uuid' => $this->city->getUuid()->value,
+            'city' => $this->city->toArray(),
             'description' => $this->description->value,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),

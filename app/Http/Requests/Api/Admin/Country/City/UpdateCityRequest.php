@@ -26,7 +26,7 @@ class UpdateCityRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::exists('admin_db.university_countries', 'uuid'),
+                Rule::exists('admin_db.country_countries', 'uuid'),
             ],
             'translations' => [
                 new ValidateTranslationRule(['value']),

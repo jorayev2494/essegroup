@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Application\University\Commands\Create;
 
+use Project\Domains\Admin\Country\Domain\City\CityRepositoryInterface;
+use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid as CompanyUuid;
 use Project\Domains\Admin\University\Domain\University\University;
@@ -14,11 +16,14 @@ use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contract
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Shared\Domain\Bus\Event\EventBusInterface;
 use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
+use Project\Domains\Admin\Country\Domain\City\ValueObjects\Uuid as CityUuid;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private CompanyRepositoryInterface $companyRepository,
+        private CountryRepositoryInterface $countryRepository,
+        private CityRepositoryInterface $cityRepository,
         private TranslationColumnServiceInterface $translationColumnService,
         private LogoServiceInterface $logoService,
         private CoverServiceInterface $coverService,
@@ -31,9 +36,13 @@ readonly class CommandHandler implements CommandHandlerInterface
     public function __invoke(Command $command): void
     {
         $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid));
+        $country = $this->countryRepository->findByUuid($command->countryUuid);
+        $city = $this->cityRepository->findByUuid(CityUuid::fromValue($command->cityUuid));
 
         $university = University::create(
             Uuid::fromValue($command->uuid),
+            $country,
+            $city,
             YouTubeVideoId::fromValue($command->youtubeVideoId)
         );
 

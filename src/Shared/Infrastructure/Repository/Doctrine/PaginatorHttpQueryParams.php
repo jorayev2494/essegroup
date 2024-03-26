@@ -31,7 +31,7 @@ readonly class PaginatorHttpQueryParams implements ArrayableInterface
     {
         return new self(
             page: $data['page'] ?? 1,
-            perPage: $data['perPage'] ?? 15,
+            perPage: $data['per_page'] ?? 15,
             cursor: $data['cursor'] ?? null
         );
     }

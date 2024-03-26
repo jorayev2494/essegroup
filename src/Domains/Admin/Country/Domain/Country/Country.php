@@ -146,6 +146,16 @@ class Country extends AggregateRoot
         $this->record(new CountryWasDeleteDomainEvent($this->uuid));
     }
 
+    public function isEquals(self $other): bool
+    {
+        return $this->value === $other->value;
+    }
+
+    public function isNotEquals(self $other): bool
+    {
+        return $this->value !== $other->value;
+    }
+
     public function toArray(): array
     {
         return [

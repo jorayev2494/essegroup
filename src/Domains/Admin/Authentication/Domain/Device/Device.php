@@ -11,7 +11,7 @@ use Project\Infrastructure\Services\Authentication\Contracts\DeviceInterface;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
-#[ORM\Table('auth_devices')]
+#[ORM\Table(name: 'auth_devices')]
 #[ORM\HasLifecycleCallbacks]
 class Device implements DeviceInterface
 {

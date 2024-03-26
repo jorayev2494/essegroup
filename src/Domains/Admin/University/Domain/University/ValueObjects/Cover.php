@@ -10,7 +10,7 @@ use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contrac
 use Project\Shared\Domain\File\File;
 
 #[ORM\Entity]
-#[ORM\Table('university_covers')]
+#[ORM\Table(name: 'university_covers')]
 #[ORM\HasLifecycleCallbacks]
 class Cover extends File implements CoverInterface
 {
