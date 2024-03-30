@@ -73,6 +73,7 @@ readonly class UniversityController
                 $request->file('cover'),
                 $request->get('youtube_video_id'),
                 $request->get('translations'),
+                $request->boolean('is_on_the_country_list')
             )
         );
 
@@ -100,6 +101,7 @@ readonly class UniversityController
                 $request->file('cover'),
                 $request->get('youtube_video_id'),
                 $request->get('translations'),
+                $request->boolean('is_on_the_country_list')
             )
         );
 

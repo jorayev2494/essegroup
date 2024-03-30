@@ -63,9 +63,9 @@ class FacultyRepository extends BaseAdminEntityRepository implements FacultyRepo
     {
         $query = $this->entityRepository->createQueryBuilder('f');
 
-        if ($queryFilter->universityUuid !== null) {
-            $query->where('f.universityUuid = :universityUuid')
-                ->setParameter('universityUuid', $queryFilter->universityUuid);
+        if (count($queryFilter->universityUuids) > 0) {
+            $query->where('f.universityUuid IN (:universityUuids)')
+                ->setParameter('universityUuids', $queryFilter->universityUuids);
         }
 
         return new FacultyCollection($query->getQuery()->getResult());

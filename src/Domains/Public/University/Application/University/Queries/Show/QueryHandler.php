@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Project\Domains\Public\University\Application\University\Queries\Show;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid;
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Domains\Public\University\Domain\University\UniversityRepositoryInterface;
 use Project\Shared\Domain\Bus\Query\QueryHandlerInterface;
 

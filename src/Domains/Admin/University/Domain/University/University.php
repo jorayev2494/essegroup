@@ -6,12 +6,15 @@ namespace Project\Domains\Admin\University\Domain\University;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Country\Domain\City\City;
+use Project\Domains\Admin\Country\Domain\City\CityTranslate;
 use Project\Domains\Admin\Country\Domain\Country\Country;
 use Project\Domains\Admin\University\Domain\Application\Application;
-use Project\Domains\Admin\University\Domain\Company\Company;
+use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
+use Project\Domains\Admin\University\Domain\Faculty\FacultyCollection;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasAddedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasChangedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasDeletedDomainEvent;
@@ -36,6 +39,7 @@ use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contrac
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
@@ -45,7 +49,7 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'university_universities')]
 #[ORM\HasLifecycleCallbacks]
-class University extends AggregateRoot implements TranslatableInterface, LogoableInterface, CoverableInterface
+class University extends AggregateRoot implements EntityUuid, TranslatableInterface, LogoableInterface, CoverableInterface
 {
     use CreatedAtAndUpdatedAtTrait,
         TranslatableTrait;
@@ -74,28 +78,28 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
     #[ORM\Column(type: DescriptionType::NAME, nullable: true)]
     private Description $description;
 
-    #[ORM\Column(name: 'company_uuid')]
+    #[ORM\Column(name: 'company_uuid', nullable: true)]
     private string $companyUuid;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'universities')]
-    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
-    private ?Company $company;
+    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private Company $company;
 
-    #[ORM\Column(name: 'country_uuid')]
-    private string $countryUuid;
+    #[ORM\Column(name: 'country_uuid', nullable: true)]
+    private ?string $countryUuid;
 
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'universities')]
-    #[ORM\JoinColumn(name: 'country_uuid', referencedColumnName: 'uuid')]
+    #[ORM\JoinColumn(name: 'country_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
     private Country $country;
 
-    #[ORM\Column(name: 'city_uuid')]
-    private string $cityUuid;
+    #[ORM\Column(name: 'city_uuid', nullable: true)]
+    private ?string $cityUuid;
 
     #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'universities')]
-    #[ORM\JoinColumn(name: 'city_uuid', referencedColumnName: 'uuid')]
-    private City $city;
+    #[ORM\JoinColumn(name: 'city_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private ?City $city;
 
-    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'university', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'university', cascade: ['persist'])]
     private Collection $faculties;
 
     /**
@@ -106,6 +110,9 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'universities')]
     private Collection $applications;
+
+    #[ORM\Column(name: 'is_on_the_country_list', type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $isOnTheCountryList;
 
     private function __construct(Uuid $uuid, Country $country, City $city, YouTubeVideoId $youTubeVideoId)
     {
@@ -120,6 +127,7 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
         $this->cover = null;
         $this->translations = new ArrayCollection();
         $this->faculties = new ArrayCollection();
+        $this->isOnTheCountryList = false;
     }
 
     public static function create(Uuid $uuid, Country $country, City $city, YouTubeVideoId $youTubeVideoId): self
@@ -128,7 +136,7 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
         $university->record(
             new UniversityWasCreatedDomainEvent(
                 $university->getUuid()->value,
-                $university->getCountry()->getUuid(),
+                $university->getCountry()->getUuid()->value,
                 $university->getCity()->getUuid()->value,
                 $university->getYouTubeVideoId()->value
             )
@@ -159,7 +167,7 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
             $this->record(
                 new UniversityCountryWasChangedDomainEvent(
                     $this->uuid->value,
-                    $this->getCountry()->getUuid()
+                    $this->getCountry()->getUuid()->value
                 )
             );
         }
@@ -365,6 +373,27 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
         return UniversityTranslation::class;
     }
 
+    public function getIsOnTheCountryList(): bool
+    {
+        return $this->isOnTheCountryList;
+    }
+
+    public function setIsOnTheCountryList(bool $isOnTheCountryList): self
+    {
+        $this->isOnTheCountryList = $isOnTheCountryList;
+
+        return $this;
+    }
+
+    public function changeIsOnTheCountryList(bool $isOnTheCountryList): self
+    {
+        if ($this->isOnTheCountryList !== $isOnTheCountryList) {
+            $this->setIsOnTheCountryList($isOnTheCountryList);
+        }
+
+        return $this;
+    }
+
     /**
      * @inheritDoc
      */
@@ -379,12 +408,13 @@ class University extends AggregateRoot implements TranslatableInterface, Logoabl
             'cover' => $this->cover?->toArray(),
             'youtube_video_id' => $this->youTubeVideoId->value,
             'company_uuid' => $this->company->getUuid()->value,
-            'company' => $this->company->toArray(),
-            'country_uuid' => $this->country->getUuid(),
-            'country' => $this->country->toArray(),
+            'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
+            'country_uuid' => $this->country->getUuid()->value,
+            'country' => $this->country->getUuid()->isNotNull() ? $this->country->toArray() : null,
             'city_uuid' => $this->city->getUuid()->value,
-            'city' => $this->city->toArray(),
+            'city' => CityTranslate::execute($this->city)?->toArray(),
             'description' => $this->description->value,
+            'is_on_the_country_list' => $this->isOnTheCountryList,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];

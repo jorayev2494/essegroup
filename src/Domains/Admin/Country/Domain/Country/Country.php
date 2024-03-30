@@ -16,10 +16,13 @@ use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasCreatedDomainE
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasDeleteDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\CompanyUuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\ISO;
+use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\CompanyUuidType;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ISOType;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ValueType;
+use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\UuidType;
+use Project\Shared\Contracts\NullableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Traits\ActivableTrait;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
@@ -27,14 +30,14 @@ use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'country_countries')]
 #[ORM\HasLifecycleCallbacks]
-class Country extends AggregateRoot
+class Country extends AggregateRoot implements NullableInterface
 {
     use ActivableTrait,
         CreatedAtAndUpdatedAtTrait;
 
     #[ORM\Id]
-    #[ORM\Column]
-    private string $uuid;
+    #[ORM\Column(type: UuidType::NAME)]
+    private Uuid $uuid;
 
     #[ORM\Column(name: 'value', type: ValueType::NAME)]
     private Value $value;
@@ -42,13 +45,16 @@ class Country extends AggregateRoot
     #[ORM\Column(name: 'iso', type: ISOType::NAME, length: 3)]
     private ISO $iso;
 
+//    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'country')]
+//    private Collection $universities;
+
     #[ORM\Column(name: 'company_uuid', type: CompanyUuidType::NAME, nullable: false)]
     private CompanyUuid $companyUuid;
 
     #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'country', cascade: ['persist', 'remove'])]
     private Collection $cities;
 
-    private function __construct(string $uuid, Value $value, ISO $iso, CompanyUuid $companyUuid, bool $isActive)
+    private function __construct(Uuid $uuid, Value $value, ISO $iso, CompanyUuid $companyUuid, bool $isActive)
     {
         $this->uuid = $uuid;
         $this->value = $value;
@@ -58,12 +64,12 @@ class Country extends AggregateRoot
         $this->isActive = $isActive;
     }
 
-    public static function create(string $uuid, Value $value, ISO $iso, CompanyUuid $companyUuid, bool $isActive): self
+    public static function create(Uuid $uuid, Value $value, ISO $iso, CompanyUuid $companyUuid, bool $isActive): self
     {
         $country = new self($uuid, $value, $iso, $companyUuid, $isActive);
         $country->record(
             new CountryWasCreatedDomainEvent(
-                $country->uuid,
+                $country->uuid->value,
                 $country->value->value,
                 $country->iso->value,
                 $country->companyUuid->value,
@@ -74,7 +80,7 @@ class Country extends AggregateRoot
         return $country;
     }
 
-    public function getUuid(): string
+    public function getUuid(): Uuid
     {
         return $this->uuid;
     }
@@ -85,7 +91,7 @@ class Country extends AggregateRoot
             $this->value = $value;
             $this->record(
                 new CountryWasChangedValueDomainEvent(
-                    $this->uuid,
+                    $this->uuid->value,
                     $this->value->value
                 )
             );
@@ -98,7 +104,7 @@ class Country extends AggregateRoot
             $this->iso = $iso;
             $this->record(
                 new CountryWasChangedISODomainEvent(
-                    $this->uuid,
+                    $this->uuid->value,
                     $this->iso->value
                 )
             );
@@ -109,7 +115,7 @@ class Country extends AggregateRoot
     {
         if ($this->companyUuid !== $companyUuid) {
             $this->companyUuid = $companyUuid;
-            $this->record(new CountryWasChangedCompanyDomainEvent($this->uuid, $this->companyUuid->value));
+            // $this->record(new CountryWasChangedCompanyDomainEvent($this->uuid, $this->companyUuid->value));
         }
     }
 
@@ -134,7 +140,7 @@ class Country extends AggregateRoot
             $this->isActive = $isActive;
             $this->record(
                 new CountryWasChangedIsActiveDomainEvent(
-                    $this->uuid,
+                    $this->uuid->value,
                     $this->isActive,
                 )
             );
@@ -143,7 +149,7 @@ class Country extends AggregateRoot
 
     public function delete(): void
     {
-        $this->record(new CountryWasDeleteDomainEvent($this->uuid));
+        // $this->record(new CountryWasDeleteDomainEvent($this->uuid));
     }
 
     public function isEquals(self $other): bool
@@ -153,13 +159,13 @@ class Country extends AggregateRoot
 
     public function isNotEquals(self $other): bool
     {
-        return $this->value !== $other->value;
+        return $this->uuid->value !== $other->uuid->value;
     }
 
     public function toArray(): array
     {
         return [
-            'uuid' => $this->uuid,
+            'uuid' => $this->uuid->value,
             'value' => $this->value->value,
             'iso' => $this->iso->value,
             'is_active' => $this->isActive,
@@ -167,5 +173,15 @@ class Country extends AggregateRoot
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];
+    }
+
+    public function isNull(): bool
+    {
+        return is_null($this->uuid);
+    }
+
+    public function isNotNull(): bool
+    {
+        return ! is_null($this->uuid);
     }
 }

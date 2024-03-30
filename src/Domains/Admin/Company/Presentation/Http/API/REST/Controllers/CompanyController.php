@@ -12,7 +12,6 @@ use Project\Domains\Admin\Company\Application\Company\Commands\Create\Command;
 use Project\Domains\Admin\Company\Application\Company\Queries\Index\Query;
 use Project\Domains\Admin\Company\Application\Company\Queries\List\Query as ListQuery;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
-use Project\Infrastructure\Services\Auth\AuthManager;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

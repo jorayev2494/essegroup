@@ -55,6 +55,7 @@ class UniversityStoreRequest extends FormRequest
             'translations.*.name' => 'required',
             'translations.*.label' => 'required',
             'translations.*.description' => 'required',
+            'is_on_the_country_list' => ['required', 'boolean'],
         ];
     }
 }

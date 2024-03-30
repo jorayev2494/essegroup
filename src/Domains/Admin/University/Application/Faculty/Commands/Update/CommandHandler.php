@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\University\Application\Faculty\Commands\Update;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
-use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid as CompanyUuid;
+use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid as CompanyUuid;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Faculty\Services\Logo\Contracts\LogoServiceInterface;

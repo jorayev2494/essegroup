@@ -16,7 +16,7 @@ use Project\Domains\Admin\University\Domain\Application\ValueObjects\MotherName;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\PassportNumber;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Phone;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
-use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
+use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
@@ -32,7 +32,8 @@ use Project\Domains\Admin\University\Infrastructure\Application\Services\Files\T
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use DateTimeImmutable;
 use Project\Shared\Domain\Bus\Event\EventBusInterface;
-use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid as CompanyUuid;
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid as CompanyUuid;
+use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid as CountryUuid;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
@@ -61,7 +62,7 @@ readonly class CommandHandler implements CommandHandlerInterface
     {
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
         $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid ?? $university->getCompany()->getUuid()->value));
-        $country = $this->countryRepository->findByUuid($command->countryUuid);
+        $country = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->countryUuid));
 
         $application = Application::create(
             Uuid::fromValue($command->uuid),

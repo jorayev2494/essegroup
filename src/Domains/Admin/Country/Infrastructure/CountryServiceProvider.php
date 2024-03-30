@@ -42,12 +42,13 @@ class CountryServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
-        \Project\Domains\Admin\Country\Application\Country\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\Country\Application\Country\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */
     protected const ENTITY_TYPES = [
         // Country
+        \Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\UuidType::class,
         \Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ValueType::class,
         \Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ISOType::class,
         \Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\CompanyUuidType::class,

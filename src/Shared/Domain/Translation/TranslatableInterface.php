@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Project\Shared\Domain\Translation;
 
 use Doctrine\Common\Collections\Collection;
+use Project\Shared\Contracts\NullableInterface;
+use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
 
-interface TranslatableInterface
+interface TranslatableInterface // extends EntityUuid // NullableInterface
 {
     public function addTranslation(AbstractTranslation $t): void;
 

@@ -16,6 +16,8 @@ use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Type
 use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\UuidType;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Shared\Contracts\ArrayableInterface;
+use Project\Shared\Contracts\NullableInterface;
+use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\ActivableTrait;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 use Project\Shared\Domain\Translation\AbstractTranslation;
@@ -26,7 +28,7 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'country_cities')]
 #[ORM\HasLifecycleCallbacks]
-class City implements ArrayableInterface, TranslatableInterface
+class City implements EntityUuid, ArrayableInterface, TranslatableInterface, NullableInterface
 {
     use ActivableTrait,
         CreatedAtAndUpdatedAtTrait,
@@ -49,7 +51,7 @@ class City implements ArrayableInterface, TranslatableInterface
     #[ORM\JoinColumn(name: 'country_uuid', referencedColumnName: 'uuid')]
     private Country $country;
 
-    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'country', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'country')]
     private Collection $universities;
 
     /**
@@ -152,7 +154,17 @@ class City implements ArrayableInterface, TranslatableInterface
 
     public function isNotEquals(self $other): bool
     {
-        return $this->value !== $other->value;
+        return $this->uuid->value !== $other->uuid->value;
+    }
+
+    public function isNull(): bool
+    {
+        return $this->uuid->value === null;
+    }
+
+    public function isNotNull(): bool
+    {
+        return $this->uuid->value !== null;
     }
 
     public function toArray(): array
@@ -161,7 +173,7 @@ class City implements ArrayableInterface, TranslatableInterface
             'uuid' => $this->uuid->value,
             'value' => $this->value->value,
             'company_uuid' => $this->companyUuid->value,
-            'country_uuid' => $this->country->getUuid(),
+            'country_uuid' => $this->country->getUuid()->value,
             'country' => $this->country->toArray(),
             'is_active' => $this->isActive,
             'created_at' => $this->createdAt->getTimestamp(),

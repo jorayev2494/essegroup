@@ -53,6 +53,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
         // Status
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\ValueType::class,
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\NoteType::class,
+        \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\UuidType::class,
     ];
 
     /** @var array<array-key, string> */

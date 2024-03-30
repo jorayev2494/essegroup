@@ -11,6 +11,7 @@ use Project\Domains\Admin\Country\Domain\City\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
+use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid as CountryUuid;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
@@ -29,7 +30,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $city ?? throw new CityNotFoundDomainException();
 
-        $country = $this->repository->findByUuid($command->countryUuid);
+        $country = $this->repository->findByUuid(CountryUuid::fromValue($command->countryUuid));
 
         $city->changeCompanyUuid(CompanyUuid::fromValue($command->companyUuid));
         $city->setCountry($country);

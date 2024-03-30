@@ -8,7 +8,7 @@ use Illuminate\Pipeline\Pipeline;
 
 abstract class BaseFilterQueryBuilder
 {
-    public static function instancePipeline(FilterPipelineSendDTO $sendData): Pipeline
+    protected static function instancePipeline(FilterPipelineSendDTO $sendData): Pipeline
     {
         return app()->make(Pipeline::class)->send($sendData);
     }

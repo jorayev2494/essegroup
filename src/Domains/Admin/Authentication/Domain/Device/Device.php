@@ -42,7 +42,7 @@ class Device implements DeviceInterface
     #[ORM\Column(name: 'author_uuid', type: Types::STRING)]
     private string $authorUuid;
 
-    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'devices', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'devices')]
     #[ORM\JoinColumn(name: 'author_uuid', referencedColumnName: 'uuid', nullable: false)]
     private Member $author;
 
