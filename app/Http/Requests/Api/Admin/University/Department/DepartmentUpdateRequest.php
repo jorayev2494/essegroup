@@ -25,9 +25,18 @@ class DepartmentUpdateRequest extends FormRequest
                 'string',
                 Rule::exists('admin_db.faculty_faculties', 'uuid'),
             ],
+            'degree_uuids.*' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.university_degrees', 'uuid'),
+            ],
             'translations' => ['required', 'array'],
             'translations.*.name' => ['required'],
             'translations.*.description' => ['required'],
+            'is_filled' => [
+                'required',
+                'boolean',
+            ],
 //            'is_active' => [
 //                'required',
 //            ],

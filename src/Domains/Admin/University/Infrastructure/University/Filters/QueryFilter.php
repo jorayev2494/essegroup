@@ -14,6 +14,9 @@ readonly class QueryFilter extends BaseQueryFilter
         public ?array $countryUuids,
         public ?array $cityUuids,
         public ?array $facultyUuids,
+        public ?array $departmentUuids,
+        public ?array $degreeUuids,
+        public bool $onlyInCountryList
     ) {
 
     }
@@ -30,6 +33,9 @@ readonly class QueryFilter extends BaseQueryFilter
             $data['country_uuids'] ?? [],
             $data['city_uuids'] ?? [],
             $data['faculty_uuids'] ?? [],
+            $data['department_uuids'] ?? [],
+            $data['degree_uuids'] ?? [],
+            $data['only_in_country_list'] ?? false,
         );
     }
 
@@ -40,6 +46,9 @@ readonly class QueryFilter extends BaseQueryFilter
             'country_uuids' => $this->countryUuids,
             'city_uuids' => $this->cityUuids,
             'faculty_uuids' => $this->facultyUuids,
+            'department_uuids' => $this->departmentUuids,
+            'degree_uuids' => $this->degreeUuids,
+            'only_in_country_list' => $this->onlyInCountryList,
         ];
     }
 }

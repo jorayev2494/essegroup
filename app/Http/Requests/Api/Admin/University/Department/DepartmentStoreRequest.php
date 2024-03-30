@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Admin\University\Department;
 
+use App\Rules\ValidateTranslationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,12 +26,23 @@ class DepartmentStoreRequest extends FormRequest
                 'string',
                 Rule::exists('admin_db.faculty_faculties', 'uuid'),
             ],
-            'translations' => ['required', 'array'],
-            'translations.*.name' => ['required'],
-            'translations.*.description' => ['required'],
-//            'is_active' => [
-//                'required',
-//            ],
+            'degree_uuids' => [
+                'required',
+                'array',
+            ],
+            'degree_uuids.*' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.university_degrees', 'uuid'),
+            ],
+            'translations' => [
+                'required',
+                new ValidateTranslationRule(['name', 'description']),
+            ],
+            'is_filled' => [
+                'required',
+                'boolean',
+            ],
         ];
     }
 }

@@ -28,7 +28,7 @@ class Code
     #[ORM\Column(name: 'author_uuid', type: Types::STRING)]
     private ?string $authorUuid;
 
-    #[ORM\OneToOne(targetEntity: Member::class, inversedBy: 'code', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Member::class, inversedBy: 'code')]
     #[ORM\JoinColumn(name: 'author_uuid', referencedColumnName: 'uuid', unique: true)]
     private ?Member $author;
 

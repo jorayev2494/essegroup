@@ -7,6 +7,7 @@ use Project\Domains\Admin\Country\Domain\Country\Country;
 use Project\Domains\Admin\Country\Domain\Country\CountryCollection;
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\CompanyUuid;
+use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
 use Project\Domains\Admin\Country\Infrastructure\Country\Filters\QueryFilter;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
@@ -46,7 +47,7 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
         return $this->paginator($query->getQuery(), $httpQuery->paginator);
     }
 
-    public function findByUuid(string $uuid): ?Country
+    public function findByUuid(Uuid $uuid): ?Country
     {
         return $this->entityRepository->find($uuid);
     }

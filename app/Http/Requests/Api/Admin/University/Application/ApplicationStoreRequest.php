@@ -78,7 +78,7 @@ class ApplicationStoreRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::exists('admin_db.university_companies', 'uuid'),
+                Rule::exists('admin_db.company_companies', 'uuid'),
             ],
             'father_name' => ['nullable', 'string', 'max:255'],
             'mother_name' => ['nullable', 'string', 'max:255'],

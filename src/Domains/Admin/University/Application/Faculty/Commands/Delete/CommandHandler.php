@@ -30,8 +30,8 @@ readonly class CommandHandler implements CommandHandlerInterface
         $faculty ?? throw new ModelNotFoundException();
 
         $this->logoService->delete($faculty);
-        $university = $faculty->getUniversity();
-        $university->removeFaculty($faculty);
+        // $university = $faculty->getUniversity();
+        // $university->removeFaculty($faculty);
 
         $faculty->delete();
         $this->facultyRepository->delete($faculty);

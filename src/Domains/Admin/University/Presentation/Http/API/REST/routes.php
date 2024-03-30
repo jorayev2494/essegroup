@@ -6,6 +6,7 @@ use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\Univ
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\FacultyController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\DepartmentController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\ApplicationController;
+use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\DegreeController;
 
 Route::group(
     ['prefix' => 'universities', 'controller' => UniversityController::class],
@@ -50,6 +51,18 @@ Route::group(
         $router->get('/', 'index');
         $router->post('/', 'store');
         $router->get('/status-list', 'statusList');
+        $router->get('/{uuid}', 'show');
+        $router->put('/{uuid}', 'update');
+        $router->delete('/{uuid}', 'delete');
+    }
+);
+
+Route::group(
+    ['prefix' => 'degrees', 'controller' => DegreeController::class],
+    static function (Router $router): void {
+        $router->get('/', 'index');
+        $router->get('/list', 'list');
+        $router->post('/', 'store');
         $router->get('/{uuid}', 'show');
         $router->put('/{uuid}', 'update');
         $router->delete('/{uuid}', 'delete');

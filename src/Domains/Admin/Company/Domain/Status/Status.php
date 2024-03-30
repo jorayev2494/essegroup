@@ -7,24 +7,27 @@ namespace Project\Domains\Admin\Company\Domain\Status;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Company;
+use Project\Domains\Admin\Company\Domain\Status\ValueObjects\Uuid;
 use Project\Domains\Admin\Company\Domain\Status\ValueObjects\Note;
 use Project\Domains\Admin\Company\Domain\Status\ValueObjects\Value;
+use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\UuidType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\NoteType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Status\Types\ValueType;
 use Project\Shared\Contracts\ArrayableInterface;
+use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
+use Project\Shared\Domain\ValueObject\UuidValueObject;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'company_statuses')]
 #[ORM\HasLifecycleCallbacks]
-class Status implements ArrayableInterface
+class Status implements EntityUuid, ArrayableInterface
 {
     use CreatedAtAndUpdatedAtTrait;
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private int $id;
+    #[ORM\Column(type: UuidType::NAME)]
+    private Uuid $uuid;
 
     #[ORM\Column(type: ValueType::NAME)]
     private Value $value;
@@ -44,18 +47,25 @@ class Status implements ArrayableInterface
     #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
     private Company $company;
 
-    private function __construct(Value $value, Note $note)
+    private function __construct(Uuid $uuid, Value $value, Note $note)
     {
+        $this->uuid = $uuid;
         $this->value = $value;
         $this->note = $note;
     }
 
-    public static function fromPrimitives(string $value, ?string $note = null): self
+    public static function fromPrimitives(string $uuid, string $value, ?string $note = null): self
     {
         return new self(
+            Uuid::fromValue($uuid),
             Value::fromValue($value),
             Note::fromValue($note),
         );
+    }
+
+    public function getUuid(): UuidValueObject
+    {
+        return $this->uuid;
     }
 
     public function getValue(): Value

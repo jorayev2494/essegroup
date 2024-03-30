@@ -11,7 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Project\Domains\Admin\University\Domain\Company\Company;
+use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\Events\FacultyWasDeletedDomainEvent;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Description;
@@ -25,8 +25,11 @@ use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Facult
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoInterface;
+use Project\Shared\Contracts\NullableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\ActivableTrait;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
 use Project\Shared\Domain\Translation\TranslatableInterface;
@@ -35,9 +38,10 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'faculty_faculties')]
 #[ORM\HasLifecycleCallbacks]
-class Faculty extends AggregateRoot implements TranslatableInterface, LogoableInterface
+class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface, LogoableInterface
 {
     use ActivableTrait,
+        CreatedAtAndUpdatedAtTrait,
         TranslatableTrait;
 
     #[ORM\Id]
@@ -57,28 +61,22 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
     #[ORM\OneToMany(targetEntity: FacultyTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
 
-    #[ORM\Column(name: 'company_uuid')]
-    private string $companyUuid;
+    #[ORM\Column(name: 'company_uuid', nullable: true)]
+    private ?string $companyUuid;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'faculties')]
-    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', nullable: false)]
-    private ?Company $company;
+    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private Company $company;
 
-    #[ORM\Column(name: 'university_uuid')]
-    private string $universityUuid;
+    #[ORM\Column(name: 'university_uuid', nullable: true)]
+    private ?string $universityUuid;
 
     #[ORM\ManyToOne(targetEntity: University::class, inversedBy: 'faculties')]
-    #[ORM\JoinColumn(name: 'university_uuid', referencedColumnName: 'uuid', nullable: false)]
+    #[ORM\JoinColumn(name: 'university_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
     private University $university;
 
-    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'faculty', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'faculty', cascade: ['persist'])]
     private Collection $departments;
-
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
-    protected DateTimeImmutable $createdAt;
-
-    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
-    protected DateTimeImmutable $updatedAt;
 
     private function __construct(Uuid $uuid, Company $company, bool $isActive)
     {
@@ -252,19 +250,6 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
         return FacultyTranslation::class;
     }
 
-    #[ORM\PrePersist]
-    public function prePersist(PrePersistEventArgs $event): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
-    #[ORM\PreUpdate]
-    public function preUpdate(PreUpdateEventArgs $event): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
-    }
-
     #[\Override]
     public function toArray(): array
     {
@@ -273,9 +258,9 @@ class Faculty extends AggregateRoot implements TranslatableInterface, LogoableIn
             'name' => $this->name->value,
             'description' => $this->description->value,
             'company_uuid' => $this->companyUuid,
-            'company' => $this->company->toArray(),
+            'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
             'university_uuid' => $this->universityUuid,
-            'university' => UniversityTranslate::execute($this->university)->toArray(),
+            'university' => UniversityTranslate::execute($this->university)?->toArray(),
             'department_count' => $this->departments->count(),
             'logo' => $this->logo?->toArray(),
             'is_active' => $this->isActive,

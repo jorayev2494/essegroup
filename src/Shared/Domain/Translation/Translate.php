@@ -4,6 +4,9 @@ namespace Project\Shared\Domain\Translation;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\TypeRegistry;
+use Project\Shared\Contracts\NullableInterface;
+use Project\Shared\Domain\Contracts\EntityId;
+use Project\Shared\Domain\Contracts\EntityUuid;
 
 abstract class Translate
 {
@@ -18,7 +21,7 @@ abstract class Translate
 
     protected static function translate(?TranslatableInterface $item, ?string $locale = null): ?TranslatableInterface
     {
-        if ($item !== null) {
+        if (self::itemIsNotNull($item)) {
             foreach (static::COLUMNS_WITH_TRANSLATE as $column => $columnType) {
                 /** @var AbstractTranslation $trans */
                 $trans = $item->getTranslations()->findFirst(
@@ -32,8 +35,15 @@ abstract class Translate
                 $setMethodName = 'set' . ucwords($column);
                 $item->$setMethodName($value);
             }
+
+            return $item;
         }
 
-        return $item;
+        return null;
+    }
+
+    private static function itemIsNotNull(TranslatableInterface $item): bool
+    {
+        return ($item instanceof EntityUuid && $item->getUuid()->isNotNull()) || ($item instanceof EntityId && $item->getId()->isNotNull());
     }
 }

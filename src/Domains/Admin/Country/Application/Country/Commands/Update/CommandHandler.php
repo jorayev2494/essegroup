@@ -10,6 +10,7 @@ use Project\Domains\Admin\Country\Domain\Country\Exceptions\CountryAlreadyExists
 use Project\Domains\Admin\Country\Domain\Country\Exceptions\CountryNotFoundDomainException;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\CompanyUuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\ISO;
+use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
 use Project\Infrastructure\Services\Auth\AuthManager;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
@@ -26,7 +27,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $country = $this->countryRepository->findByUuid($command->uuid);
+        $country = $this->countryRepository->findByUuid(Uuid::fromValue($command->uuid));
 
         $country ?? throw new CountryNotFoundDomainException();
 

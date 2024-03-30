@@ -3,7 +3,7 @@
 namespace Project\Domains\Public\University\Infrastructure\Repositories\Doctrine\University;
 
 use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
-use Project\Domains\Admin\University\Domain\Company\ValueObjects\Uuid;
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityCollection;
 use Project\Domains\Admin\University\Infrastructure\University\Filters\QueryFilter;

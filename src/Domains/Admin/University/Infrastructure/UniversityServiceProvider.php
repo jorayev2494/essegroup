@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\University\Infrastructure;
 
 use App\Providers\Domains\AdminDomainServiceProvider;
-use Project\Domains\Admin\University\Application\Company\Subscribers\CompanyNameWasChangedDomainEventSubscriber;
-use Project\Domains\Admin\University\Domain\Company\CompanyRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Degree\DegreeRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
-use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\CompanyRepository;
+use Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\DegreeRepository;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\DepartmentRepository;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\FacultyRepository;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\UniversityRepository;
@@ -24,11 +23,12 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     /** @var array<string, string> */
     protected const SERVICES = [
         UniversityRepositoryInterface::class => [self::SERVICE_SINGLETON, UniversityRepository::class],
-        CompanyRepositoryInterface::class => [self::SERVICE_SINGLETON, CompanyRepository::class],
         DepartmentRepositoryInterface::class => [self::SERVICE_SINGLETON, DepartmentRepository::class],
         CoverServiceInterface::class => [self::SERVICE_SINGLETON, CoverService::class],
         LogoServiceInterface::class => [self::SERVICE_SINGLETON, LogoService::class],
         FacultyRepositoryInterface::class => [self::SERVICE_SINGLETON, FacultyRepository::class],
+        DegreeRepositoryInterface::class => [self::SERVICE_SINGLETON, DegreeRepository::class],
+
         \Project\Domains\Admin\University\Domain\Faculty\Services\Logo\Contracts\LogoServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Faculty\Services\Logo\LogoService::class],
         // \Project\Domains\Admin\University\Domain\Faculty\Services\Logo\Contracts\LogoServiceInterface::class => [self::SERVICE_SINGLETON, LogoService::class],
 
@@ -70,6 +70,11 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Application\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Application\Queries\Show\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Application\Queries\StatusList\QueryHandler::class,
+
+        // Degree
+        \Project\Domains\Admin\University\Application\Degree\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\Degree\Queries\List\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\Degree\Queries\Show\QueryHandler::class,
     ];
 
     /** @var array<string, string> */
@@ -80,12 +85,6 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\NameType::class,
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\LabelType::class,
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\DescriptionType::class,
-
-        // Company
-        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\Types\UuidType::class,
-        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\Types\NameType::class,
-        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\Types\DomainType::class,
-        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Company\Types\StatusType::class,
 
         // University
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType::class,
@@ -108,7 +107,11 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\PhoneType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusEnumType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\HomeAddressType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusIdType::class,
 
+        // Degree
+        \Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\Types\UuidType::class,
+        \Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\Types\ValueType::class,
 
     ];
 
@@ -132,6 +135,11 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Application\Commands\Create\CommandHandler::class,
         \Project\Domains\Admin\University\Application\Application\Commands\Update\CommandHandler::class,
         \Project\Domains\Admin\University\Application\Application\Commands\Delete\CommandHandler::class,
+
+        // Degree
+        \Project\Domains\Admin\University\Application\Degree\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Degree\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Degree\Commands\Delete\CommandHandler::class,
     ];
 
     /** @var array<array-key, string> */
@@ -142,27 +150,42 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         // Application
-        \Project\Domains\Admin\University\Application\Application\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Application\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Application\Subscribers\Department\ApplicationWasDeletedFromDepartmentDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Application\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Application\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Application\Subscribers\Department\ApplicationWasDeletedFromDepartmentDomainEventSubscriber::class,
 
         // Department
-        \Project\Domains\Admin\University\Application\Department\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Department\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Department\Subscribers\Faculty\FacultyWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Department\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Department\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Department\Subscribers\Faculty\FacultyWasDeletedDomainEventSubscriber::class,
 
         // Faculty
-        \Project\Domains\Admin\University\Application\Faculty\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Faculty\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Faculty\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Faculty\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
 
         // University
-        \Project\Domains\Admin\University\Application\University\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\University\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+
+        // Degree
+        // \Project\Domains\Admin\University\Application\Degree\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
 
         // Company
-        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyNameWasChangedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyDomainWasChangedDomainEventSubscriber::class,
-        \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyNameWasChangedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyDomainWasChangedDomainEventSubscriber::class,
+        // \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
+    ];
+
+    /** @var array<string, string> */
+    protected const ENTITY_PATHS = [
+        __DIR__ . '/../Domain/University',
+        __DIR__ . '/../Domain/University/ValueObjects',
+        __DIR__ . '/../Domain/Faculty',
+        __DIR__ . '/../Domain/Faculty/ValueObjects',
+        __DIR__ . '/../Domain/Department',
+        __DIR__ . '/../Domain/Application/ValueObjects',
+        __DIR__ . '/../Domain/Application',
+        __DIR__ . '/../Domain/Degree',
     ];
 
     /** @var array<string, string> */
@@ -172,17 +195,5 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
             'prefix' => 'api/admin',
             'path' => __DIR__ . '/../Presentation/Http/API/REST/routes.php',
         ],
-    ];
-
-    /** @var array<string, string> */
-    protected const ENTITY_PATHS = [
-        __DIR__ . '/../Domain/University',
-        __DIR__ . '/../Domain/University/ValueObjects',
-        __DIR__ . '/../Domain/Company',
-        __DIR__ . '/../Domain/Faculty',
-        __DIR__ . '/../Domain/Faculty/ValueObjects',
-        __DIR__ . '/../Domain/Department',
-        __DIR__ . '/../Domain/Application/ValueObjects',
-        __DIR__ . '/../Domain/Application',
     ];
 }
