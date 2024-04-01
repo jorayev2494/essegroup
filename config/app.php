@@ -31,6 +31,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'available_client_translation_locales' => array_filter(explode(',', env('AVAILABLE_CLIENT_TRANSLATION_LOCALES', 'en,ru'))),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

@@ -45,6 +45,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Domain\Application\Services\Contracts\StatusServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\StatusService::class],
         \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\AdditionalDocumentService::class],
         \Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\ApplicationService::class],
+        \Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Alias\Repositories\Doctrine\AliasRepository::class],
     ];
 
     /** @var array<array-key, string> */
@@ -75,6 +76,10 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Degree\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Degree\Queries\List\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Degree\Queries\Show\QueryHandler::class,
+
+        // Alias
+        \Project\Domains\Admin\University\Application\Alias\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\Alias\Queries\Show\QueryHandler::class,
     ];
 
     /** @var array<string, string> */
@@ -113,6 +118,9 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\Types\UuidType::class,
         \Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\Types\ValueType::class,
 
+        // Alias
+        \Project\Domains\Admin\University\Infrastructure\Alias\Repositories\Doctrine\Types\UuidType::class,
+        \Project\Domains\Admin\University\Infrastructure\Alias\Repositories\Doctrine\Types\ValueType::class,
     ];
 
     /** @var array<array-key, string> */
@@ -140,6 +148,11 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Degree\Commands\Create\CommandHandler::class,
         \Project\Domains\Admin\University\Application\Degree\Commands\Update\CommandHandler::class,
         \Project\Domains\Admin\University\Application\Degree\Commands\Delete\CommandHandler::class,
+
+        // Alias
+        \Project\Domains\Admin\University\Application\Alias\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Alias\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Alias\Commands\Delete\CommandHandler::class,
     ];
 
     /** @var array<array-key, string> */
@@ -172,6 +185,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         __DIR__ . '/../Domain/Application/ValueObjects',
         __DIR__ . '/../Domain/Application',
         __DIR__ . '/../Domain/Degree',
+        __DIR__ . '/../Domain/Alias',
     ];
 
     /** @var array<string, string> */

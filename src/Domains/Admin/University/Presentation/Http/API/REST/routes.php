@@ -7,6 +7,7 @@ use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\Facu
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\DepartmentController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\ApplicationController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\DegreeController;
+use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\AliasController;
 
 Route::group(
     ['prefix' => 'universities', 'controller' => UniversityController::class],
@@ -62,6 +63,17 @@ Route::group(
     static function (Router $router): void {
         $router->get('/', 'index');
         $router->get('/list', 'list');
+        $router->post('/', 'store');
+        $router->get('/{uuid}', 'show');
+        $router->put('/{uuid}', 'update');
+        $router->delete('/{uuid}', 'delete');
+    }
+);
+
+Route::group(
+    ['prefix' => 'aliases', 'controller' => AliasController::class],
+    static function (Router $router): void {
+        $router->get('/', 'index');
         $router->post('/', 'store');
         $router->get('/{uuid}', 'show');
         $router->put('/{uuid}', 'update');
