@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Application\Application\Commands\Update;
 
+use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Application\Exceptions\ApplicationNotFoundDomainException;
 use Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface;
@@ -24,12 +25,15 @@ use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInter
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid as FacultyUuid;
+use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid as CountryUuid;
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid as CompanyUuid;
 use DateTimeImmutable;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private ApplicationRepositoryInterface $applicationRepository,
+        private CompanyRepositoryInterface $companyRepository,
         private StatusServiceInterface $statusService,
         private UniversityRepositoryInterface $universityRepository,
         private CountryRepositoryInterface $countryRepository,
@@ -42,12 +46,14 @@ readonly class CommandHandler implements CommandHandlerInterface
     public function __invoke(Command $command): void
     {
         $application = $this->applicationRepository->findByUuid(Uuid::fromValue($command->uuid));
+        $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid));
 
         $application ?? throw new ApplicationNotFoundDomainException();
 
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
-        $country = $this->countryRepository->findByUuid($command->countryUuid);
+        $country = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->countryUuid));
 
+        $application->changeCompany($company);
         $application->changeUniversity($university);
         $application->changeBirthday(new DateTimeImmutable($command->birthday));
         $application->changeCountry($country);

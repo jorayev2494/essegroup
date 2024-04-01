@@ -66,13 +66,13 @@ readonly class UniversityController
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
-                $request->get('company_uuid'),
                 $request->get('country_uuid'),
                 $request->get('city_uuid'),
                 $request->file('logo'),
                 $request->file('cover'),
                 $request->get('youtube_video_id'),
                 $request->get('translations'),
+                $request->boolean('is_on_the_country_list')
             )
         );
 
@@ -93,13 +93,13 @@ readonly class UniversityController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
-                $request->get('company_uuid'),
                 $request->get('country_uuid'),
                 $request->get('city_uuid'),
                 $request->file('logo'),
                 $request->file('cover'),
                 $request->get('youtube_video_id'),
                 $request->get('translations'),
+                $request->boolean('is_on_the_country_list')
             )
         );
 

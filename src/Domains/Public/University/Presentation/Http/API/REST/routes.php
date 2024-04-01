@@ -8,6 +8,7 @@ use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\Fac
 use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\DepartmentController;
 use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\CountryController;
 use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\CityController;
+use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\DegreeController;
 
 Route::group(
     ['prefix' => 'universities', 'controller' => UniversityController::class],
@@ -37,6 +38,13 @@ Route::group(
     static function (Router $router): void {
         $router->get('/list', 'list');
         $router->get('/{uuid}', 'show');
+    }
+);
+
+Route::group(
+    ['prefix' => 'degrees', 'controller' => DegreeController::class],
+    static function (Router $router): void {
+        $router->get('/list', 'list');
     }
 );
 

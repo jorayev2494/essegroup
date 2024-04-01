@@ -15,19 +15,18 @@ class DepartmentUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_uuid' => [
+            'degree_uuids.*' => [
                 'required',
                 'string',
-                Rule::exists('admin_db.company_companies', 'uuid'),
-            ],
-            'faculty_uuid' => [
-                'required',
-                'string',
-                Rule::exists('admin_db.faculty_faculties', 'uuid'),
+                Rule::exists('admin_db.university_degrees', 'uuid'),
             ],
             'translations' => ['required', 'array'],
             'translations.*.name' => ['required'],
             'translations.*.description' => ['required'],
+            'is_filled' => [
+                'required',
+                'boolean',
+            ],
 //            'is_active' => [
 //                'required',
 //            ],

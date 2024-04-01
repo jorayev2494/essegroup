@@ -26,6 +26,7 @@ class Command implements CommandInterface
         public readonly string $countryUuid,
         public readonly string $status,
         array $statusNotes,
+        public string $companyUuid,
         public readonly ?string $fatherName,
         public readonly ?string $motherName,
         public readonly ?string $friendPhone,

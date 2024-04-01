@@ -57,7 +57,12 @@ class ApplicationUpdateRequest extends FormRequest
                 'max:500',
                 Rule::requiredIf(StatusEnum::managementNoteRequired(StatusEnum::from($this->get('status')['value'])))
             ],
-
+            'company_uuid' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::exists('admin_db.company_companies', 'uuid'),
+            ],
             'father_name' => ['nullable', 'string', 'max:255'],
             'mother_name' => ['nullable', 'string', 'max:255'],
             'friend_phone' => ['nullable', 'string', 'max:255'],

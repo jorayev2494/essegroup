@@ -6,6 +6,7 @@ namespace Project\Domains\Admin\Country\Application\Country\Queries\Show;
 
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\Country\Exceptions\CountryNotFoundDomainException;
+use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid;
 use Project\Shared\Domain\Bus\Query\QueryHandlerInterface;
 
 readonly class QueryHandler implements QueryHandlerInterface
@@ -19,7 +20,7 @@ readonly class QueryHandler implements QueryHandlerInterface
 
     public function __invoke(Query $query): array
     {
-        $country = $this->countryRepository->findByUuid($query->uuid);
+        $country = $this->countryRepository->findByUuid(Uuid::fromValue($query->uuid));
 
         $country ?? throw new CountryNotFoundDomainException();
 

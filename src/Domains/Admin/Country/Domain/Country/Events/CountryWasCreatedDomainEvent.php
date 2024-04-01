@@ -10,7 +10,6 @@ readonly class CountryWasCreatedDomainEvent extends DomainEvent
         public string $uuid,
         public string $value,
         public string $iso,
-        public string $companyUuid,
         public bool $isActive,
         string $eventId = null,
         string $occurredOn = null,
@@ -26,11 +25,10 @@ readonly class CountryWasCreatedDomainEvent extends DomainEvent
             'uuid' => $uuid,
             'value' => $value,
             'iso' => $iso,
-            'company_uuid' => $companyUuid,
             'is_active' => $isActive,
         ] = $body;
 
-        return new self($uuid, $value, $iso, $companyUuid, $isActive, $eventId, $occurredOn);
+        return new self($uuid, $value, $iso, $isActive, $eventId, $occurredOn);
     }
 
     #[\Override]
@@ -51,7 +49,6 @@ readonly class CountryWasCreatedDomainEvent extends DomainEvent
                 'uuid' => $this->uuid,
                 'value' => $this->value,
                 'iso' => $this->iso,
-                'company_uuid' => $this->companyUuid,
                 'is_active' => $this->isActive,
             ],
             'event_id' => $this->eventId(),

@@ -10,7 +10,6 @@ readonly class Command implements CommandInterface
 {
     public function __construct(
         public string $uuid,
-        public string $companyUuid,
         public string $value,
         public string $iso,
         public bool $isActive

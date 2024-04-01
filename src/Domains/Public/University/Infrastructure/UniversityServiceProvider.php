@@ -13,6 +13,8 @@ use Project\Domains\Public\University\Domain\City\Services\CityService;
 use Project\Domains\Public\University\Domain\City\Services\Contracts\CityServiceInterface;
 use Project\Domains\Public\University\Domain\Country\Services\Contracts\CountryServiceInterface;
 use Project\Domains\Public\University\Domain\Country\Services\CountryService;
+use Project\Domains\Public\University\Domain\Degree\Services\Contracts\DegreeServiceInterface;
+use Project\Domains\Public\University\Domain\Degree\Services\DegreeService;
 use Project\Domains\Public\University\Domain\Department\Services\Contracts\DepartmentServiceInterface;
 use Project\Domains\Public\University\Domain\Department\Services\DepartmentService;
 use Project\Domains\Public\University\Domain\Faculty\Services\Contracts\FacultyServiceInterface;
@@ -34,6 +36,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         DepartmentServiceInterface::class => [self::SERVICE_SINGLETON, DepartmentService::class],
         CountryServiceInterface::class => [self::SERVICE_SINGLETON, CountryService::class],
         CityServiceInterface::class => [self::SERVICE_SINGLETON, CityService::class],
+        DegreeServiceInterface::class => [self::SERVICE_SINGLETON, DegreeService::class],
     ];
 
     /** @var array<array-key, string> */
@@ -44,6 +47,9 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
 
         // City
         \Project\Domains\Public\University\Application\City\Queries\List\QueryHandler::class,
+
+        // Degree
+        \Project\Domains\Public\University\Application\Degree\Queries\List\QueryHandler::class,
     ];
 
     /** @var array<array-key, string> */

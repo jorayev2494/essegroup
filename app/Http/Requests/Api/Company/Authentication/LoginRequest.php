@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Api\Company\Authentication;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class LoginRequest extends FormRequest
 {

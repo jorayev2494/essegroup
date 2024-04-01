@@ -14,24 +14,27 @@ use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Application\StatusEnum;
 use Project\Domains\Admin\University\Domain\Application\StatusNoteTranslation;
 use Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusEnumType;
+use Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusIdType;
 use Project\Shared\Contracts\ArrayableInterface;
 use DateTimeImmutable;
+use Project\Shared\Domain\Contracts\EntityId;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
 use Project\Shared\Domain\Translation\TranslatableInterface;
 use Project\Shared\Domain\Translation\TranslatableTrait;
+use Project\Shared\Domain\ValueObject\IdValueObject;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'university_application_statuses')]
 #[ORM\HasLifecycleCallbacks]
-class Status implements ArrayableInterface, TranslatableInterface
+class Status implements EntityId, ArrayableInterface, TranslatableInterface
 {
     use TranslatableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private int $id;
+    #[ORM\Column(type: StatusIdType::NAME)]
+    private StatusId $id;
 
     #[ORM\Column(type: StatusEnumType::NAME, length: 20)]
     private StatusEnum $value;
@@ -62,6 +65,11 @@ class Status implements ArrayableInterface, TranslatableInterface
     public static function fromPrimitives(string $value): self
     {
         return new self(StatusEnum::from($value));
+    }
+
+    public function getId(): IdValueObject
+    {
+        return $this->id;
     }
 
     public function translationDomainEvent(AbstractTranslation $translation, TranslationDomainEventTypeEnum $type): void

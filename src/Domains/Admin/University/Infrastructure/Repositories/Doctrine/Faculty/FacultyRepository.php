@@ -28,28 +28,6 @@ class FacultyRepository extends BaseAdminEntityRepository implements FacultyRepo
         return $this->entityRepository->find($uuid);
     }
 
-    public function findManyByCompanyUuid(string $companyUuid): FacultyCollection
-    {
-        return new FacultyCollection(
-            $this->entityRepository->createQueryBuilder('f')
-                ->where('f.companyUuid = :companyUuid')
-                ->setParameter('companyUuid', $companyUuid)
-                ->getQuery()
-                ->getResult()
-        );
-    }
-
-    public function findManyByUniversityUuid(string $universityUuid): FacultyCollection
-    {
-        return new FacultyCollection(
-            $this->entityRepository->createQueryBuilder('f')
-                ->where('f.universityUuid = :universityUuid')
-                ->setParameter('universityUuid', $universityUuid)
-                ->getQuery()
-                ->getResult()
-        );
-    }
-
     #[\Override]
     public function paginate(Query $httpQuery): Paginator
     {
@@ -63,9 +41,9 @@ class FacultyRepository extends BaseAdminEntityRepository implements FacultyRepo
     {
         $query = $this->entityRepository->createQueryBuilder('f');
 
-        if ($queryFilter->universityUuid !== null) {
-            $query->where('f.universityUuid = :universityUuid')
-                ->setParameter('universityUuid', $queryFilter->universityUuid);
+        if (count($queryFilter->universityUuids) > 0) {
+            $query->where('f.universityUuid IN (:universityUuids)')
+                ->setParameter('universityUuids', $queryFilter->universityUuids);
         }
 
         return new FacultyCollection($query->getQuery()->getResult());

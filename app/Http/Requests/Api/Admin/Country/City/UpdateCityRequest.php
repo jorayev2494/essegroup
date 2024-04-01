@@ -16,12 +16,6 @@ class UpdateCityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_uuid' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::exists('admin_db.company_companies', 'uuid'),
-            ],
             'country_uuid' => [
                 'required',
                 'string',

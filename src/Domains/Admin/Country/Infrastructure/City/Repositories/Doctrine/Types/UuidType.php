@@ -21,10 +21,10 @@ class UuidType extends Type
     /**
      * @param Uuid $value
      * @param AbstractPlatform $platform
-     * @return mixed
+     * @return string|null
      * @throws \Doctrine\DBAL\Types\ConversionException
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         return $value->value;
     }

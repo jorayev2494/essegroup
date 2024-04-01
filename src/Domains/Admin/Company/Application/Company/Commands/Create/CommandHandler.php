@@ -13,6 +13,8 @@ use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Email;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
+use Project\Domains\Admin\Company\Domain\Status\Status;
+use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Shared\Domain\Bus\Event\EventBusInterface;
 
@@ -22,6 +24,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private CompanyRepositoryInterface $repository,
         private LogoServiceInterface $logoService,
         private EventBusInterface $eventBus,
+        private UuidGeneratorInterface $uuidGenerator
     )
     {
 
@@ -29,23 +32,12 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $company = $this->repository->findByName(Name::fromValue($command->name));
-
-        if ($company !== null) {
-            throw new CompanyNameAlreadyExistsDomainException();
-        }
-
-        $company = $this->repository->findByDomain(Domain::fromValue($command->domain));
-
-        if ($company !== null) {
-            throw new CompanyDomainAlreadyExistsDomainException();
-        }
-
         $company = Company::create(
             Uuid::fromValue($command->uuid),
             Name::fromValue($command->name),
             Email::fromValue($command->email),
-            Domain::fromValue($command->domain)
+            Domain::fromValue($command->domain),
+            Status::fromPrimitives($this->uuidGenerator->generate(), 'new')
         );
 
         $this->logoService->upload($company, $command->logo);

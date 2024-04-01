@@ -27,8 +27,8 @@ class ManagerServiceProvider extends CompanyDomainServiceProvider
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         // Company
-        \Project\Domains\Company\Manager\Application\Manager\Subscribers\Company\CompanyWasCreatedDomainEventSubscriber::class,
-        \Project\Domains\Company\Manager\Application\Manager\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Company\Manager\Application\Manager\Subscribers\Company\CompanyWasCreatedDomainEventSubscriber::class,
+        // \Project\Domains\Company\Manager\Application\Manager\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */

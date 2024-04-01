@@ -26,14 +26,19 @@ use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\T
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\EmailType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\NameType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\UuidType;
+use Project\Domains\Admin\University\Domain\Application\Application;
+use Project\Domains\Admin\University\Domain\Department\Department;
+use Project\Domains\Admin\University\Domain\Faculty\Faculty;
+use Project\Domains\Admin\University\Domain\University\University;
 use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'company_companies')]
 #[ORM\HasLifecycleCallbacks]
-class Company extends AggregateRoot implements LogoableInterface
+class Company extends AggregateRoot implements EntityUuid, LogoableInterface
 {
     use CreatedAtAndUpdatedAtTrait;
 
@@ -60,6 +65,18 @@ class Company extends AggregateRoot implements LogoableInterface
     #[ORM\OneToMany(targetEntity: Status::class, mappedBy: 'company', cascade: ['persist', 'remove'])]
     private Collection $statuses;
 
+    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'company', cascade: ['persist'])]
+    private Collection $universities;
+
+    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'company', cascade: ['persist'])]
+    private Collection $faculties;
+
+    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'company', cascade: ['persist'])]
+    private Collection $departments;
+
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'company', cascade: ['persist'])]
+    private Collection $applications;
+
     private function __construct(Uuid $uuid, Name $name, Email $email, Domain $domain)
     {
         $this->uuid = $uuid;
@@ -67,12 +84,16 @@ class Company extends AggregateRoot implements LogoableInterface
         $this->email = $email;
         $this->domain = $domain;
         $this->statuses = new ArrayCollection();
+        $this->universities = new ArrayCollection();
+        $this->faculties = new ArrayCollection();
+        $this->departments = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
-    public static function create(Uuid $uuid, Name $name, Email $email, Domain $domain): self
+    public static function create(Uuid $uuid, Name $name, Email $email, Domain $domain, Status $status): self
     {
         $company = new self($uuid, $name, $email, $domain);
-        $company->addStatus(Status::fromPrimitives('new'));
+        $company->addStatus($status);
         $company->record(
             new CompanyWasCreatedDomainEvent(
                 $company->getUuid()->value,
@@ -170,6 +191,50 @@ class Company extends AggregateRoot implements LogoableInterface
         // $this->logo = null;
 
         return $this;
+    }
+
+    public function getUniversities(): Collection
+    {
+        return $this->universities;
+    }
+
+    public function addUniversity(University $university): self
+    {
+        $this->universities->add($university);
+        $university->setCompany($this);
+
+        return $this;
+    }
+
+    public function removeUniversity(University $university): void
+    {
+        if ($this->universities->contains($university)) {
+            $this->universities->removeElement($university);
+        }
+    }
+
+    /**
+     * @return Collection<int, Faculty>
+     */
+    public function getFaculties(): Collection
+    {
+        return $this->faculties;
+    }
+
+    /**
+     * @return Collection<int, Department>
+     */
+    public function getDepartments(): Collection
+    {
+        return $this->departments;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
     }
 
     public function delete(): void

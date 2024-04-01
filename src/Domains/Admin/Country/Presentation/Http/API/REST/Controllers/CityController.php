@@ -57,7 +57,6 @@ readonly class CityController
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
-                $request->get('company_uuid'),
                 $request->get('country_uuid'),
                 $request->get('translations'),
                 true
@@ -81,7 +80,6 @@ readonly class CityController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
-                $request->get('company_uuid'),
                 $request->get('country_uuid'),
                 $request->get('translations'),
                 true

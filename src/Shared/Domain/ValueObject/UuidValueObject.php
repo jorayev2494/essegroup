@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Project\Shared\Domain\ValueObject;
 
 use InvalidArgumentException;
+use Project\Shared\Contracts\NullableInterface;
 use Ramsey\Uuid\Uuid;
 
 
-class UuidValueObject implements \Stringable
+class UuidValueObject implements \Stringable, NullableInterface
 {
     public ?string $value;
 
@@ -45,9 +46,18 @@ class UuidValueObject implements \Stringable
         return $this->value !== $other->value;
     }
 
+    public function isNull(): bool
+    {
+        return $this->value === null;
+    }
+
+    public function isNotNull(): bool
+    {
+        return $this->value !== null;
+    }
+
     public function __toString(): string
     {
-        // dd($this->value);
-        return $this->value;
+        return $this->value ?? static::class;
     }
 }

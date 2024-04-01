@@ -23,11 +23,6 @@ class UniversityStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_uuid' => [
-                'required',
-                'string',
-                Rule::exists('admin_db.company_companies', 'uuid'),
-            ],
             'country_uuid' => [
                 'required',
                 'string',
@@ -55,6 +50,7 @@ class UniversityStoreRequest extends FormRequest
             'translations.*.name' => 'required',
             'translations.*.label' => 'required',
             'translations.*.description' => 'required',
+            'is_on_the_country_list' => ['required', 'boolean'],
         ];
     }
 }

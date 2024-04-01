@@ -38,12 +38,12 @@ class AuthenticationServiceProvider extends CompanyDomainServiceProvider
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         // Company
-        \Project\Domains\Company\Authentication\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
-        \Project\Domains\Company\Authentication\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Company\Authentication\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
+        // \Project\Domains\Company\Authentication\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
 
         // Authentication
-        \Project\Domains\Company\Authentication\Application\Authentication\Subscribers\Manager\ManagerWasCreatedDomainEventSubscriber::class,
-        \Project\Domains\Company\Authentication\Application\Authentication\Subscribers\Manager\ManagerWasDeletedDomainEventSubscriber::class,
+        // \Project\Domains\Company\Authentication\Application\Authentication\Subscribers\Manager\ManagerWasCreatedDomainEventSubscriber::class,
+        // \Project\Domains\Company\Authentication\Application\Authentication\Subscribers\Manager\ManagerWasDeletedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */

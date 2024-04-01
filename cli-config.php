@@ -17,31 +17,32 @@ $migrationsPaths = [];
 $entity = getenv('ENTITY');
 
 if (in_array($entity, ['admin', 'company', 'client'])) {
-    if ($entity === 'client')
-    {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $app->make(ClientEntityManagerInterface::class);
-        $migrationsPaths = $app->make('client_doctrine_migration_paths');
-        $entityManager->getConfiguration()
-            ->setMetadataDriverImpl(
-                new AttributeDriver($app->make('client_doctrine_entity_paths')->toArray())
-            );
-
-        $dbalKey = 'client_dbal_connection';
-    }
-    else if ($entity === 'company')
-    {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $app->make(CompanyEntityManagerInterface::class);
-        $migrationsPaths = $app->make('company_doctrine_migration_paths');
-        $entityManager->getConfiguration()
-            ->setMetadataDriverImpl(
-                new AttributeDriver($app->make('company_doctrine_entity_paths')->toArray())
-            );
-
-        $dbalKey = 'company_dbal_connection';
-    }
-    else if ($entity === 'admin')
+//    if ($entity === 'client')
+//    {
+//        /** @var EntityManagerInterface $entityManager */
+//        $entityManager = $app->make(ClientEntityManagerInterface::class);
+//        $migrationsPaths = $app->make('client_doctrine_migration_paths');
+//        $entityManager->getConfiguration()
+//            ->setMetadataDriverImpl(
+//                new AttributeDriver($app->make('client_doctrine_entity_paths')->toArray())
+//            );
+//
+//        $dbalKey = 'client_dbal_connection';
+//    }
+//    else if ($entity === 'company')
+//    {
+//        /** @var EntityManagerInterface $entityManager */
+//        $entityManager = $app->make(CompanyEntityManagerInterface::class);
+//        $migrationsPaths = $app->make('company_doctrine_migration_paths');
+//        $entityManager->getConfiguration()
+//            ->setMetadataDriverImpl(
+//                new AttributeDriver($app->make('company_doctrine_entity_paths')->toArray())
+//            );
+//
+//        $dbalKey = 'company_dbal_connection';
+//    }
+//    else
+    if ($entity === 'admin')
     {
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $app->make(AdminEntityManagerInterface::class);

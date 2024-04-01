@@ -10,6 +10,7 @@ use Project\Domains\Admin\Country\Domain\Country\Exceptions\CountryAlreadyExists
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\CompanyUuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\ISO;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
+use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid;
 use Project\Infrastructure\Services\Auth\AuthManager;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Shared\Domain\Bus\Event\EventBusInterface;
@@ -25,20 +26,10 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $country = $this->countryRepository->findByValueAndByCompanyUuid(
-            Value::fromValue($command->value),
-            CompanyUuid::fromValue(AuthManager::getCompanyUuid())
-        );
-
-        if ($country) {
-            throw new CountryAlreadyExistsDomainException();
-        }
-
         $country = Country::create(
-            $command->uuid,
+            Uuid::fromValue($command->uuid),
             Value::fromValue($command->value),
             ISO::fromValue($command->iso),
-            CompanyUuid::fromValue($command->companyUuid),
             $command->isActive
         );
 
