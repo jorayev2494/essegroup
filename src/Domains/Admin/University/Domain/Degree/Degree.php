@@ -6,7 +6,6 @@ namespace Project\Domains\Admin\University\Domain\Degree;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Value;
@@ -38,43 +37,28 @@ class Degree implements EntityUuid, TranslatableInterface, ArrayableInterface
     #[ORM\Column(type: ValueType::NAME, nullable: true)]
     private Value $value;
 
-    #[ORM\Column(name: 'company_uuid', nullable: true)]
-    private ?string $companyUuid;
-
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'departments')]
-    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private ?Company $company;
-
     #[ORM\ManyToMany(targetEntity: Department::class, mappedBy: 'degrees')]
     private Collection $departments;
 
     #[ORM\OneToMany(targetEntity: DegreeTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
 
-    private function __construct(Uuid $uuid, Company $company, bool $isActive)
+    private function __construct(Uuid $uuid, bool $isActive)
     {
         $this->uuid = $uuid;
-        $this->company = $company;
         $this->isActive = $isActive;
         $this->value = Value::fromValue(null);
         $this->translations = new ArrayCollection();
     }
 
-    public static function create(Uuid $uuid, Company $company, bool $isActive): self
+    public static function create(Uuid $uuid, bool $isActive): self
     {
-        return new self($uuid, $company, $isActive);
+        return new self($uuid, $isActive);
     }
 
     public function getUuid(): Uuid
     {
         return $this->uuid;
-    }
-
-    public function setCompanyUuid(string $companyUuid): self
-    {
-        $this->companyUuid = $companyUuid;
-
-        return $this;
     }
 
     public function setValue(Value $value): self
@@ -119,8 +103,6 @@ class Degree implements EntityUuid, TranslatableInterface, ArrayableInterface
         return [
             'uuid' => $this->uuid->value,
             'value' => $this->value->value,
-            'company_uuid' => $this->companyUuid,
-            'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];

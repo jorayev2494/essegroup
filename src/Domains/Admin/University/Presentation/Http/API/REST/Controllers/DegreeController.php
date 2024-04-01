@@ -56,7 +56,6 @@ readonly class DegreeController
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
-                $request->get('company_uuid'),
                 $request->get('translations'),
                 true
             )
@@ -79,7 +78,6 @@ readonly class DegreeController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
-                $request->get('company_uuid'),
                 $request->get('translations'),
                 true
             )

@@ -24,7 +24,7 @@ readonly class CommandHandler implements CommandHandlerInterface
     {
         $country = $this->repository->findByUuid(Uuid::fromValue($command->countryUuid));
 
-        $city = City::fromPrimitives($command->uuid, $command->companyUuid, $command->isActive);
+        $city = City::fromPrimitives($command->uuid, $command->isActive);
 
         $this->translationColumnService->addTranslations($city, $command->translations);
 

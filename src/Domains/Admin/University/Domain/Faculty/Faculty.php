@@ -4,28 +4,19 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Domain\Faculty;
 
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Project\Domains\Admin\Company\Domain\Company\Company;
-use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\Events\FacultyWasDeletedDomainEvent;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Logo;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid;
-use Project\Domains\Admin\University\Domain\University\University;
-use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\DescriptionType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\NameType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoInterface;
-use Project\Shared\Contracts\NullableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\ActivableTrait;
@@ -61,31 +52,12 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
     #[ORM\OneToMany(targetEntity: FacultyTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
 
-    #[ORM\Column(name: 'company_uuid', nullable: true)]
-    private ?string $companyUuid;
-
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'faculties')]
-    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private Company $company;
-
-    #[ORM\Column(name: 'university_uuid', nullable: true)]
-    private ?string $universityUuid;
-
-    #[ORM\ManyToOne(targetEntity: University::class, inversedBy: 'faculties')]
-    #[ORM\JoinColumn(name: 'university_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private University $university;
-
-    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'faculty', cascade: ['persist'])]
-    private Collection $departments;
-
-    private function __construct(Uuid $uuid, Company $company, bool $isActive)
+    private function __construct(Uuid $uuid, bool $isActive)
     {
         $this->uuid = $uuid;
-        $this->company = $company;
         $this->name = Name::fromValue(null);
         $this->description = Description::fromValue(null);
         $this->logo = null;
-        $this->departments = new ArrayCollection();
         $this->isActive = $isActive;
         $this->translations = new ArrayCollection();
     }
@@ -115,11 +87,6 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
         $this->description = $description;
     }
 
-    public function setCompany(?Company $company): void
-    {
-        $this->company = $company;
-    }
-
     public function getLogo(): ?LogoInterface
     {
         return $this->logo;
@@ -132,11 +99,6 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
         }
 
         return $this;
-    }
-
-    public function changeCompany(Company $company): void
-    {
-        $this->company = $company;
     }
 
     public function translationDomainEvent(AbstractTranslation $translation, TranslationDomainEventTypeEnum $type): void
@@ -164,37 +126,14 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
 //        $this->record($domainEvent);
     }
 
-    public function getUniversity(): University
+    public static function create(Uuid $uuid, bool $isActive): self
     {
-        return $this->university;
-    }
-
-    public function setUniversity(University $university): void
-    {
-        $this->university = $university;
-    }
-
-    public static function create(Uuid $uuid, Company $company, bool $isActive): self
-    {
-        return new self($uuid, $company, $isActive);
+        return new self($uuid, $isActive);
     }
 
     public function delete(): void
     {
         $this->record(new FacultyWasDeletedDomainEvent($this->uuid->value));
-    }
-
-    public function getDepartments(): Collection
-    {
-        return $this->departments;
-    }
-
-    public function addDepartments(Department $department): void
-    {
-        if (! $this->departments->contains($department)) {
-            $this->departments->add($department);
-            $department->setFaculty($this);
-        }
     }
 
     #[\Override]
@@ -211,11 +150,6 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
         }
 
         return $this;
-    }
-
-    public function changeUniversity(University $university): void
-    {
-        $this->university = $university;
     }
 
     public function changeIsActive(bool $value): void
@@ -257,11 +191,6 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
             'uuid' => $this->uuid->value,
             'name' => $this->name->value,
             'description' => $this->description->value,
-            'company_uuid' => $this->companyUuid,
-            'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
-            'university_uuid' => $this->universityUuid,
-            'university' => UniversityTranslate::execute($this->university)?->toArray(),
-            'department_count' => $this->departments->count(),
             'logo' => $this->logo?->toArray(),
             'is_active' => $this->isActive,
             'created_at' => $this->createdAt->getTimestamp(),

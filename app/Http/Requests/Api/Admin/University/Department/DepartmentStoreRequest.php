@@ -16,16 +16,6 @@ class DepartmentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_uuid' => [
-                'required',
-                'string',
-                Rule::exists('admin_db.company_companies', 'uuid'),
-            ],
-            'faculty_uuid' => [
-                'required',
-                'string',
-                Rule::exists('admin_db.faculty_faculties', 'uuid'),
-            ],
             'degree_uuids' => [
                 'required',
                 'array',

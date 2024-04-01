@@ -23,8 +23,6 @@ interface UniversityRepositoryInterface
 
     public function findByUuid(Uuid $uuid): ?University;
 
-    public function findManyByCompanyUuid(string $companyUuid): UniversityCollection;
-
     public function save(University $university): void;
 
     public function delete(University $university): void;

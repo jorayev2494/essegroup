@@ -16,7 +16,6 @@ readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private DegreeRepositoryInterface $degreeRepository,
-        private CompanyRepositoryInterface $companyRepository,
         private TranslationColumnServiceInterface $translationColumnService
     ) {
 
@@ -24,11 +23,8 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid));
-
         $degree = Degree::create(
             Uuid::fromValue($command->uuid),
-            $company,
             $command->isActive
         );
 

@@ -19,8 +19,6 @@ interface DegreeRepositoryInterface
 
     public function findManyByUuids(Uuid ...$uuid): DegreeCollection;
 
-    public function findManyByCompanyUuid(string $companyUuid): DegreeCollection;
-
     public function save(Degree $degree): void;
 
     public function delete(Degree $degree): void;

@@ -28,7 +28,6 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $degree ?? throw new DegreeNotFoundDomainException();
 
-        $degree->setCompanyUuid($command->companyUuid);
         $this->translationColumnService->addTranslations($degree, $command->translations);
 
         $this->degreeRepository->save($degree);

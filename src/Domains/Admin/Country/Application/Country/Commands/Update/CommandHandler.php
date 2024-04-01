@@ -31,7 +31,6 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $country ?? throw new CountryNotFoundDomainException();
 
-        $country->changeCompanyUuid(CompanyUuid::fromValue($command->companyUuid));
         $country->changeValue(Value::fromValue($command->value));
         $country->changeISO(ISO::fromValue($command->iso));
         $country->changeIsActive($command->isActive);

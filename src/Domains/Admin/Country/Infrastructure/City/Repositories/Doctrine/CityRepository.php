@@ -36,11 +36,6 @@ class CityRepository extends BaseAdminEntityRepository implements CityRepository
     {
         $query = $this->entityRepository->createQueryBuilder('c');
 
-        if ($filter->companyUuid !== null) {
-            $query->andWhere('c.companyUuid LIKE :companyUuid')
-                ->setParameter('companyUuid', $filter->companyUuid);
-        }
-
         if (count($filter->countryUuids) > 0) {
             $query->andWhere('c.countryUuid LIKE :countryUuids')
                 ->setParameter('countryUuids', $filter->countryUuids);

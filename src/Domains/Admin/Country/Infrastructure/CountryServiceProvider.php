@@ -41,9 +41,7 @@ class CountryServiceProvider extends AdminDomainServiceProvider
     ];
 
     /** @var array<array-key, string> */
-    protected const DOMAIN_EVENT_SUBSCRIBERS = [
-        // \Project\Domains\Admin\Country\Application\Country\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-    ];
+    protected const DOMAIN_EVENT_SUBSCRIBERS = [];
 
     /** @var array<string, string> */
     protected const ENTITY_TYPES = [
@@ -51,11 +49,9 @@ class CountryServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\UuidType::class,
         \Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ValueType::class,
         \Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ISOType::class,
-        \Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\CompanyUuidType::class,
 
         // City
         \Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\UuidType::class,
-        \Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\CompanyUuidType::class,
         \Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\ValueType::class,
     ];
 

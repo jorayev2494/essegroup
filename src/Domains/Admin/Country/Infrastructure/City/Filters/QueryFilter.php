@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 readonly class QueryFilter implements ArrayableInterface
 {
     private function __construct(
-        public ?string $companyUuid,
         public array $countryUuids
     ) {
 
@@ -24,7 +23,6 @@ readonly class QueryFilter implements ArrayableInterface
     public static function makeFromArray(array $data): self
     {
         return new self(
-            $data['company_uuid'] ?? null,
             $data['country_uuids'] ?? [],
         );
     }
@@ -33,7 +31,6 @@ readonly class QueryFilter implements ArrayableInterface
     public function toArray(): array
     {
         return [
-            'company_uuid' => $this->companyUuid,
             'country_uuids' => $this->countryUuids,
         ];
     }

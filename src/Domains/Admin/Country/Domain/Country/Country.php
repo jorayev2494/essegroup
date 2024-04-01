@@ -8,17 +8,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Country\Domain\City\City;
-use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedCompanyDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedIsActiveDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedISODomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedValueDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasCreatedDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasDeleteDomainEvent;
-use Project\Domains\Admin\Country\Domain\Country\ValueObjects\CompanyUuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\ISO;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
-use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\CompanyUuidType;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ISOType;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ValueType;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\UuidType;
@@ -48,31 +45,26 @@ class Country extends AggregateRoot implements NullableInterface
 //    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'country')]
 //    private Collection $universities;
 
-    #[ORM\Column(name: 'company_uuid', type: CompanyUuidType::NAME, nullable: false)]
-    private CompanyUuid $companyUuid;
-
     #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'country', cascade: ['persist', 'remove'])]
     private Collection $cities;
 
-    private function __construct(Uuid $uuid, Value $value, ISO $iso, CompanyUuid $companyUuid, bool $isActive)
+    private function __construct(Uuid $uuid, Value $value, ISO $iso, bool $isActive)
     {
         $this->uuid = $uuid;
         $this->value = $value;
         $this->iso = $iso;
-        $this->companyUuid = $companyUuid;
         $this->cities = new ArrayCollection();
         $this->isActive = $isActive;
     }
 
-    public static function create(Uuid $uuid, Value $value, ISO $iso, CompanyUuid $companyUuid, bool $isActive): self
+    public static function create(Uuid $uuid, Value $value, ISO $iso, bool $isActive): self
     {
-        $country = new self($uuid, $value, $iso, $companyUuid, $isActive);
+        $country = new self($uuid, $value, $iso, $isActive);
         $country->record(
             new CountryWasCreatedDomainEvent(
                 $country->uuid->value,
                 $country->value->value,
                 $country->iso->value,
-                $country->companyUuid->value,
                 $country->isActive
             )
         );
@@ -108,14 +100,6 @@ class Country extends AggregateRoot implements NullableInterface
                     $this->iso->value
                 )
             );
-        }
-    }
-
-    public function changeCompanyUuid(CompanyUuid $companyUuid): void
-    {
-        if ($this->companyUuid !== $companyUuid) {
-            $this->companyUuid = $companyUuid;
-            // $this->record(new CountryWasChangedCompanyDomainEvent($this->uuid, $this->companyUuid->value));
         }
     }
 
@@ -169,7 +153,6 @@ class Country extends AggregateRoot implements NullableInterface
             'value' => $this->value->value,
             'iso' => $this->iso->value,
             'is_active' => $this->isActive,
-            'company_uuid' => $this->companyUuid->value,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];
