@@ -13,10 +13,6 @@ interface FacultyRepositoryInterface
 {
     public function findByUuid(Uuid $uuid): ?Faculty;
 
-    public function findManyByCompanyUuid(string $companyUuid): FacultyCollection;
-
-    public function findManyByUniversityUuid(string $universityUuid): FacultyCollection;
-
     public function paginate(Query $httpQuery): Paginator;
 
     public function list(QueryFilter $queryFilter): FacultyCollection;

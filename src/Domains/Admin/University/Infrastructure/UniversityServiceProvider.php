@@ -150,30 +150,16 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         // Application
-        // \Project\Domains\Admin\University\Application\Application\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-        // \Project\Domains\Admin\University\Application\Application\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
-        // \Project\Domains\Admin\University\Application\Application\Subscribers\Department\ApplicationWasDeletedFromDepartmentDomainEventSubscriber::class,
 
         // Department
-        // \Project\Domains\Admin\University\Application\Department\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-        // \Project\Domains\Admin\University\Application\Department\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
-        // \Project\Domains\Admin\University\Application\Department\Subscribers\Faculty\FacultyWasDeletedDomainEventSubscriber::class,
 
         // Faculty
-        // \Project\Domains\Admin\University\Application\Faculty\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
-        // \Project\Domains\Admin\University\Application\Faculty\Subscribers\University\UniversityWasDeletedDomainEventSubscriber::class,
 
         // University
-        // \Project\Domains\Admin\University\Application\University\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
 
         // Degree
-        // \Project\Domains\Admin\University\Application\Degree\Subscribers\Company\CompanyWasDeletedDomainEventSubscriber::class,
 
         // Company
-        // \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasCreatedDomainEventSubscriber::class,
-        // \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyNameWasChangedDomainEventSubscriber::class,
-        // \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyDomainWasChangedDomainEventSubscriber::class,
-        // \Project\Domains\Admin\University\Application\Company\Subscribers\CompanyWasDeletedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */

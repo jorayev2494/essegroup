@@ -32,7 +32,6 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $country = $this->repository->findByUuid(CountryUuid::fromValue($command->countryUuid));
 
-        $city->changeCompanyUuid(CompanyUuid::fromValue($command->companyUuid));
         $city->setCountry($country);
 
         $this->translationColumnService->addTranslations($city, $command->translations);

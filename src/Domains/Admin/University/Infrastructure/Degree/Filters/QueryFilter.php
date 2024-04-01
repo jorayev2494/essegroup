@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 readonly class QueryFilter extends BaseQueryFilter
 {
     private function __construct(
-        public ?string $companyUuid
+
     )
     {
 
@@ -24,14 +24,14 @@ readonly class QueryFilter extends BaseQueryFilter
     public static function makeFromArray(array $data): static
     {
         return new self(
-            companyUuid: $data['company_uuid'] ?? null,
+
         );
     }
 
     public function toArray(): array
     {
         return [
-            'company_uuid' => $this->companyUuid,
+
         ];
     }
 }

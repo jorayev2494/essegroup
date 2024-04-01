@@ -26,20 +26,10 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $country = $this->countryRepository->findByValueAndByCompanyUuid(
-            Value::fromValue($command->value),
-            CompanyUuid::fromValue(AuthManager::getCompanyUuid())
-        );
-
-        if ($country) {
-            throw new CountryAlreadyExistsDomainException();
-        }
-
         $country = Country::create(
             Uuid::fromValue($command->uuid),
             Value::fromValue($command->value),
             ISO::fromValue($command->iso),
-            CompanyUuid::fromValue($command->companyUuid),
             $command->isActive
         );
 

@@ -19,11 +19,6 @@ class FacultyCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_uuid' => [
-                'required',
-                'string',
-                Rule::exists('admin_db.company_companies', 'uuid'),
-            ],
             'university_uuid' => [
                 'required',
                 'string',

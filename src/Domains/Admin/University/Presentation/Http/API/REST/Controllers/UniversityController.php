@@ -66,7 +66,6 @@ readonly class UniversityController
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
-                $request->get('company_uuid'),
                 $request->get('country_uuid'),
                 $request->get('city_uuid'),
                 $request->file('logo'),
@@ -94,7 +93,6 @@ readonly class UniversityController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
-                $request->get('company_uuid'),
                 $request->get('country_uuid'),
                 $request->get('city_uuid'),
                 $request->file('logo'),

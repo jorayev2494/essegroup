@@ -34,12 +34,12 @@ class DegreeRepository extends BaseAdminEntityRepository implements DegreeReposi
     {
         $query = $this->entityRepository->createQueryBuilder('d');
 
-        FilterQueryBuilder::build(
-            new FilterPipelineDTO(
-                $query,
-                $filter
-            )
-        );
+        // FilterQueryBuilder::build(
+        //     new FilterPipelineDTO(
+        //         $query,
+        //         $filter
+        //     )
+        // );
 
         return new DegreeCollection($query->getQuery()->getResult());
     }
@@ -58,17 +58,6 @@ class DegreeRepository extends BaseAdminEntityRepository implements DegreeReposi
                     static fn (Uuid $uuid): string => $uuid->value,
                     $uuids
                 ))
-                ->getQuery()
-                ->getResult()
-        );
-    }
-
-    public function findManyByCompanyUuid(string $companyUuid): DegreeCollection
-    {
-        return new DegreeCollection(
-            $this->entityRepository->createQueryBuilder('d')
-                ->where('d.companyUuid = :companyUuid')
-                ->setParameter('companyUuid', $companyUuid)
                 ->getQuery()
                 ->getResult()
         );

@@ -7,11 +7,9 @@ namespace Project\Domains\Admin\Country\Domain\City;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Project\Domains\Admin\Country\Domain\City\ValueObjects\CompanyUuid;
 use Project\Domains\Admin\Country\Domain\City\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\City\ValueObjects\Value;
 use Project\Domains\Admin\Country\Domain\Country\Country;
-use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\CompanyUuidType;
 use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\ValueType;
 use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\UuidType;
 use Project\Domains\Admin\University\Domain\University\University;
@@ -41,9 +39,6 @@ class City implements EntityUuid, ArrayableInterface, TranslatableInterface, Nul
     #[ORM\Column(type: ValueType::NAME, nullable: true)]
     private Value $value;
 
-    #[ORM\Column(name: 'company_uuid', type: CompanyUuidType::NAME, nullable: false)]
-    private CompanyUuid $companyUuid;
-
     #[ORM\Column(name: 'country_uuid')]
     private string $countryUuid;
 
@@ -60,21 +55,19 @@ class City implements EntityUuid, ArrayableInterface, TranslatableInterface, Nul
     #[ORM\OneToMany(targetEntity: CityTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
 
-    private function __construct(Uuid $uuid, CompanyUuid $companyUuid, bool $isActive)
+    private function __construct(Uuid $uuid, bool $isActive)
     {
         $this->uuid = $uuid;
-        $this->companyUuid = $companyUuid;
         $this->value = new Value(null);
         $this->universities = new ArrayCollection();
         $this->translations = new ArrayCollection();
         $this->isActive = $isActive;
     }
 
-    public static function fromPrimitives(string $uuid, string $companyUuid, bool $isActive): self
+    public static function fromPrimitives(string $uuid, bool $isActive): self
     {
         return new self(
             Uuid::fromValue($uuid),
-            CompanyUuid::fromValue($companyUuid),
             $isActive
         );
     }
@@ -92,15 +85,6 @@ class City implements EntityUuid, ArrayableInterface, TranslatableInterface, Nul
     public function setValue(Value $value): self
     {
         $this->value = $value;
-
-        return $this;
-    }
-
-    public function changeCompanyUuid(CompanyUuid $companyUuid): self
-    {
-        if ($this->companyUuid->isNotEquals($companyUuid)) {
-            $this->companyUuid = $companyUuid;
-        }
 
         return $this;
     }
@@ -172,7 +156,6 @@ class City implements EntityUuid, ArrayableInterface, TranslatableInterface, Nul
         return [
             'uuid' => $this->uuid->value,
             'value' => $this->value->value,
-            'company_uuid' => $this->companyUuid->value,
             'country_uuid' => $this->country->getUuid()->value,
             'country' => $this->country->toArray(),
             'is_active' => $this->isActive,

@@ -7,11 +7,8 @@ namespace Project\Domains\Admin\University\Domain\Department;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Application\Application;
-use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\University\Domain\Degree\Degree;
 use Project\Domains\Admin\University\Domain\Degree\DegreeCollection;
 use Project\Domains\Admin\University\Domain\Department\Events\ApplicationWasDeletedFromDepartmentDomainEvent;
@@ -19,10 +16,6 @@ use Project\Domains\Admin\University\Domain\Department\Events\DepartmentWasDelet
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
-use Project\Domains\Admin\University\Domain\Faculty\Faculty;
-use Project\Domains\Admin\University\Domain\Faculty\FacultyTranslate;
-use Project\Domains\Admin\University\Domain\University\University;
-use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\NameType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType;
@@ -57,20 +50,6 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\OneToMany(targetEntity: DepartmentTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
 
-    #[ORM\Column(name: 'company_uuid', nullable: true)]
-    private ?string $companyUuid;
-
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'departments')]
-    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private Company $company;
-
-    #[ORM\Column(name: 'university_uuid', type: Types::STRING, nullable: true)]
-    private ?string $universityUuid;
-
-    #[ORM\ManyToOne(targetEntity: University::class, inversedBy: 'departments')]
-    #[ORM\JoinColumn(name: 'university_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private University $university;
-
     #[ORM\ManyToMany(targetEntity: Application::class, mappedBy: 'departments')]
     private Collection $applications;
 
@@ -82,27 +61,16 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     )]
     private Collection $degrees;
 
-    #[ORM\Column(name: 'faculty_uuid', type: Types::STRING, nullable: true)]
-    private ?string $facultyUuid;
-
-    #[ORM\ManyToOne(targetEntity: Faculty::class, inversedBy: 'departments')]
-    #[ORM\JoinColumn(name: 'faculty_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private Faculty $faculty;
-
     #[ORM\Column(name: 'is_filled', type: Types::BOOLEAN)]
     private bool $isFilled;
 
     private function __construct(
         Uuid $uuid,
-        Company $company,
-        University $university,
         ArrayCollection $degrees,
         bool $isActive
     )
     {
         $this->uuid = $uuid;
-        $this->university = $university;
-        $this->company = $company;
         $this->degrees = $degrees;
         $this->name = Name::fromValue(null);
         $this->description = Description::fromValue(null);
@@ -112,9 +80,9 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         $this->isFilled = false;
     }
 
-    public static function fromPrimitives(string $uuid, Company $company, University $university, ArrayCollection $degrees, bool $isActive): self
+    public static function fromPrimitives(string $uuid, ArrayCollection $degrees, bool $isActive): self
     {
-        return new self(Uuid::fromValue($uuid), $company, $university, $degrees, $isActive);
+        return new self(Uuid::fromValue($uuid), $degrees, $isActive);
     }
 
     public function delete(): void
@@ -145,26 +113,6 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     public function setDescription(Description $description): void
     {
         $this->description = $description;
-    }
-
-    public function changeCompany(Company $company): void
-    {
-        $this->company = $company;
-    }
-
-    public function getUniversity(): University
-    {
-        return $this->university;
-    }
-
-    public function changeUniversity(University $university): void
-    {
-        $this->university = $university;
-    }
-
-    public function changeFaculty(Faculty $faculty): void
-    {
-        $this->faculty = $faculty;
     }
 
     public function addDegree(Degree $degree): self
@@ -208,21 +156,6 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
             $this->applications->removeElement($application);
             $this->record(new ApplicationWasDeletedFromDepartmentDomainEvent($this->getUuid()->value, $application->getUuid()->value));
         }
-    }
-
-    public function setCompany(?Company $company): void
-    {
-        $this->company = $company;
-    }
-
-    public function getFaculty(): Faculty
-    {
-        return $this->faculty;
-    }
-
-    public function setFaculty(Faculty $faculty): void
-    {
-        $this->faculty = $faculty;
     }
 
     public function getIsActive(): bool
@@ -284,12 +217,6 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     {
         return [
             'uuid' => $this->uuid->value,
-            'company_uuid' => $this->companyUuid,
-            'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
-            'university_uuid' => $this->universityUuid,
-            'university' => UniversityTranslate::execute($this->university)?->toArray(),
-            'faculty_uuid' => $this->facultyUuid,
-            'faculty' => FacultyTranslate::execute($this->faculty)?->toArray(),
             'name' => $this->name->value,
             'description' => $this->description->value,
             'degrees' => (new DegreeCollection($this->degrees->toArray()))->translateItems()->toArray(),

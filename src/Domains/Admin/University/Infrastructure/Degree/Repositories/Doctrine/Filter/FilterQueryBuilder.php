@@ -12,7 +12,7 @@ class FilterQueryBuilder extends BaseFilterQueryBuilder
     {
         self::instancePipeline($sendData)
             ->pipe([
-                FilterByCompany::class,
+                // FilterByCompany::class,
             ])
             ->thenReturn();
     }

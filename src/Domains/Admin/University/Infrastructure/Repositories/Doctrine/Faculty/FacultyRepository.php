@@ -28,28 +28,6 @@ class FacultyRepository extends BaseAdminEntityRepository implements FacultyRepo
         return $this->entityRepository->find($uuid);
     }
 
-    public function findManyByCompanyUuid(string $companyUuid): FacultyCollection
-    {
-        return new FacultyCollection(
-            $this->entityRepository->createQueryBuilder('f')
-                ->where('f.companyUuid = :companyUuid')
-                ->setParameter('companyUuid', $companyUuid)
-                ->getQuery()
-                ->getResult()
-        );
-    }
-
-    public function findManyByUniversityUuid(string $universityUuid): FacultyCollection
-    {
-        return new FacultyCollection(
-            $this->entityRepository->createQueryBuilder('f')
-                ->where('f.universityUuid = :universityUuid')
-                ->setParameter('universityUuid', $universityUuid)
-                ->getQuery()
-                ->getResult()
-        );
-    }
-
     #[\Override]
     public function paginate(Query $httpQuery): Paginator
     {

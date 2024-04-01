@@ -16,17 +16,11 @@ class UpdateCountryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_uuid' => [
-                'required',
-                'string',
-                Rule::exists('admin_db.company_companies', 'uuid'),
-            ],
             'value' => [
                 'required',
                 'alpha',
                 'max:255',
                 Rule::unique('admin_db.country_countries', 'value')
-                    ->where('company_uuid', AuthManager::getCompanyUuid())
                     ->ignore($this->route()->parameter('id'), 'id'),
             ],
             'iso' => [
@@ -34,7 +28,6 @@ class UpdateCountryRequest extends FormRequest
                 'alpha',
                 'max:3',
                 Rule::unique('admin_db.country_countries', 'iso')
-                    ->where('company_uuid', AuthManager::getCompanyUuid())
                     ->ignore($this->route()->parameter('id'), 'id'),
             ],
             'is_active' => ['required', 'boolean'],

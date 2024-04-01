@@ -12,9 +12,6 @@ use Project\Domains\Admin\Country\Domain\City\City;
 use Project\Domains\Admin\Country\Domain\City\CityTranslate;
 use Project\Domains\Admin\Country\Domain\Country\Country;
 use Project\Domains\Admin\University\Domain\Application\Application;
-use Project\Domains\Admin\Company\Domain\Company\Company;
-use Project\Domains\Admin\University\Domain\Faculty\Faculty;
-use Project\Domains\Admin\University\Domain\Faculty\FacultyCollection;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasAddedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasChangedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasDeletedDomainEvent;
@@ -78,13 +75,6 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\Column(type: DescriptionType::NAME, nullable: true)]
     private Description $description;
 
-    #[ORM\Column(name: 'company_uuid', nullable: true)]
-    private string $companyUuid;
-
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'universities')]
-    #[ORM\JoinColumn(name: 'company_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private Company $company;
-
     #[ORM\Column(name: 'country_uuid', nullable: true)]
     private ?string $countryUuid;
 
@@ -98,9 +88,6 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'universities')]
     #[ORM\JoinColumn(name: 'city_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
     private ?City $city;
-
-    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'university', cascade: ['persist'])]
-    private Collection $faculties;
 
     /**
      * @var UniversityTranslation[] $translations
@@ -126,7 +113,6 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
         $this->logo = null;
         $this->cover = null;
         $this->translations = new ArrayCollection();
-        $this->faculties = new ArrayCollection();
         $this->isOnTheCountryList = false;
     }
 
@@ -233,18 +219,6 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
         return $this;
     }
 
-    public function getCompany(): Company
-    {
-        return $this->company;
-    }
-
-    public function setCompany(?Company $company): self
-    {
-        $this->company = $company;
-
-        return $this;
-    }
-
     public function getLogo(): ?LogoInterface
     {
         return $this->logo;
@@ -335,21 +309,6 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
         return $this;
     }
 
-    public function addFaculty(Faculty $faculty): void
-    {
-        if (! $this->faculties->contains($faculty)) {
-            $this->faculties->add($faculty);
-            $faculty->setUniversity($this);
-        }
-    }
-
-    public function removeFaculty(Faculty $faculty): void
-    {
-        if ($this->faculties->contains($faculty)) {
-            $this->faculties->removeElement($faculty);
-        }
-    }
-
     #[\Override]
     public function deleteCover(): static
     {
@@ -407,8 +366,6 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
             'logo' => $this->logo?->toArray(),
             'cover' => $this->cover?->toArray(),
             'youtube_video_id' => $this->youTubeVideoId->value,
-            'company_uuid' => $this->company->getUuid()->value,
-            'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
             'country_uuid' => $this->country->getUuid()->value,
             'country' => $this->country->getUuid()->isNotNull() ? $this->country->toArray() : null,
             'city_uuid' => $this->city->getUuid()->value,

@@ -17,7 +17,6 @@ class Command implements CommandInterface
 
     public function __construct(
         public readonly string $uuid,
-        public readonly string $companyUuid,
         public readonly string $countryUuid,
         public readonly string $cityUuid,
         public readonly ?UploadedFile $logo,
