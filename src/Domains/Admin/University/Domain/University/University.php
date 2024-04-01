@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Country\Domain\City\City;
-use Project\Domains\Admin\Country\Domain\City\CityTranslate;
+use Project\Domains\Admin\Country\Domain\City\AliasTranslate;
 use Project\Domains\Admin\Country\Domain\Country\Country;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasAddedDomainEvent;
@@ -369,7 +369,7 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
             'country_uuid' => $this->country->getUuid()->value,
             'country' => $this->country->getUuid()->isNotNull() ? $this->country->toArray() : null,
             'city_uuid' => $this->city->getUuid()->value,
-            'city' => CityTranslate::execute($this->city)?->toArray(),
+            'city' => AliasTranslate::execute($this->city)?->toArray(),
             'description' => $this->description->value,
             'is_on_the_country_list' => $this->isOnTheCountryList,
             'created_at' => $this->createdAt->getTimestamp(),

@@ -15,6 +15,11 @@ trait TranslatableTrait
         return $this->translations;
     }
 
+    public function translationDomainEvent(AbstractTranslation $translation, TranslationDomainEventTypeEnum $type): void
+    {
+
+    }
+
     public function addTranslation(AbstractTranslation $t): void
     {
         $trans = $this->translations->findFirst(

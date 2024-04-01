@@ -13,10 +13,7 @@ class ValidateTranslationRule implements ValidationRule
     function __construct(
         private readonly array $params
     ) {
-        $this->locales = [
-           'en',
-           'ru',
-        ];
+        $this->locales = config('app.available_client_translation_locales');
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
