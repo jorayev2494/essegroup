@@ -21,7 +21,7 @@ trait CreatedAtAndUpdatedAtTrait
     #[ORM\PrePersist]
     public function prePersisting(PrePersistEventArgs $event): void
     {
-        $this->createdAt = new DateTimeImmutable();
+        $this->createdAt = $this->createdAt ?? new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
 
