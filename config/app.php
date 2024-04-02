@@ -181,6 +181,7 @@ return [
         Project\Domains\Admin\Company\Infrastructure\CompanyServiceProvider::class,
         Project\Domains\Admin\University\Infrastructure\UniversityServiceProvider::class,
         Project\Domains\Admin\Country\Infrastructure\CountryServiceProvider::class,
+        Project\Domains\Admin\Language\Infrastructure\LanguageServiceProvider::class,
 
         // Company
         Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,

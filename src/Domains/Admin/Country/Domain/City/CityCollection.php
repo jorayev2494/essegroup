@@ -15,6 +15,6 @@ class CityCollection extends Collection
 
     protected function translatorClass(): string
     {
-        return CityTranslate::class;
+        return LanguageTranslate::class;
     }
 }
