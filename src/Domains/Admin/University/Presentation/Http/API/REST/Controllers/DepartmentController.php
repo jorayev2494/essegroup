@@ -57,7 +57,12 @@ readonly class DepartmentController
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
+                $request->get('name_uuid'),
+                $request->get('alias_uuid'),
+                $request->get('university_uuid'),
+                $request->get('faculty_uuid'),
                 $request->get('degree_uuids'),
+                $request->get('language_uuid'),
                 $request->get('translations'),
                 $request->boolean('is_filled'),
                 $request->boolean('is_active', true)
@@ -81,7 +86,12 @@ readonly class DepartmentController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
+                $request->get('name_uuid'),
+                $request->get('alias_uuid'),
+                $request->get('university_uuid'),
+                $request->get('faculty_uuid'),
                 $request->get('degree_uuids'),
+                $request->get('language_uuid'),
                 $request->get('translations'),
                 $request->boolean('is_filled'),
                 $request->boolean('is_active', true)

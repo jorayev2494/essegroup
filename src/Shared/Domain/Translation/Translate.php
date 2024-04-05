@@ -42,8 +42,8 @@ abstract class Translate
         return null;
     }
 
-    private static function itemIsNotNull(TranslatableInterface $item): bool
+    private static function itemIsNotNull(?TranslatableInterface $item): bool
     {
-        return ($item instanceof EntityUuid && $item->getUuid()->isNotNull()) || ($item instanceof EntityId && $item->getId()->isNotNull());
+        return $item !== null && (($item instanceof EntityUuid && $item->getUuid()->isNotNull()) || ($item instanceof EntityId && $item->getId()->isNotNull()));
     }
 }

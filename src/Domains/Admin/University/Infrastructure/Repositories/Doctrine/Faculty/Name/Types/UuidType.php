@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types;
+namespace Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Name\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use Project\Domains\Admin\University\Domain\Department\ValueObjects\Name;
+use Project\Domains\Admin\University\Domain\Faculty\Name\ValueObjects\Uuid;
 
-class NameType extends Type
+class UuidType extends Type
 {
 
-    public const NAME = 'admin_domain_university_department_name';
+    public const NAME = 'admin_domain_faculty_faculty_name_uuid';
 
     #[\Override]
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
@@ -20,25 +20,25 @@ class NameType extends Type
     }
 
     /**
-     * @param Name $value
+     * @param Uuid $value
      * @param AbstractPlatform $platform
      * @return mixed
      * @throws \Doctrine\DBAL\Types\ConversionException
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        return $value->value;
+        return $value?->value;
     }
 
     /**
-     * @param $value
+     * @param string $value
      * @param AbstractPlatform $platform
      * @return mixed
      * @throws \Doctrine\DBAL\Types\ConversionException
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform): Name
+    public function convertToPHPValue($value, AbstractPlatform $platform): Uuid
     {
-        return Name::fromValue($value);
+        return Uuid::fromValue($value);
     }
 
     #[\Override]

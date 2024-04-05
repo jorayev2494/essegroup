@@ -7,13 +7,16 @@ namespace Project\Domains\Admin\University\Domain\Faculty;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\Events\FacultyWasDeletedDomainEvent;
+use Project\Domains\Admin\University\Domain\Faculty\Name\FacultyName;
+use Project\Domains\Admin\University\Domain\Faculty\Name\FacultyNameTranslate;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Logo;
-use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Domain\University\University;
+use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\DescriptionType;
-use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\NameType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoInterface;
@@ -43,8 +46,12 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
     #[ORM\JoinColumn(name: 'logo_uuid', referencedColumnName: 'uuid', unique: true, nullable: false)]
     private ?Logo $logo;
 
-    #[ORM\Column(type: NameType::NAME, nullable: true)]
-    private Name $name;
+    #[ORM\Column(name: 'name_uuid', nullable: true)]
+    private string $nameUuid;
+
+    #[ORM\ManyToOne(targetEntity: FacultyName::class, inversedBy: 'faculties')]
+    #[ORM\JoinColumn(name: 'name_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private FacultyName $name;
 
     #[ORM\Column(type: DescriptionType::NAME, nullable: true)]
     private Description $description;
@@ -52,14 +59,31 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
     #[ORM\OneToMany(targetEntity: FacultyTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
 
-    private function __construct(Uuid $uuid, bool $isActive)
+    #[ORM\Column(name: 'university_uuid', nullable: true)]
+    private ?string $universityUuid;
+
+    #[ORM\ManyToOne(targetEntity: University::class, inversedBy: 'faculties')]
+    #[ORM\JoinColumn(name: 'university_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private University $university;
+
+    #[ORM\OneToMany(targetEntity: Department::class,  mappedBy: 'faculty')]
+    private Collection $departments;
+
+    private function __construct(Uuid $uuid, FacultyName $name, University $university, bool $isActive)
     {
         $this->uuid = $uuid;
-        $this->name = Name::fromValue(null);
+        $this->name = $name;
+        $this->university = $university;
         $this->description = Description::fromValue(null);
         $this->logo = null;
         $this->isActive = $isActive;
+        $this->departments = new ArrayCollection();
         $this->translations = new ArrayCollection();
+    }
+
+    public static function create(Uuid $uuid, FacultyName $name, University $university, bool $isActive): self
+    {
+        return new self($uuid, $name, $university, $isActive);
     }
 
     public function getUuid(): Uuid
@@ -67,14 +91,11 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
         return $this->uuid;
     }
 
-    public function getName(): ?Name
-    {
-        return $this->name;
-    }
-
-    public function setName(Name $name): void
+    public function setName(FacultyName $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function getDescription(): ?Description
@@ -101,6 +122,16 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
         return $this;
     }
 
+    public function getUniversity(): University
+    {
+        return $this->university;
+    }
+
+    public function changeUniversity(University $university): void
+    {
+        $this->university = $university;
+    }
+
     public function translationDomainEvent(AbstractTranslation $translation, TranslationDomainEventTypeEnum $type): void
     {
 //        $domainEvent = match ($type) {
@@ -124,16 +155,6 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
 //        };
 //
 //        $this->record($domainEvent);
-    }
-
-    public static function create(Uuid $uuid, bool $isActive): self
-    {
-        return new self($uuid, $isActive);
-    }
-
-    public function delete(): void
-    {
-        $this->record(new FacultyWasDeletedDomainEvent($this->uuid->value));
     }
 
     #[\Override]
@@ -184,12 +205,20 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
         return FacultyTranslation::class;
     }
 
+    public function delete(): void
+    {
+        $this->record(new FacultyWasDeletedDomainEvent($this->uuid->value));
+    }
+
     #[\Override]
     public function toArray(): array
     {
         return [
             'uuid' => $this->uuid->value,
-            'name' => $this->name->value,
+            'name_uuid' => FacultyNameTranslate::execute($this->name)?->getUuid()->value,
+            'name' => FacultyNameTranslate::execute($this->name)?->toArray(),
+            'university_uuid' => $this->universityUuid,
+            'university' => UniversityTranslate::execute($this->university)?->toArray(),
             'description' => $this->description->value,
             'logo' => $this->logo?->toArray(),
             'is_active' => $this->isActive,

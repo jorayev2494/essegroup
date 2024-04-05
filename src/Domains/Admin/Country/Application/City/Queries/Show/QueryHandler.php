@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\Country\Application\City\Queries\Show;
 
 use Project\Domains\Admin\Country\Domain\City\CityRepositoryInterface;
-use Project\Domains\Admin\Country\Domain\City\AliasTranslate;
+use Project\Domains\Admin\Country\Domain\City\CityTranslate;
 use Project\Domains\Admin\Country\Domain\City\Exceptions\CityNotFoundDomainException;
 use Project\Domains\Admin\Country\Domain\City\ValueObjects\Uuid;
 use Project\Shared\Domain\Bus\Query\QueryHandlerInterface;
@@ -25,6 +25,6 @@ readonly class QueryHandler implements QueryHandlerInterface
 
         $city ?? throw new CityNotFoundDomainException();
 
-        return AliasTranslate::execute($city)->toArrayWithTranslations();
+        return CityTranslate::execute($city)->toArrayWithTranslations();
     }
 }

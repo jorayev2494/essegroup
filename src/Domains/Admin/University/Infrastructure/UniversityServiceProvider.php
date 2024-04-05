@@ -6,12 +6,8 @@ namespace Project\Domains\Admin\University\Infrastructure;
 
 use App\Providers\Domains\AdminDomainServiceProvider;
 use Project\Domains\Admin\University\Domain\Degree\DegreeRepositoryInterface;
-use Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInterface;
-use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\DegreeRepository;
-use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\DepartmentRepository;
-use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\FacultyRepository;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\UniversityRepository;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contracts\CoverServiceInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\CoverService;
@@ -23,11 +19,19 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     /** @var array<string, string> */
     protected const SERVICES = [
         UniversityRepositoryInterface::class => [self::SERVICE_SINGLETON, UniversityRepository::class],
-        DepartmentRepositoryInterface::class => [self::SERVICE_SINGLETON, DepartmentRepository::class],
         CoverServiceInterface::class => [self::SERVICE_SINGLETON, CoverService::class],
         LogoServiceInterface::class => [self::SERVICE_SINGLETON, LogoService::class],
-        FacultyRepositoryInterface::class => [self::SERVICE_SINGLETON, FacultyRepository::class],
         DegreeRepositoryInterface::class => [self::SERVICE_SINGLETON, DegreeRepository::class],
+
+        // Faculty
+        \Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\FacultyRepository::class],
+        // Name Faculty
+        \Project\Domains\Admin\University\Domain\Faculty\Name\FacultyNameRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Name\FacultyNameRepository::class],
+
+        // Department
+        \Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\DepartmentRepository::class],
+        // Department Name
+        \Project\Domains\Admin\University\Domain\Department\Name\DepartmentNameRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Name\DepartmentNameRepository::class],
 
         \Project\Domains\Admin\University\Domain\Faculty\Services\Logo\Contracts\LogoServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Faculty\Services\Logo\LogoService::class],
         // \Project\Domains\Admin\University\Domain\Faculty\Services\Logo\Contracts\LogoServiceInterface::class => [self::SERVICE_SINGLETON, LogoService::class],
@@ -62,10 +66,20 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Faculty\Queries\Show\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Faculty\Queries\List\QueryHandler::class,
 
+        // Faculty name
+        \Project\Domains\Admin\University\Application\Faculty\Name\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\Faculty\Name\Queries\List\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\Faculty\Name\Queries\Show\QueryHandler::class,
+
         // Department
         \Project\Domains\Admin\University\Application\Department\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Department\Queries\Show\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Department\Queries\List\QueryHandler::class,
+
+        // Department Name
+        \Project\Domains\Admin\University\Application\DepartmentName\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\DepartmentName\Queries\List\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\DepartmentName\Queries\Show\QueryHandler::class,
 
         // Application
         \Project\Domains\Admin\University\Application\Application\Queries\Index\QueryHandler::class,
@@ -79,6 +93,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
 
         // Alias
         \Project\Domains\Admin\University\Application\Alias\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\Alias\Queries\List\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Alias\Queries\Show\QueryHandler::class,
     ];
 
@@ -91,15 +106,21 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\LabelType::class,
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\DescriptionType::class,
 
-        // University
+        // Faculty
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType::class,
-        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\NameType::class,
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\DescriptionType::class,
+
+        // Faculty Name
+        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Name\Types\UuidType::class,
+        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Name\Types\ValueType::class,
 
         // Department
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType::class,
-        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\NameType::class,
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType::class,
+
+        // Department Name
+        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Name\Types\UuidType::class,
+        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Name\Types\ValueType::class,
 
         // Application
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\UuidType::class,
@@ -134,10 +155,20 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Faculty\Commands\Update\CommandHandler::class,
         \Project\Domains\Admin\University\Application\Faculty\Commands\Delete\CommandHandler::class,
 
+        // Faculty Name
+        \Project\Domains\Admin\University\Application\Faculty\Name\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Faculty\Name\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\Faculty\Name\Commands\Delete\CommandHandler::class,
+
         // Department
         \Project\Domains\Admin\University\Application\Department\Commands\Create\CommandHandler::class,
         \Project\Domains\Admin\University\Application\Department\Commands\Update\CommandHandler::class,
         \Project\Domains\Admin\University\Application\Department\Commands\Delete\CommandHandler::class,
+
+        // Department Name
+        \Project\Domains\Admin\University\Application\DepartmentName\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\DepartmentName\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\DepartmentName\Commands\Delete\CommandHandler::class,
 
         // Application
         \Project\Domains\Admin\University\Application\Application\Commands\Create\CommandHandler::class,
@@ -180,8 +211,10 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         __DIR__ . '/../Domain/University',
         __DIR__ . '/../Domain/University/ValueObjects',
         __DIR__ . '/../Domain/Faculty',
+        __DIR__ . '/../Domain/Faculty/Name',
         __DIR__ . '/../Domain/Faculty/ValueObjects',
         __DIR__ . '/../Domain/Department',
+        __DIR__ . '/../Domain/Department/Name',
         __DIR__ . '/../Domain/Application/ValueObjects',
         __DIR__ . '/../Domain/Application',
         __DIR__ . '/../Domain/Degree',

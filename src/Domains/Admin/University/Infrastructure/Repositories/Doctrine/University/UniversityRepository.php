@@ -38,11 +38,6 @@ class UniversityRepository extends BaseAdminEntityRepository implements Universi
     {
         $query = $this->entityRepository->createQueryBuilder('u');
 
-        if ($httpQuery->filter->companyUuid !== null) {
-            $query->where('u.companyUuid = :companyUuid')
-                ->setParameter('companyUuid', $httpQuery->filter->companyUuid);
-        }
-
         return $this->paginator($query->getQuery(), $httpQuery->paginator);
     }
 
@@ -50,10 +45,12 @@ class UniversityRepository extends BaseAdminEntityRepository implements Universi
     {
         $query = $this->entityRepository->createQueryBuilder('u');
 
-        if ($httpQueryFilterDTO->companyUuid !== null) {
-            $query->where('u.companyUuid = :companyUuid')
-                ->setParameter('companyUuid', $httpQueryFilterDTO->companyUuid);
-        }
+        FilterQueryBuilder::build(
+            new FilterPipelineDTO(
+                $query,
+                $httpQueryFilterDTO
+            )
+        );
 
         return new UniversityCollection($query->getQuery()->getResult());
     }

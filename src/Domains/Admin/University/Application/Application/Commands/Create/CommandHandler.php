@@ -61,7 +61,7 @@ readonly class CommandHandler implements CommandHandlerInterface
     public function __invoke(Command $command): void
     {
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
-        $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid ?? $university->getCompany()->getUuid()->value));
+        $company = $this->companyRepository->findByUuid(CompanyUuid::fromValue($command->companyUuid));
         $country = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->countryUuid));
 
         $application = Application::create(

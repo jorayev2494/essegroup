@@ -9,6 +9,7 @@ use App\Http\Requests\Api\Admin\University\Language\UpdateRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Project\Domains\Admin\Language\Applications\Language\Queries\Index\Query as IndexQuery;
+use Project\Domains\Admin\Language\Applications\Language\Queries\List\Query as ListQuery;
 use Project\Domains\Admin\Language\Applications\Language\Commands\Create\Command as CreateCommand;
 use Project\Domains\Admin\Language\Applications\Language\Queries\Show\Query as ShowQuery;
 use Project\Domains\Admin\Language\Applications\Language\Commands\Update\Command as UpdateCommand;
@@ -36,6 +37,15 @@ readonly class LanguageController
         return $this->response->json(
             $this->queryBus->ask(
                 IndexQuery::makeFromRequest($request)
+            )
+        );
+    }
+
+    public function list(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                ListQuery::makeFromRequest($request)
             )
         );
     }

@@ -16,6 +16,6 @@ class CountryCollection extends Collection
     #[\Override]
     protected function translatorClass(): string
     {
-        return '';
+        return CountryTranslate::class;
     }
 }

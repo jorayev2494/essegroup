@@ -12,6 +12,8 @@ interface LanguageRepositoryInterface
 {
     public function paginate(Query $httpQuery): Paginator;
 
+    public function list(): LanguageCollection;
+
     public function findByUuid(Uuid $uuid): ?Language;
 
     public function save(Language $language): void;

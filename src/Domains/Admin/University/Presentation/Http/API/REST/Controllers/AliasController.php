@@ -9,6 +9,7 @@ use App\Http\Requests\Api\Admin\University\Alias\UpdateRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Project\Domains\Admin\University\Application\Alias\Queries\Index\Query as IndexQuery;
+use Project\Domains\Admin\University\Application\Alias\Queries\List\Query as ListQuery;
 use Project\Domains\Admin\University\Application\Alias\Commands\Create\Command as CreateCommand;
 use Project\Domains\Admin\University\Application\Alias\Queries\Show\Query as ShowQuery;
 use Project\Domains\Admin\University\Application\Alias\Commands\Update\Command as UpdateCommand;
@@ -36,6 +37,15 @@ readonly class AliasController
         return $this->response->json(
             $this->queryBus->ask(
                 IndexQuery::makeFromRequest($request)
+            )
+        );
+    }
+
+    public function list(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                ListQuery::makeFromRequest($request)
             )
         );
     }

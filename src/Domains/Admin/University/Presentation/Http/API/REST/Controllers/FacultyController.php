@@ -57,6 +57,7 @@ readonly class FacultyController
         $this->commandBus->dispatch(
             new StoreCommand(
                 $uuid,
+                $request->get('name_uuid'),
                 $request->get('university_uuid'),
                 $request->file('logo'),
                 $request->get('translations'),
@@ -81,6 +82,7 @@ readonly class FacultyController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
+                $request->get('name_uuid'),
                 $request->get('university_uuid'),
                 $request->file('logo'),
                 $request->get('translations'),

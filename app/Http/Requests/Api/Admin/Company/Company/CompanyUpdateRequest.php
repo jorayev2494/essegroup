@@ -34,7 +34,7 @@ class CompanyUpdateRequest extends FormRequest
             'domain' => [
                 'required',
                 'string',
-                'alpha',
+                // 'alpha',
                 Rule::unique('admin_db.company_companies', 'domain')->whereNot('uuid', $this->route('uuid')),
             ],
             'logo' => [

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Application\Faculty\Queries\Show;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Project\Domains\Admin\University\Domain\Faculty\Exceptions\FacultyNotFoundDomainException;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyTranslate;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid;
@@ -23,7 +23,7 @@ readonly class QueryHandler implements QueryHandlerInterface
     {
         $faculty = $this->facultyRepository->findByUuid(Uuid::fromValue($query->uuid));
 
-        $faculty ?? throw new ModelNotFoundException();
+        $faculty ?? throw new FacultyNotFoundDomainException();
 
         return FacultyTranslate::execute($faculty)->toArrayWithTranslations();
     }

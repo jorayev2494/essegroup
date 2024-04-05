@@ -16,6 +16,26 @@ class DepartmentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'name_uuid' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.university_department_names', 'uuid'),
+            ],
+            'alias_uuid' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.university_aliases', 'uuid'),
+            ],
+            'university_uuid' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.university_universities', 'uuid'),
+            ],
+            'faculty_uuid' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.faculty_faculties', 'uuid'),
+            ],
             'degree_uuids' => [
                 'required',
                 'array',
@@ -27,7 +47,12 @@ class DepartmentStoreRequest extends FormRequest
             ],
             'translations' => [
                 'required',
-                new ValidateTranslationRule(['name', 'description']),
+                new ValidateTranslationRule(['description']),
+            ],
+            'language_uuid' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.language_languages', 'uuid'),
             ],
             'is_filled' => [
                 'required',

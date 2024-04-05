@@ -9,6 +9,9 @@ use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\Dep
 use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\CountryController;
 use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\CityController;
 use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\DegreeController;
+use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\AliasController;
+use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\FacultyNameController;
+use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\DepartmentNameController;
 
 Route::group(
     ['prefix' => 'universities', 'controller' => UniversityController::class],
@@ -23,6 +26,13 @@ Route::group(
     ['prefix' => 'departments', 'controller' => DepartmentController::class],
     static function (Router $router): void {
         $router->get('/list', 'list');
+
+        $router->group(
+            ['prefix' => 'names', 'controller' => DepartmentNameController::class],
+            static function (Router $router): void {
+                $router->get('/list', 'list');
+            }
+        );
     }
 );
 
@@ -38,6 +48,13 @@ Route::group(
     static function (Router $router): void {
         $router->get('/list', 'list');
         $router->get('/{uuid}', 'show');
+
+        $router->group(
+            ['prefix' => 'names', 'controller' => FacultyNameController::class],
+            static function (Router $router): void {
+                $router->get('/list', 'list');
+            }
+        );
     }
 );
 
@@ -57,6 +74,13 @@ Route::group(
 
 Route::group(
     ['prefix' => 'countries/cities', 'controller' => CityController::class],
+    static function (Router $router): void {
+        $router->get('/list', 'list');
+    }
+);
+
+Route::group(
+    ['prefix' => 'aliases', 'controller' => AliasController::class],
     static function (Router $router): void {
         $router->get('/list', 'list');
     }

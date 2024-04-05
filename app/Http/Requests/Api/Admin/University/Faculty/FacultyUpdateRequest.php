@@ -19,6 +19,11 @@ class FacultyUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'name_uuid' => [
+                'required',
+                'string',
+                Rule::exists('admin_db.faculty_faculty_names', 'uuid'),
+            ],
             'university_uuid' => [
                 'required',
                 'string',

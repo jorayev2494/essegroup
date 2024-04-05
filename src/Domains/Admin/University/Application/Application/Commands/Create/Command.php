@@ -30,7 +30,7 @@ readonly class Command implements CommandInterface
         public array $additionalDocuments,
         public bool $isAgreedToShareData,
         public string $creatorRole,
-        public string $companyUuid,
+        public ?string $companyUuid,
         public ?string $fatherName,
         public ?string $motherName,
         public ?string $friendPhone,

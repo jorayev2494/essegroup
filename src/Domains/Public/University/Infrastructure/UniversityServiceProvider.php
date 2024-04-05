@@ -7,6 +7,8 @@ namespace Project\Domains\Public\University\Infrastructure;
 use App\Providers\Domains\AdminDomainServiceProvider;
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\CountryRepository;
+use Project\Domains\Public\University\Domain\Alias\Services\AliasService;
+use Project\Domains\Public\University\Domain\Alias\Services\Contracts\AliasServiceInterface;
 use Project\Domains\Public\University\Domain\Application\Services\ApplicationService;
 use Project\Domains\Public\University\Domain\Application\Services\Contracts\ApplicationServiceInterface;
 use Project\Domains\Public\University\Domain\City\Services\CityService;
@@ -17,8 +19,12 @@ use Project\Domains\Public\University\Domain\Degree\Services\Contracts\DegreeSer
 use Project\Domains\Public\University\Domain\Degree\Services\DegreeService;
 use Project\Domains\Public\University\Domain\Department\Services\Contracts\DepartmentServiceInterface;
 use Project\Domains\Public\University\Domain\Department\Services\DepartmentService;
+use Project\Domains\Public\University\Domain\DepartmentName\Services\Contracts\DepartmentNameServiceInterface;
+use Project\Domains\Public\University\Domain\DepartmentName\Services\DepartmentNameService;
 use Project\Domains\Public\University\Domain\Faculty\Services\Contracts\FacultyServiceInterface;
 use Project\Domains\Public\University\Domain\Faculty\Services\FacultyService;
+use Project\Domains\Public\University\Domain\FacultyName\Services\Contracts\FacultyNameServiceInterface;
+use Project\Domains\Public\University\Domain\FacultyName\Services\FacultyNameService;
 use Project\Domains\Public\University\Domain\University\Services\Contracts\UniversityServiceInterface;
 use Project\Domains\Public\University\Domain\University\Services\UniversityService;
 use Project\Domains\Public\University\Domain\University\UniversityRepositoryInterface;
@@ -37,6 +43,9 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         CountryServiceInterface::class => [self::SERVICE_SINGLETON, CountryService::class],
         CityServiceInterface::class => [self::SERVICE_SINGLETON, CityService::class],
         DegreeServiceInterface::class => [self::SERVICE_SINGLETON, DegreeService::class],
+        AliasServiceInterface::class => [self::SERVICE_SINGLETON, AliasService::class],
+        FacultyNameServiceInterface::class => [self::SERVICE_SINGLETON, FacultyNameService::class],
+        DepartmentNameServiceInterface::class => [self::SERVICE_SINGLETON, DepartmentNameService::class],
     ];
 
     /** @var array<array-key, string> */
@@ -50,6 +59,15 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
 
         // Degree
         \Project\Domains\Public\University\Application\Degree\Queries\List\QueryHandler::class,
+
+        // Alias
+        \Project\Domains\Public\University\Application\Alias\Queries\List\QueryHandler::class,
+
+        // Faculty Name
+        \Project\Domains\Public\University\Application\FacultyName\Queries\List\QueryHandler::class,
+
+        // Department Name
+        \Project\Domains\Public\University\Application\DepartmentName\Queries\List\QueryHandler::class,
     ];
 
     /** @var array<array-key, string> */

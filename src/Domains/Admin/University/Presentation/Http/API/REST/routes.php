@@ -4,7 +4,9 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\UniversityController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\FacultyController;
+use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\FacultyNameController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\DepartmentController;
+use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\DepartmentNameController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\ApplicationController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\DegreeController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\AliasController;
@@ -31,6 +33,18 @@ Route::group(
         $router->get('/{uuid}', 'show');
         $router->post('/{uuid}', 'update');
         $router->delete('/{uuid}', 'delete');
+
+        $router->group(
+            ['prefix' => 'names', 'controller' => FacultyNameController::class],
+            static function (Router $router): void {
+                $router->get('/', 'index');
+                $router->get('/list', 'list');
+                $router->post('/', 'store');
+                $router->get('/{uuid}', 'show');
+                $router->put('/{uuid}', 'update');
+                $router->delete('/{uuid}', 'delete');
+            }
+        );
     }
 );
 
@@ -43,6 +57,18 @@ Route::group(
         $router->get('/{uuid}', 'show');
         $router->put('/{uuid}', 'update');
         $router->delete('/{uuid}', 'delete');
+
+        $router->group(
+            ['prefix' => 'names', 'controller' => DepartmentNameController::class],
+            static function (Router $router): void {
+                $router->get('/', 'index');
+                $router->get('/list', 'list');
+                $router->post('/', 'store');
+                $router->get('/{uuid}', 'show');
+                $router->put('/{uuid}', 'update');
+                $router->delete('/{uuid}', 'delete');
+            }
+        );
     }
 );
 
@@ -74,6 +100,7 @@ Route::group(
     ['prefix' => 'aliases', 'controller' => AliasController::class],
     static function (Router $router): void {
         $router->get('/', 'index');
+        $router->get('/list', 'list');
         $router->post('/', 'store');
         $router->get('/{uuid}', 'show');
         $router->put('/{uuid}', 'update');
