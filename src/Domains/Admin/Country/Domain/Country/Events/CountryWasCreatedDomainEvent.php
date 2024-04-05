@@ -8,7 +8,6 @@ readonly class CountryWasCreatedDomainEvent extends DomainEvent
 {
     public function __construct(
         public string $uuid,
-        public string $value,
         public string $iso,
         public bool $isActive,
         string $eventId = null,
@@ -23,12 +22,11 @@ readonly class CountryWasCreatedDomainEvent extends DomainEvent
     {
         [
             'uuid' => $uuid,
-            'value' => $value,
             'iso' => $iso,
             'is_active' => $isActive,
         ] = $body;
 
-        return new self($uuid, $value, $iso, $isActive, $eventId, $occurredOn);
+        return new self($uuid, $iso, $isActive, $eventId, $occurredOn);
     }
 
     #[\Override]
@@ -47,7 +45,6 @@ readonly class CountryWasCreatedDomainEvent extends DomainEvent
             'id' => $this->aggregateId(),
             'body' => [
                 'uuid' => $this->uuid,
-                'value' => $this->value,
                 'iso' => $this->iso,
                 'is_active' => $this->isActive,
             ],

@@ -20,6 +20,10 @@ class DegreeUpdateRequest extends FormRequest
                 'required',
                 new ValidateTranslationRule(['value']),
             ],
+            'translations.*.value' => [
+                Rule::unique('admin_db.university_degree_translations', 'content')
+                    ->ignore($this->route('uuid'), 'degree_uuid'),
+            ],
         ];
     }
 }

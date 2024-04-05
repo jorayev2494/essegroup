@@ -9,9 +9,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Country\Domain\City\City;
-use Project\Domains\Admin\Country\Domain\City\AliasTranslate;
+use Project\Domains\Admin\Country\Domain\City\CityTranslate;
 use Project\Domains\Admin\Country\Domain\Country\Country;
+use Project\Domains\Admin\Country\Domain\Country\CountryTranslate;
 use Project\Domains\Admin\University\Domain\Application\Application;
+use Project\Domains\Admin\University\Domain\Department\Department;
+use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasAddedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasChangedDomainEvent;
 use Project\Domains\Admin\University\Domain\University\Events\Translation\UniversityTranslationWasDeletedDomainEvent;
@@ -95,6 +98,12 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\OneToMany(targetEntity: UniversityTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
 
+    #[ORM\OneToMany(targetEntity: Faculty::class, mappedBy: 'university')]
+    private Collection $faculties;
+
+    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'university')]
+    private Collection $departments;
+
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'universities')]
     private Collection $applications;
 
@@ -112,6 +121,7 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
         $this->description = Description::fromValue(null);
         $this->logo = null;
         $this->cover = null;
+        $this->faculties = new ArrayCollection();
         $this->translations = new ArrayCollection();
         $this->isOnTheCountryList = false;
     }
@@ -367,9 +377,9 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
             'cover' => $this->cover?->toArray(),
             'youtube_video_id' => $this->youTubeVideoId->value,
             'country_uuid' => $this->country->getUuid()->value,
-            'country' => $this->country->getUuid()->isNotNull() ? $this->country->toArray() : null,
+            'country' => CountryTranslate::execute($this->country)?->toArray(),
             'city_uuid' => $this->city->getUuid()->value,
-            'city' => AliasTranslate::execute($this->city)?->toArray(),
+            'city' => CityTranslate::execute($this->city)?->toArray(),
             'description' => $this->description->value,
             'is_on_the_country_list' => $this->isOnTheCountryList,
             'created_at' => $this->createdAt->getTimestamp(),

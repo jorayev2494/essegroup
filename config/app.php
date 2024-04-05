@@ -191,6 +191,7 @@ return [
 
         // Public
         Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,
+        Project\Domains\Public\Language\Infrastructure\LanguageServiceProvider::class,
 
         App\Providers\DoctrineServiceProvider::class,
     ])->toArray(),

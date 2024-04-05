@@ -8,16 +8,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\Language\Domain\Language\Language;
+use Project\Domains\Admin\Language\Domain\Language\LanguageTranslate;
+use Project\Domains\Admin\University\Domain\Alias\Alias;
+use Project\Domains\Admin\University\Domain\Alias\AliasTranslate;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Degree\Degree;
 use Project\Domains\Admin\University\Domain\Degree\DegreeCollection;
 use Project\Domains\Admin\University\Domain\Department\Events\ApplicationWasDeletedFromDepartmentDomainEvent;
 use Project\Domains\Admin\University\Domain\Department\Events\DepartmentWasDeletedDomainEvent;
+use Project\Domains\Admin\University\Domain\Department\Name\DepartmentName;
+use Project\Domains\Admin\University\Domain\Department\Name\DepartmentNameTranslate;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Description;
-use Project\Domains\Admin\University\Domain\Department\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Domain\Faculty\Faculty;
+use Project\Domains\Admin\University\Domain\Faculty\FacultyTranslate;
+use Project\Domains\Admin\University\Domain\University\University;
+use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType;
-use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\NameType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
@@ -41,14 +49,46 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\Column(type: UuidType::NAME)]
     private Uuid $uuid;
 
-    #[ORM\Column(type: NameType::NAME, nullable: true)]
-    private Name $name;
+    #[ORM\Column(name: 'name_uuid', nullable: true)]
+    private string $nameUuid;
+
+    #[ORM\ManyToOne(targetEntity: DepartmentName::class, inversedBy: 'departments')]
+    #[ORM\JoinColumn(name: 'name_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private DepartmentName $name;
 
     #[ORM\Column(type: DescriptionType::NAME, nullable: true)]
     private Description $description;
 
     #[ORM\OneToMany(targetEntity: DepartmentTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
+
+    #[ORM\Column(name: 'alias_uuid', nullable: true)]
+    private ?string $aliasUuid;
+
+    #[ORM\ManyToOne(targetEntity: Alias::class, inversedBy: 'departments')]
+    #[ORM\JoinColumn(name: 'alias_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private Alias $alias;
+
+    #[ORM\Column(name: 'university_uuid', type: Types::STRING, nullable: true)]
+    private ?string $universityUuid;
+
+    #[ORM\ManyToOne(targetEntity: University::class, inversedBy: 'departments')]
+    #[ORM\JoinColumn(name: 'university_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private University $university;
+
+    #[ORM\Column(name: 'faculty_uuid', type: Types::STRING, nullable: true)]
+    private ?string $facultyUuid;
+
+    #[ORM\ManyToOne(targetEntity: Faculty::class, inversedBy: 'departments')]
+    #[ORM\JoinColumn(name: 'faculty_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private Faculty $faculty;
+
+    #[ORM\Column(name: 'language_uuid', nullable: true)]
+    private ?string $languageUuid;
+
+    #[ORM\ManyToOne(targetEntity: Language::class, inversedBy: 'departments')]
+    #[ORM\JoinColumn(name: 'language_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private Language $language;
 
     #[ORM\ManyToMany(targetEntity: Application::class, mappedBy: 'departments')]
     private Collection $applications;
@@ -66,43 +106,46 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
 
     private function __construct(
         Uuid $uuid,
+        DepartmentName $name,
+        Alias $alias,
+        University $university,
+        Faculty $faculty,
+        Language $language,
         ArrayCollection $degrees,
         bool $isActive
     )
+
     {
         $this->uuid = $uuid;
+        $this->name = $name;
+        $this->alias = $alias;
+        $this->university = $university;
+        $this->faculty = $faculty;
         $this->degrees = $degrees;
-        $this->name = Name::fromValue(null);
+        $this->language = $language;
         $this->description = Description::fromValue(null);
         $this->translations = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->isActive = $isActive;
         $this->isFilled = false;
     }
-
-    public static function fromPrimitives(string $uuid, ArrayCollection $degrees, bool $isActive): self
+    public static function create(
+        Uuid $uuid,
+        DepartmentName $name,
+        Alias $alias,
+        University $university,
+        Faculty $faculty,
+        ArrayCollection $degrees,
+        Language $language,
+        bool $isActive
+    ): self
     {
-        return new self(Uuid::fromValue($uuid), $degrees, $isActive);
-    }
-
-    public function delete(): void
-    {
-        $this->record(new DepartmentWasDeletedDomainEvent($this->uuid->value));
+        return new self($uuid, $name, $alias, $university, $faculty, $language, $degrees, $isActive);
     }
 
     public function getUuid(): UUid
     {
         return $this->uuid;
-    }
-
-    public function getName(): Name
-    {
-        return $this->name;
-    }
-
-    public function setName(Name $name): void
-    {
-        $this->name = $name;
     }
 
     public function getDescription(): Description
@@ -113,6 +156,47 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     public function setDescription(Description $description): void
     {
         $this->description = $description;
+    }
+
+    public function changeName(DepartmentName $name): self
+    {
+        if ($this->name->getUuid()->value !== $name->getUuid()->value) {
+            $this->name = $name;
+        }
+
+        return $this;
+    }
+
+    public function getAlias(): Alias
+    {
+        return $this->alias;
+    }
+
+    public function changeAlias(Alias $alias): self
+    {
+        $this->alias = $alias;
+
+        return $this;
+    }
+
+    public function getUniversity(): University
+    {
+        return $this->university;
+    }
+
+    public function changeUniversity(University $university): void
+    {
+        $this->university = $university;
+    }
+
+    public function getFaculty(): Faculty
+    {
+        return $this->faculty;
+    }
+
+    public function changeFaculty(Faculty $faculty): void
+    {
+        $this->faculty = $faculty;
     }
 
     public function addDegree(Degree $degree): self
@@ -148,6 +232,18 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     public function getApplications(): Collection
     {
         return $this->applications;
+    }
+
+    public function getLanguage(): Language
+    {
+        return $this->language;
+    }
+
+    public function changeLanguage(Language $language): self
+    {
+        $this->language = $language;
+
+        return $this;
     }
 
     public function removeApplication(Application $application): void
@@ -212,14 +308,28 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         return $this;
     }
 
+    public function delete(): void
+    {
+        $this->record(new DepartmentWasDeletedDomainEvent($this->uuid->value));
+    }
+
     #[\Override]
     public function toArray(): array
     {
         return [
             'uuid' => $this->uuid->value,
-            'name' => $this->name->value,
+            'name_uuid' => DepartmentNameTranslate::execute($this->name)?->getUuid()->value,
+            'name' => DepartmentNameTranslate::execute($this->name)?->toArray(),
             'description' => $this->description->value,
+            'alias_uuid' => $this->aliasUuid,
+            'alias' => AliasTranslate::execute($this->alias)?->toArray(),
+            'university_uuid' => $this->universityUuid,
+            'university' => UniversityTranslate::execute($this->university)?->toArray(),
+            'faculty_uuid' => $this->facultyUuid,
+            'faculty' => FacultyTranslate::execute($this->faculty)?->toArray(),
             'degrees' => (new DegreeCollection($this->degrees->toArray()))->translateItems()->toArray(),
+            'language_uuid' => $this->languageUuid,
+            'language' => LanguageTranslate::execute($this->language)?->toArray(),
             'is_filled' => $this->isFilled,
             'is_active' => $this->isActive,
             'created_at' => $this->createdAt->getTimestamp(),

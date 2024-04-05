@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\Country\Application\Country\Commands\Create;
 
+use Project\Shared\Application\Command\Traits\TranslationsTrait;
 use Project\Shared\Domain\Bus\Command\CommandInterface;
 
-readonly class Command implements CommandInterface
+class Command implements CommandInterface
 {
+    use TranslationsTrait;
+
     public function __construct(
-        public string $uuid,
-        public string $value,
-        public string $iso,
-        public bool $isActive
+        public readonly string $uuid,
+        public readonly string $iso,
+        public array $translations,
+        public readonly bool $isActive
     )
     {
-
+        $this->setTranslations($this->translations);
     }
 }

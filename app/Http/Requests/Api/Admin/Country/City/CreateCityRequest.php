@@ -23,7 +23,11 @@ class CreateCityRequest extends FormRequest
                 Rule::exists('admin_db.country_countries', 'uuid'),
             ],
             'translations' => [
+                'required',
                 new ValidateTranslationRule(['value']),
+            ],
+            'translations.*.value' => [
+                Rule::unique('admin_db.country_city_translations', 'content'),
             ],
         ];
     }

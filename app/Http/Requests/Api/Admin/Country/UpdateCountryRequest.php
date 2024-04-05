@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Api\Admin\Country;
 
+use App\Rules\ValidateTranslationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Project\Infrastructure\Services\Auth\AuthManager;
 
 class UpdateCountryRequest extends FormRequest
 {
@@ -16,12 +16,13 @@ class UpdateCountryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'value' => [
+            'translations' => [
                 'required',
-                'alpha',
-                'max:255',
-                Rule::unique('admin_db.country_countries', 'value')
-                    ->ignore($this->route()->parameter('id'), 'id'),
+                new ValidateTranslationRule(['value']),
+            ],
+            'translations.*.value' => [
+                Rule::unique('admin_db.country_country_translations', 'content')
+                    ->ignore($this->route('uuid'), 'country_uuid'),
             ],
             'iso' => [
                 'required',

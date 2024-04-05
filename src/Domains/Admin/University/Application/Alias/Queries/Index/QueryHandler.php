@@ -6,8 +6,6 @@ namespace Project\Domains\Admin\University\Application\Alias\Queries\Index;
 
 use Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Alias\AliasTranslate;
-use Project\Domains\Admin\University\Domain\Alias\Exceptions\AliasNotFoundExceptionDomainException;
-use Project\Domains\Admin\University\Domain\Alias\ValueObjects\Uuid;
 use Project\Shared\Domain\Bus\Query\QueryHandlerInterface;
 
 readonly class QueryHandler implements QueryHandlerInterface

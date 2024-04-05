@@ -66,8 +66,8 @@ readonly class CountryController
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
-                $request->get('value'),
                 $request->get('iso'),
+                $request->get('translations'),
                 $request->get('is_active'),
             )
         );
@@ -80,8 +80,8 @@ readonly class CountryController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
-                $request->get('value'),
                 $request->get('iso'),
+                $request->get('translations'),
                 $request->boolean('is_active')
             )
         );

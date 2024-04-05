@@ -72,6 +72,11 @@ class DepartmentRepository extends BaseAdminEntityRepository implements Departme
                 ->setParameter('facultyUuid', $queryFilter->facultyUuid);
         }
 
+        if (count($queryFilter->aliasUuids) > 0) {
+            $query->andWhere('d.aliasUuid IN (:aliasUuids)')
+                ->setParameter('aliasUuids', $queryFilter->aliasUuids);
+        }
+
         return new DepartmentCollection($query->getQuery()->getResult());
     }
 

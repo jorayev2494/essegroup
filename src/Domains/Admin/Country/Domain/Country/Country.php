@@ -12,7 +12,6 @@ use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedIsActiv
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedISODomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasChangedValueDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasCreatedDomainEvent;
-use Project\Domains\Admin\Country\Domain\Country\Events\CountryWasDeleteDomainEvent;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\ISO;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
@@ -21,22 +20,26 @@ use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\T
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\UuidType;
 use Project\Shared\Contracts\NullableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\ActivableTrait;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
+use Project\Shared\Domain\Translation\TranslatableInterface;
+use Project\Shared\Domain\Translation\TranslatableTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'country_countries')]
 #[ORM\HasLifecycleCallbacks]
-class Country extends AggregateRoot implements NullableInterface
+class Country extends AggregateRoot implements EntityUuid, TranslatableInterface, NullableInterface
 {
-    use ActivableTrait,
+    use TranslatableTrait,
+        ActivableTrait,
         CreatedAtAndUpdatedAtTrait;
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME)]
     private Uuid $uuid;
 
-    #[ORM\Column(name: 'value', type: ValueType::NAME)]
+    #[ORM\Column(name: 'value', type: ValueType::NAME, nullable: true)]
     private Value $value;
 
     #[ORM\Column(name: 'iso', type: ISOType::NAME, length: 3)]
@@ -45,25 +48,31 @@ class Country extends AggregateRoot implements NullableInterface
 //    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'country')]
 //    private Collection $universities;
 
+    /**
+     * @var CountryTranslation[] $translations
+     */
+    #[ORM\OneToMany(targetEntity: CountryTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    private Collection $translations;
+
     #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'country', cascade: ['persist', 'remove'])]
     private Collection $cities;
 
-    private function __construct(Uuid $uuid, Value $value, ISO $iso, bool $isActive)
+    private function __construct(Uuid $uuid, ISO $iso, bool $isActive)
     {
         $this->uuid = $uuid;
-        $this->value = $value;
+        $this->value = Value::fromValue(null);
+        $this->translations = new ArrayCollection();
         $this->iso = $iso;
         $this->cities = new ArrayCollection();
         $this->isActive = $isActive;
     }
 
-    public static function create(Uuid $uuid, Value $value, ISO $iso, bool $isActive): self
+    public static function create(Uuid $uuid, ISO $iso, bool $isActive): self
     {
-        $country = new self($uuid, $value, $iso, $isActive);
+        $country = new self($uuid, $iso, $isActive);
         $country->record(
             new CountryWasCreatedDomainEvent(
                 $country->uuid->value,
-                $country->value->value,
                 $country->iso->value,
                 $country->isActive
             )
@@ -75,6 +84,13 @@ class Country extends AggregateRoot implements NullableInterface
     public function getUuid(): Uuid
     {
         return $this->uuid;
+    }
+
+    public function setValue(Value $value): self
+    {
+        $this->value = $value;
+
+        return $this;
     }
 
     public function changeValue(Value $value): void
@@ -144,6 +160,11 @@ class Country extends AggregateRoot implements NullableInterface
     public function isNotEquals(self $other): bool
     {
         return $this->uuid->value !== $other->uuid->value;
+    }
+
+    public function getTranslationClass(): string
+    {
+        return CountryTranslation::class;
     }
 
     public function toArray(): array

@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\Country\Domain\Country\CountryTranslate;
 use Project\Domains\Admin\University\Domain\Application\Traits\AdditionalDocumentTrait;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\AdditionalDocument;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\BiometricPhoto;
@@ -617,7 +618,7 @@ class Application extends AggregateRoot implements
             'company_uuid' => $this->company->getUuid()->value,
             'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
             'country_uuid' => $this->country->getUuid()->value,
-            'country' => $this->country->getUuid()->isNotNull() ? $this->country->toArray() : null,
+            'country' => CountryTranslate::execute($this->country)?->toArray(),
             'university_uuid' => $this->university->getUuid()->value,
             'university' => UniversityTranslate::execute($this->university)?->toArray(),
             'departments' => array_map(static fn (ArrayableInterface $item): array => DepartmentTranslate::execute($item)->toArray(), $this->departments->toArray()),

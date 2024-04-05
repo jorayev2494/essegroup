@@ -12,6 +12,8 @@ interface AliasRepositoryInterface
 {
     public function paginate(Query $httpQuery): Paginator;
 
+    public function list(): AliasCollection;
+
     public function findByUuid(Uuid $uuid): ?Alias;
 
     public function save(Alias $alias): void;

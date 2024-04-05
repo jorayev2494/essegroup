@@ -17,6 +17,7 @@ class LanguageServiceProvider extends AdminDomainServiceProvider
     /** @var array<array-key, string> */
     protected const QUERY_HANDLERS = [
         \Project\Domains\Admin\Language\Applications\Language\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\Language\Applications\Language\Queries\List\QueryHandler::class,
         \Project\Domains\Admin\Language\Applications\Language\Queries\Show\QueryHandler::class,
     ];
 

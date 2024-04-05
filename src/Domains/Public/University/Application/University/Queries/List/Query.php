@@ -21,15 +21,13 @@ readonly class Query extends BaseHttpQueryParams
 
     protected function fromArray(array $data): static
     {
-
-
         return $this;
     }
 
     public function toArray(): array
     {
         return [
-
+            ...$this->filters->toArray(),
         ];
     }
 }

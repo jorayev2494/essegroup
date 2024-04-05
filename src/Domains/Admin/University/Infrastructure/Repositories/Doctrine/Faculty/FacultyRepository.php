@@ -46,6 +46,12 @@ class FacultyRepository extends BaseAdminEntityRepository implements FacultyRepo
                 ->setParameter('universityUuids', $queryFilter->universityUuids);
         }
 
+        if (count($queryFilter->aliasUuids) > 0) {
+            $query->innerJoin('f.departments', 'fd', 'fd.facultyUuid = f.uuid')
+                ->andWhere('fd.aliasUuid IN (:aliasUuid)')
+                ->setParameter('aliasUuid', $queryFilter->aliasUuids);
+        }
+
         return new FacultyCollection($query->getQuery()->getResult());
     }
 

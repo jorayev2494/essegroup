@@ -6,6 +6,7 @@ namespace Project\Domains\Admin\University\Infrastructure\Alias\Repositories\Doc
 
 use Project\Domains\Admin\University\Application\Alias\Queries\Index\Query;
 use Project\Domains\Admin\University\Domain\Alias\Alias;
+use Project\Domains\Admin\University\Domain\Alias\AliasCollection;
 use Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Alias\ValueObjects\Uuid;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
@@ -23,6 +24,15 @@ class AliasRepository extends BaseAdminEntityRepository implements AliasReposito
         $query = $this->entityRepository->createQueryBuilder('a');
 
         return $this->paginator($query, $httpQuery->paginator);
+    }
+
+    public function list(): AliasCollection
+    {
+        return new AliasCollection(
+            $this->entityRepository->createQueryBuilder('a')
+                ->getQuery()
+                ->getResult()
+        );
     }
 
     public function findByUuid(Uuid $uuid): ?Alias

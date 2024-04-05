@@ -6,12 +6,29 @@ namespace App\Http\Requests\Api\Public\University\Application;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Project\Domains\Admin\Company\Domain\Company\Company;
+use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
+use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 
 class ApplicationStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        /** @var CompanyRepositoryInterface $companyRepository */
+        $companyRepository = resolve(CompanyRepositoryInterface::class);
+
+        /** @var Company $company */
+        $company = $companyRepository->findByDomain(Domain::fromValue($this->getHostName()));
+        if ($company->getUuid()->isNotNull()) {
+            $this->merge([
+                'company_uuid' => $company->getUuid()->value,
+            ]);
+        }
     }
 
     public function rules(): array
@@ -73,5 +90,12 @@ class ApplicationStoreRequest extends FormRequest
             'friend_phone' => ['nullable', 'string', 'max:255'],
             'home_address' => ['nullable', 'string', 'max:255'],
         ];
+    }
+
+    private function getHostName(): string
+    {
+        [$hostName] = explode(':', $this->server('HTTP_HOST'));
+
+        return $hostName;
     }
 }

@@ -15,9 +15,10 @@ class FilterByDepartment extends BaseFilterPipe
      */
     public function execute(QueryBuilder $queryBuilder, object $queryFilter): void
     {
-        $queryBuilder->innerJoin('u.faculties', 'uf')
-            ->innerJoin('uf.departments', 'ufd', 'ufd.facultyUuid = uf.uuid')
-            ->andWhere('ufd.uuid IN (:departmentUuids)')
+        $queryBuilder->innerJoin('u.faculties', 'uff', 'uff.universityUuid = u.uuid')
+            ->innerJoin('uff.departments', 'uffd', 'uffd.facultyUuid = uff.uuid')
+            ->innerJoin('uffd.name', 'uffn')
+            ->andWhere('uffn.uuid IN (:departmentUuids)')
             ->setParameter('departmentUuids', $queryFilter->departmentUuids)
         ;
     }

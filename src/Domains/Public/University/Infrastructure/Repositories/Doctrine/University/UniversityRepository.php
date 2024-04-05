@@ -23,11 +23,6 @@ class UniversityRepository extends BaseAdminEntityRepository implements Universi
     {
         $query = $this->entityRepository->createQueryBuilder('u');
 
-        if ($queryFilter->companyUuid !== null) {
-            $query->where('u.companyUuid = :companyUuid')
-                ->setParameter('companyUuid', $queryFilter->companyUuid);
-        }
-
         return new UniversityCollection($query->getQuery()->getResult());
     }
 

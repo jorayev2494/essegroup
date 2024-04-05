@@ -8,6 +8,7 @@ Route::group(
     ['prefix' => 'languages', 'controller' => LanguageController::class],
     static function (Router $router): void {
         $router->get('/', 'index');
+        $router->get('/list', 'list');
         $router->post('/', 'store');
         $router->get('/{uuid}', 'show');
         $router->put('/{uuid}', 'update');
