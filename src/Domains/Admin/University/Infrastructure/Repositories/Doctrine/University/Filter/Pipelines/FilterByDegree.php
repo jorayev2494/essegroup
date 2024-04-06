@@ -17,8 +17,7 @@ class FilterByDegree extends BaseFilterPipe
     {
         $queryBuilder->innerJoin('u.faculties', 'ufd')
             ->innerJoin('ufd.departments', 'ufdd', 'ufdd.facultyUuid = ufd.uuid')
-            ->innerJoin('ufdd.degrees', 'ufddd')
-            ->andWhere('ufddd.uuid IN (:degreeUuids)')
+            ->andWhere('ufdd.degreeUuid IN (:degreeUuids)')
             ->setParameter('degreeUuids', $queryFilter->degreeUuids);
     }
 

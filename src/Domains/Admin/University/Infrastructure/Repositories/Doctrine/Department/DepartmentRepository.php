@@ -62,9 +62,9 @@ class DepartmentRepository extends BaseAdminEntityRepository implements Departme
     {
         $query = $this->entityRepository->createQueryBuilder('d');
 
-        if ($queryFilter->universityUuid !== null) {
-            $query->where('d.universityUuid = :universityUuid')
-                ->setParameter('universityUuid', $queryFilter->universityUuid);
+        if (count($queryFilter->universityUuids) > 0) {
+            $query->where('d.universityUuid IN (:universityUuids)')
+                ->setParameter('universityUuids', $queryFilter->universityUuids);
         }
 
         if ($queryFilter->facultyUuid !== null) {

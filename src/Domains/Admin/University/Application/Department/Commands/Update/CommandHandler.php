@@ -46,7 +46,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $department ?? throw new ModelNotFoundException();
 
-        $degrees = $this->degreeRepository->findManyByUuids(...array_map(static fn (string $uuid): DegreeUuid => DegreeUuid::fromValue($uuid), $command->degreeUuids));
+        $degree = $this->degreeRepository->findByUuid(DegreeUuid::fromValue($command->degreeUuid));
         $name = $this->nameRepository->findByUuid(DepartmentNameUuid::fromValue($command->nameUuid));
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
         $faculty = $this->facultyRepository->findByUuid(FacultyUuid::fromValue($command->facultyUuid));
@@ -58,11 +58,9 @@ readonly class CommandHandler implements CommandHandlerInterface
         $department->changeUniversity($university);
         $department->changeAlias($alias);
         $department->changeLanguage($language);
+        $department->changeDegree($degree);
         $department->changeIsFilled($command->isFilled);
         $department->setIsActive($command->isActive);
-
-        $department->clearDegrees();
-        $degrees->forEach(static fn (Degree $degree): Department => $department->addDegree($degree));
 
         $this->translationService->addTranslations($department, $command->translations);
 

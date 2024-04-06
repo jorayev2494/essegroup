@@ -17,7 +17,7 @@ class Command implements CommandInterface
         public readonly string $aliasUuid,
         public readonly string $universityUuid,
         public readonly string $facultyUuid,
-        public readonly array $degreeUuids,
+        public readonly string $degreeUuid,
         public readonly string $languageUuid,
         array $translations,
         public readonly bool $isFilled,

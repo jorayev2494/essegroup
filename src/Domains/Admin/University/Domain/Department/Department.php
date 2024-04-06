@@ -14,7 +14,7 @@ use Project\Domains\Admin\University\Domain\Alias\Alias;
 use Project\Domains\Admin\University\Domain\Alias\AliasTranslate;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Degree\Degree;
-use Project\Domains\Admin\University\Domain\Degree\DegreeCollection;
+use Project\Domains\Admin\University\Domain\Degree\DegreeTranslate;
 use Project\Domains\Admin\University\Domain\Department\Events\ApplicationWasDeletedFromDepartmentDomainEvent;
 use Project\Domains\Admin\University\Domain\Department\Events\DepartmentWasDeletedDomainEvent;
 use Project\Domains\Admin\University\Domain\Department\Name\DepartmentName;
@@ -83,6 +83,13 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\JoinColumn(name: 'faculty_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
     private Faculty $faculty;
 
+    #[ORM\Column(name: 'degree_uuid', nullable: true)]
+    private ?string $degreeUuid;
+
+    #[ORM\ManyToOne(targetEntity: Degree::class, inversedBy: 'departments')]
+    #[ORM\JoinColumn(name: 'degree_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private Degree $degree;
+
     #[ORM\Column(name: 'language_uuid', nullable: true)]
     private ?string $languageUuid;
 
@@ -93,14 +100,6 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\ManyToMany(targetEntity: Application::class, mappedBy: 'departments')]
     private Collection $applications;
 
-    #[ORM\ManyToMany(targetEntity: Degree::class, inversedBy: 'departments')]
-    #[ORM\JoinTable(
-        name: 'university_departments_degrees',
-        joinColumns: new ORM\JoinColumn(name: 'department_uuid', referencedColumnName: 'uuid'),
-        inverseJoinColumns: new ORM\JoinColumn(name: 'degree_uuid', referencedColumnName: 'uuid')
-    )]
-    private Collection $degrees;
-
     #[ORM\Column(name: 'is_filled', type: Types::BOOLEAN)]
     private bool $isFilled;
 
@@ -110,8 +109,8 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         Alias $alias,
         University $university,
         Faculty $faculty,
+        Degree $degree,
         Language $language,
-        ArrayCollection $degrees,
         bool $isActive
     )
 
@@ -121,7 +120,7 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         $this->alias = $alias;
         $this->university = $university;
         $this->faculty = $faculty;
-        $this->degrees = $degrees;
+        $this->degree = $degree;
         $this->language = $language;
         $this->description = Description::fromValue(null);
         $this->translations = new ArrayCollection();
@@ -135,12 +134,12 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         Alias $alias,
         University $university,
         Faculty $faculty,
-        ArrayCollection $degrees,
+        Degree $degree,
         Language $language,
         bool $isActive
     ): self
     {
-        return new self($uuid, $name, $alias, $university, $faculty, $language, $degrees, $isActive);
+        return new self($uuid, $name, $alias, $university, $faculty, $degree, $language, $isActive);
     }
 
     public function getUuid(): UUid
@@ -199,23 +198,14 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         $this->faculty = $faculty;
     }
 
-    public function addDegree(Degree $degree): self
+    public function getDegree(): Degree
     {
-        if (! $this->degrees->contains($degree)) {
-            $this->degrees->add($degree);
-        }
-
-        return $this;
+        return $this->degree;
     }
 
-    public function getDegrees(): Collection
+    public function changeDegree(Degree $degree): self
     {
-        return $this->degrees;
-    }
-
-    public function clearDegrees(): self
-    {
-        $this->degrees = new ArrayCollection();
+        $this->degree = $degree;
 
         return $this;
     }
@@ -327,7 +317,8 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
             'university' => UniversityTranslate::execute($this->university)?->toArray(),
             'faculty_uuid' => $this->facultyUuid,
             'faculty' => FacultyTranslate::execute($this->faculty)?->toArray(),
-            'degrees' => (new DegreeCollection($this->degrees->toArray()))->translateItems()->toArray(),
+            'degree_uuid' => $this->degreeUuid,
+            'degree' => DegreeTranslate::execute($this->degree)?->toArray(),
             'language_uuid' => $this->languageUuid,
             'language' => LanguageTranslate::execute($this->language)?->toArray(),
             'is_filled' => $this->isFilled,
