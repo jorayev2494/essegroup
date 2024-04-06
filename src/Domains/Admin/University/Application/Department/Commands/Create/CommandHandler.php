@@ -42,7 +42,7 @@ readonly class CommandHandler implements CommandHandlerInterface
     public function __invoke(Command $command): void
     {
         $name = $this->nameRepository->findByUuid(DepartmentNameUuid::fromValue($command->nameUuid));
-        $degrees = $this->degreeRepository->findManyByUuids(...array_map(static fn (string $uuid): DegreeUuid => DegreeUuid::fromValue($uuid), $command->degreeUuids));
+        $degree = $this->degreeRepository->findByUuid(DegreeUuid::fromValue($command->degreeUuid));
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
         $faculty = $this->facultyRepository->findByUuid(FacultyUuid::fromValue($command->facultyUuid));
         $alias = $this->aliasRepository->findByUuid(AliasUuid::fromValue($command->aliasUuid));
@@ -54,7 +54,7 @@ readonly class CommandHandler implements CommandHandlerInterface
             $alias,
             $university,
             $faculty,
-            new ArrayCollection(iterator_to_array($degrees->getIterator())),
+            $degree,
             $language,
             $command->isActive
         );

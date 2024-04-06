@@ -36,9 +36,10 @@ class DepartmentStoreRequest extends FormRequest
                 'string',
                 Rule::exists('admin_db.faculty_faculties', 'uuid'),
             ],
-            'degree_uuids' => [
+            'degree_uuid' => [
                 'required',
-                'array',
+                'string',
+                Rule::exists('admin_db.university_degrees', 'uuid'),
             ],
             'degree_uuids.*' => [
                 'required',

@@ -29,7 +29,7 @@ class UpdateCountryRequest extends FormRequest
                 'alpha',
                 'max:3',
                 Rule::unique('admin_db.country_countries', 'iso')
-                    ->ignore($this->route()->parameter('id'), 'id'),
+                    ->ignore($this->route()->parameter('uuid'), 'uuid'),
             ],
             'is_active' => ['required', 'boolean'],
         ];
