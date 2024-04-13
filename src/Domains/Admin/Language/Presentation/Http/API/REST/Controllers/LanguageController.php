@@ -57,6 +57,7 @@ readonly class LanguageController
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
+                $request->get('iso'),
                 $request->get('translations'),
                 true
             )
@@ -79,6 +80,7 @@ readonly class LanguageController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
+                $request->get('iso'),
                 $request->get('translations'),
                 true
             )

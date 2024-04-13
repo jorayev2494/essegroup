@@ -16,74 +16,43 @@ class ApplicationStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'student_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.student_students', 'uuid'),
+            ],
+            'alias_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.university_aliases', 'uuid'),
+            ],
+            'language_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.language_languages', 'uuid'),
+            ],
+            'degree_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.university_degrees', 'uuid'),
+            ],
+            'country_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.country_countries', 'uuid'),
+            ],
             'university_uuid' => [
                 'required',
-                'string',
-                'max:255',
+                'uuid',
                 Rule::exists('admin_db.university_universities', 'uuid'),
             ],
-//            'faculty_uuid' => [
-//                'required',
-//                'string',
-//                'max:255',
-//                Rule::exists('admin_db.faculty_faculties', 'uuid'),
-//            ],
             'department_uuids' => [
                 'required',
             ],
             'department_uuids.*' => [
-                'required',
-                'string',
+                'uuid',
                 Rule::exists('admin_db.university_departments', 'uuid'),
             ],
-            'country_uuid' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::exists('admin_db.country_countries', 'uuid'),
-            ],
-            'full_name' => ['required', 'string', 'max:255'],
-            'birthday' => ['required', 'date', 'max:255'],
-            'passport_number' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'phone' => ['required', 'min:5', 'max:255'],
-            'passport' => ['required', 'file', 'mimetypes:application/pdf'],
-            'passport_translation' => ['required', 'file', 'mimetypes:application/pdf'],
-            'school_attestat' => ['required', 'file', 'mimetypes:application/pdf'],
-            'school_attestat_translation' => ['required', 'file', 'mimetypes:application/pdf'],
-            'transcript' => ['required', 'file', 'mimetypes:application/pdf'],
-            'transcript_translation' => ['required', 'file', 'mimetypes:application/pdf'],
-            'equivalence_document' => ['required', 'file', 'mimetypes:application/pdf'],
-            'biometric_photo' => ['required', 'file', 'mimetypes:application/pdf'],
-            'additional_documents' => ['array', 'max:5'],
-            'additional_documents.*.description' => [
-                'string',
-                'max:255',
-            ],
-            'additional_documents.*.document' => [
-                'file',
-                // 'mimetypes:application/pdf',
-            ],
-            // 'is_agreed_to_share_data' => ['required', 'boolean', 'in:true,1'],
-
-            // 'status' => ['required', Rule::in(StatusEnum::cases())],
-            // 'note' => [
-            //     'nullable',
-            //     'string',
-            //     'max:500',
-            //     Rule::requiredIf(StatusEnum::managementNoteRequired(StatusEnum::from($this->get('status'))))
-            // ],
-
-            'company_uuid' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::exists('admin_db.company_companies', 'uuid'),
-            ],
-            'father_name' => ['nullable', 'string', 'max:255'],
-            'mother_name' => ['nullable', 'string', 'max:255'],
-            'friend_phone' => ['nullable', 'string', 'max:255'],
-            'home_address' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

@@ -16,21 +16,14 @@ class Command implements CommandInterface
 
     public function __construct(
         public readonly string $uuid,
-        public readonly string $fullName,
-        public readonly string $birthday,
-        public readonly string $passportNumber,
-        public readonly string $email,
-        public readonly string $phone,
+        public readonly string $aliasUuid,
+        public readonly string $languageUuid,
+        public readonly string $degreeUuid,
+        public readonly string $countryUuid,
         public readonly string $universityUuid,
         public readonly array $departmentUuids,
-        public readonly string $countryUuid,
         public readonly string $status,
         array $statusNotes,
-        public string $companyUuid,
-        public readonly ?string $fatherName,
-        public readonly ?string $motherName,
-        public readonly ?string $friendPhone,
-        public readonly ?string $homeAddress,
     )
     {
         $this->setNoteTranslations($statusNotes);

@@ -16,57 +16,52 @@ class ApplicationUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'full_name' => ['required', 'string', 'max:255'],
-            'birthday' => ['required', 'date', 'max:255'],
-            'passport_number' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'phone' => ['required', 'min:5', 'max:255'],
-
+            'student_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.student_students', 'uuid'),
+            ],
+            'alias_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.university_aliases', 'uuid'),
+            ],
+            'language_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.language_languages', 'uuid'),
+            ],
+            'degree_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.university_degrees', 'uuid'),
+            ],
+            'country_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.country_countries', 'uuid'),
+            ],
             'university_uuid' => [
                 'required',
-                'string',
-                'max:255',
+                'uuid',
                 Rule::exists('admin_db.university_universities', 'uuid'),
             ],
-            // 'faculty_uuid' => [
-            //     'required',
-            //     'string',
-            //     'max:255',
-            //     Rule::exists('admin_db.faculty_faculties', 'uuid'),
-            // ],
             'department_uuids' => [
                 'required',
             ],
             'department_uuids.*' => [
-                'required',
-                'string',
+                'uuid',
                 Rule::exists('admin_db.university_departments', 'uuid'),
             ],
-            'country_uuid' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::exists('admin_db.country_countries', 'uuid'),
-            ],
 
-            'status.value' => ['required', Rule::in(StatusEnum::MANAGEMENT_NOTE_REQUIRED)],
-            'status.notes' => ['array'],
-            'status.translations.*.note' => [
-                'nullable',
-                'string',
-                'max:500',
-                Rule::requiredIf(StatusEnum::managementNoteRequired(StatusEnum::from($this->get('status')['value'])))
-            ],
-            'company_uuid' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::exists('admin_db.company_companies', 'uuid'),
-            ],
-            'father_name' => ['nullable', 'string', 'max:255'],
-            'mother_name' => ['nullable', 'string', 'max:255'],
-            'friend_phone' => ['nullable', 'string', 'max:255'],
-            'home_address' => ['nullable', 'string', 'max:255'],
+            // 'status.value' => ['required', Rule::in(StatusEnum::MANAGEMENT_NOTE_REQUIRED)],
+            // 'status.notes' => ['array'],
+            // 'status.translations.*.note' => [
+            //     'nullable',
+            //     'string',
+            //     'max:500',
+            //     Rule::requiredIf(StatusEnum::managementNoteRequired(StatusEnum::from($this->get('status')['value'])))
+            // ],
         ];
     }
 }

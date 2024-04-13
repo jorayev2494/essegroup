@@ -38,16 +38,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
 
         // Application
         \Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\ApplicationRepository::class],
-        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\BiometricPhoto\Contracts\BiometricPhotoServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\BiometricPhoto\BiometricPhotoService::class],
-        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\Passport\Contracts\PassportServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\Passport\PassportService::class],
-        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\PassportTranslation\Contracts\PassportTranslationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\PassportTranslation\PassportTranslationService::class],
-        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\Transcript\Contracts\TranscriptServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\Transcript\TranscriptService::class],
-        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\TranscriptTranslation\Contracts\TranscriptTranslationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\TranscriptTranslation\TranscriptTranslationService::class],
-        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\SchoolAttestat\Contracts\SchoolAttestatServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\SchoolAttestat\SchoolAttestatService::class],
-        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\SchoolAttestatTranslation\Contracts\SchoolAttestatTranslationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\SchoolAttestatTranslation\SchoolAttestatTranslationService::class],
-        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\EquivalenceDocument\Contracts\EquivalenceDocumentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\EquivalenceDocument\EquivalenceDocumentService::class],
         \Project\Domains\Admin\University\Domain\Application\Services\Contracts\StatusServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\StatusService::class],
-        \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Services\Files\AdditionalDocument\AdditionalDocumentService::class],
         \Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\ApplicationService::class],
         \Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Alias\Repositories\Doctrine\AliasRepository::class],
     ];
@@ -59,7 +50,6 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\University\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\University\Application\University\Queries\List\QueryHandler::class,
         \Project\Domains\Admin\University\Application\University\Queries\Search\QueryHandler::class,
-
 
         // Faculty
         \Project\Domains\Admin\University\Application\Faculty\Queries\Index\QueryHandler::class,
@@ -83,6 +73,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
 
         // Application
         \Project\Domains\Admin\University\Application\Application\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\Application\Queries\ByStudentUuid\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Application\Queries\Show\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Application\Queries\StatusList\QueryHandler::class,
 
@@ -124,15 +115,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
 
         // Application
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\UuidType::class,
-        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\PassportNumberType::class,
-        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\FatherNameType::class,
-        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\MotherNameType::class,
-        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\FriendPhoneType::class,
-        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\FullNameType::class,
-        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\EmailType::class,
-        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\PhoneType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusEnumType::class,
-        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\HomeAddressType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusIdType::class,
 
         // Degree

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine;
 
-use Project\Domains\Admin\University\Application\Application\Queries\Index\Query;
+use Project\Domains\Admin\University\Application\Application\Queries\Index\Query as IndexQuery;
+use Project\Domains\Admin\University\Application\Application\Queries\ByStudentUuid\Query as ByStudentUuidQuery;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Application\ApplicationCollection;
 use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface;
@@ -20,9 +21,19 @@ class ApplicationRepository extends BaseAdminEntityRepository implements Applica
         return Application::class;
     }
 
-    public function paginate(Query $httpQuery): Paginator
+    public function paginate(IndexQuery $httpQuery): Paginator
     {
         $query = $this->entityRepository->createQueryBuilder('a');
+
+        return $this->paginator($query->getQuery(), $httpQuery->paginator);
+    }
+
+    public function paginateByStudentUuid(ByStudentUuidQuery $httpQuery): Paginator
+    {
+        $query = $this->entityRepository->createQueryBuilder('a');
+
+        $query->where('a.studentUuid = :studentUuid')
+            ->setParameter('studentUuid', $httpQuery->studentUuid);
 
         return $this->paginator($query->getQuery(), $httpQuery->paginator);
     }

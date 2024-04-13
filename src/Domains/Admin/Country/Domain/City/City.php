@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Country\Domain\City\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\City\ValueObjects\Value;
 use Project\Domains\Admin\Country\Domain\Country\Country;
+use Project\Domains\Admin\Country\Domain\Country\CountryTranslate;
 use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\ValueType;
 use Project\Domains\Admin\Country\Infrastructure\City\Repositories\Doctrine\Types\UuidType;
 use Project\Domains\Admin\University\Domain\University\University;
@@ -157,7 +158,7 @@ class City implements EntityUuid, ArrayableInterface, TranslatableInterface, Nul
             'uuid' => $this->uuid->value,
             'value' => $this->value->value,
             'country_uuid' => $this->country->getUuid()->value,
-            'country' => $this->country->toArray(),
+            'country' => CountryTranslate::execute($this->country)?->toArray(),
             'is_active' => $this->isActive,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),

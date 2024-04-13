@@ -34,6 +34,7 @@ class LanguageServiceProvider extends AdminDomainServiceProvider
     /** @var array<string, string> */
     protected const ENTITY_TYPES = [
         \Project\Domains\Admin\Language\Infrastructure\Language\Repositories\Doctrine\Types\UuidType::class,
+        \Project\Domains\Admin\Language\Infrastructure\Language\Repositories\Doctrine\Types\ISOType::class,
         \Project\Domains\Admin\Language\Infrastructure\Language\Repositories\Doctrine\Types\ValueType::class,
     ];
 

@@ -329,12 +329,12 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
 
     public function isEquals(self $other): bool
     {
-        return $this->uuid === $other->uuid;
+        return $this->uuid->value === $other->uuid->value;
     }
 
     public function isNotEquals(self $other): bool
     {
-        return $this->uuid !== $other->uuid;
+        return $this->uuid->value !== $other->uuid->value;
     }
 
     public function getTranslationClass(): string

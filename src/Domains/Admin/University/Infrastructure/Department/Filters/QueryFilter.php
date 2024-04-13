@@ -10,9 +10,12 @@ use Symfony\Component\HttpFoundation\Request;
 readonly class QueryFilter extends BaseQueryFilter
 {
     private function __construct(
+        public array $countryUuids,
+        public array $aliasUuids,
+        public array $languageUuids,
+        public array $degreeUuids,
         public array $universityUuids,
-        public ?string $facultyUuid,
-        public array $aliasUuids
+        public array $facultyUuids
     ) {
 
     }
@@ -25,9 +28,12 @@ readonly class QueryFilter extends BaseQueryFilter
     public static function makeFromArray(array $data): static
     {
         return new self(
-            $data['university_uuids'] ?? [],
-            $data['faculty_uuid'] ?? null,
+            $data['country_uuids'] ?? [],
             $data['alias_uuids'] ?? [],
+            $data['language_uuids'] ?? [],
+            $data['degree_uuids'] ?? [],
+            $data['university_uuids'] ?? [],
+            $data['faculty_uuids'] ?? [],
         );
     }
 
@@ -35,9 +41,12 @@ readonly class QueryFilter extends BaseQueryFilter
     public function toArray(): array
     {
         return [
-            'university_uuids' => $this->universityUuids,
-            'faculty_uuid' => $this->facultyUuid,
+            'country_uuids' => $this->countryUuids,
             'alias_uuids' => $this->aliasUuids,
+            'language_uuids' => $this->languageUuids,
+            'degree_uuids' => $this->degreeUuids,
+            'university_uuids' => $this->universityUuids,
+            'faculty_uuids' => $this->facultyUuids,
         ];
     }
 }

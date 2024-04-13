@@ -16,6 +16,13 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'iso' => [
+                'required',
+                'alpha',
+                'max:3',
+                Rule::unique('admin_db.language_languages', 'iso')
+                    ->ignore($this->route()->parameter('uuid'), 'uuid'),
+            ],
             'translations' => [
                 'required',
                 new ValidateTranslationRule(['value']),

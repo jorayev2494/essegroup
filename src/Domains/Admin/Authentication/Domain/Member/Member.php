@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Authentication\Domain\Code\Code;
 use Project\Domains\Admin\Authentication\Domain\Device\Device;
+use Project\Domains\Admin\Authentication\Domain\Member\Events\Restore\MemberRestorePasswordLinkWasAddedDomainEvent;
 use Project\Domains\Admin\Authentication\Domain\Member\ValueObjects\Email;
 use Project\Domains\Admin\Authentication\Domain\Member\ValueObjects\Password;
 use Project\Domains\Admin\Authentication\Domain\Member\ValueObjects\Uuid;
@@ -85,7 +86,7 @@ class Member extends AggregateRoot implements AuthenticatableInterface
     {
         $code->setAuthor($this);
         $this->code = $code;
-        // $this->record(new MemberRestorePasswordLinkWasAddedDomainEvent($this->uuid, $code->getValue(), $this->email));
+        $this->record(new MemberRestorePasswordLinkWasAddedDomainEvent($this->uuid->value, $this->email->value, $code->getValue()));
     }
 
     public function removeCode(): void

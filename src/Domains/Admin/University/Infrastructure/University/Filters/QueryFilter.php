@@ -10,13 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 readonly class QueryFilter extends BaseQueryFilter
 {
     private function __construct(
-        public ?array $countryUuids,
-        public ?array $aliasUuids,
-        public ?array $cityUuids,
-        public ?array $facultyUuids,
-        public ?array $departmentUuids,
-        public ?array $degreeUuids,
-        public ?array $languageUuids,
+        public array $countryUuids,
+        public array $aliasUuids,
+        public array $cityUuids,
+        public array $facultyUuids,
+        public array $departmentUuids,
+        public array $degreeUuids,
+        public array $languageUuids,
         public bool $onlyInCountryList
     ) {
 

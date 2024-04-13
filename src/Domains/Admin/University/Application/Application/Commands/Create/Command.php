@@ -11,32 +11,14 @@ readonly class Command implements CommandInterface
 {
     public function __construct(
         public string $uuid,
-        public string $fullName,
-        public string $birthday,
-        public string $passportNumber,
-        public string $email,
-        public string $phone,
+        public string $studentUuid,
+        public string $aliasUuid,
+        public string $languageUuid,
+        public string $degreeUuid,
+        public string $countryUuid,
         public string $universityUuid,
         public array $departmentUuids,
-        public string $countryUuid,
-        public UploadedFile $passport,
-        public UploadedFile $passportTranslation,
-        public UploadedFile $schoolAttestat,
-        public UploadedFile $schoolAttestatTranslation,
-        public UploadedFile $transcript,
-        public UploadedFile $transcriptTranslation,
-        public UploadedFile $equivalenceDocument,
-        public UploadedFile $biometricPhoto,
-        public array $additionalDocuments,
         public bool $isAgreedToShareData,
-        public string $creatorRole,
-        public ?string $companyUuid,
-        public ?string $fatherName,
-        public ?string $motherName,
-        public ?string $friendPhone,
-        public ?string $homeAddress,
-    )
-    {
-
-    }
+        public string $creatorRole
+    ) { }
 }

@@ -61,6 +61,8 @@ class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepo
     #[\Override]
     public function save(Company $company): void
     {
+        // $this->entityRepository->getEntityManager()->flush();
+        //        $this->entityRepository->getEntityManager()->refresh($company);
         $this->entityRepository->getEntityManager()->persist($company);
         $this->entityRepository->getEntityManager()->flush();
     }
@@ -68,7 +70,7 @@ class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepo
     #[\Override]
     public function delete(Company $company): void
     {
-        $this->entityRepository->getEntityManager()->flush();
+        // $this->entityRepository->getEntityManager()->flush();
         $this->entityRepository->getEntityManager()->remove($company);
         $this->entityRepository->getEntityManager()->flush();
     }

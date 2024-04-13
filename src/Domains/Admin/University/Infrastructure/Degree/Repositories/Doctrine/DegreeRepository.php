@@ -34,12 +34,12 @@ class DegreeRepository extends BaseAdminEntityRepository implements DegreeReposi
     {
         $query = $this->entityRepository->createQueryBuilder('d');
 
-        // FilterQueryBuilder::build(
-        //     new FilterPipelineDTO(
-        //         $query,
-        //         $filter
-        //     )
-        // );
+        FilterQueryBuilder::build(
+            new FilterPipelineDTO(
+                $query,
+                $filter
+            )
+        );
 
         return new DegreeCollection($query->getQuery()->getResult());
     }
