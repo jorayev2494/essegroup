@@ -42,7 +42,7 @@ abstract class DomainServiceProvider extends ServiceProvider implements AppServi
     /** @var array<string, string> */
     protected const ROUTE_PATHS = [
         // [
-        //     'middleware' => 'api',
+        //     'middleware' => ['api', 'auth:admin'],
         //     'prefix' => 'api/admin',
         //     'path' => __DIR__ . '/../Presentation/Http/API/REST/routes.php',
         // ],

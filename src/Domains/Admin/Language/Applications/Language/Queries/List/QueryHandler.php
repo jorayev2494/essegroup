@@ -17,6 +17,6 @@ readonly class QueryHandler implements QueryHandlerInterface
 
     public function __invoke(Query $query): array
     {
-        return $this->repository->list()->translateItems()->toArray();
+        return $this->repository->list($query)->translateItems()->toArray();
     }
 }

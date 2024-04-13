@@ -6,11 +6,13 @@ namespace Project\Domains\Admin\Company\Infrastructure;
 
 use App\Providers\Domains\AdminDomainServiceProvider;
 use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
+use Project\Domains\Admin\Company\Domain\Company\LogoRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoServiceInterface;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\LogoService;
 use Project\Domains\Admin\Company\Domain\Company\Services\Status\Contracts\StatusServiceInterface;
 use Project\Domains\Admin\Company\Domain\Company\Services\Status\StatusService;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\CompanyRepository;
+use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\LogoRepository;
 
 class CompanyServiceProvider extends AdminDomainServiceProvider
 {
@@ -19,6 +21,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
         CompanyRepositoryInterface::class => [self::SERVICE_BIND, CompanyRepository::class],
         LogoServiceInterface::class => [self::SERVICE_BIND, LogoService::class],
         StatusServiceInterface::class => [self::SERVICE_SINGLETON, StatusService::class],
+        LogoRepositoryInterface::class => [self::SERVICE_SINGLETON, LogoRepository::class],
     ];
 
     /** @var array<array-key, string> */
@@ -39,7 +42,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
-
+        // \Project\Domains\Admin\Company\Application\Company\Subsribers\Company\CompanyLogoWasDeletedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */

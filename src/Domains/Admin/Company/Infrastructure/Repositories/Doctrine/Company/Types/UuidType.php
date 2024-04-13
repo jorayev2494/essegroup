@@ -25,9 +25,9 @@ class UuidType extends Type
      * @return mixed
      * @throws \Doctrine\DBAL\Types\ConversionException
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        return $value->value;
+        return $value?->value;
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform): Uuid

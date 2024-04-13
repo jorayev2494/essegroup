@@ -6,7 +6,7 @@ namespace Project\Domains\Public\University\Presentation\Http\API\REST\Controlle
 
 use App\Http\Requests\Api\Public\University\Application\ApplicationStoreRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Project\Domains\Admin\University\Application\Application\Commands\Create\Command as CreateCommand;
+use Project\Domains\Public\University\Application\Application\Commands\Create\Command as CreateCommand;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,35 +27,17 @@ readonly class ApplicationController
     {
         $uuid = $this->uuidGenerator->generate();
 
-        ['additional_documents' => $additionalDocuments] = $request->all();
-
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
-                $request->get('full_name'),
-                $request->get('birthday'),
-                $request->get('passport_number'),
-                $request->get('email'),
-                $request->get('phone'),
+                $request->get('student_uuid'),
+                $request->get('alias_uuid'),
+                $request->get('language_uuid'),
+                $request->get('degree_uuid'),
+                $request->get('country_uuid'),
                 $request->get('university_uuid'),
                 $request->get('department_uuids'),
-                $request->get('country_uuid'),
-                $request->file('passport'),
-                $request->file('passport_translation'),
-                $request->file('school_attestat'),
-                $request->file('school_attestat_translation'),
-                $request->file('transcript'),
-                $request->file('transcript_translation'),
-                $request->file('equivalence_document'),
-                $request->file('biometric_photo'),
-                $additionalDocuments,
-                $request->boolean('is_agreed_to_share_data'),
-                'client',
-                $request->get('company_uuid'),
-                $request->get('father_name'),
-                $request->get('mother_name'),
-                $request->get('friend_phone'),
-                $request->get('home_address'),
+                $request->boolean('is_agreed_to_share_data')
             )
         );
 

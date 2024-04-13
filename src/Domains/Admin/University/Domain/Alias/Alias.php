@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Alias\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Alias\ValueObjects\Value;
+use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Infrastructure\Alias\Repositories\Doctrine\Types\UuidType;
 use Project\Domains\Admin\University\Infrastructure\Alias\Repositories\Doctrine\Types\ValueType;
 use Project\Shared\Contracts\ArrayableInterface;
@@ -40,6 +41,9 @@ class Alias implements EntityUuid, ArrayableInterface, TranslatableInterface
      */
     #[ORM\OneToMany(targetEntity: AliasTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
+
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'alias')]
+    private Collection $applications;
 
     public function __construct(Uuid $uuid, bool $isActive)
     {
@@ -94,6 +98,16 @@ class Alias implements EntityUuid, ArrayableInterface, TranslatableInterface
         // };
         //
         // $this->record($domainEvent);
+    }
+
+    public function isEqual(self $other): bool
+    {
+        return $this->uuid->value === $other->getUuid()->value;
+    }
+
+    public function isNotEqual(self $other): bool
+    {
+        return $this->uuid->value !== $other->getUuid()->value;
     }
 
     public function toArray(): array

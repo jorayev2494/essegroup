@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Admin\University\Faculty;
 
+use App\Rules\ValidateTranslationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -35,10 +36,10 @@ class FacultyUpdateRequest extends FormRequest
                 'mimetypes:image/*',
                 // Rule::dimensions()->width(self::LOGO_WIDTH)->height(self::LOGO_HEIGHT),
             ],
-            'translations' => ['required', 'array'],
-            'translations.*.name' => ['required'],
-            // 'translations.*.label' => ['required'],
-            'translations.*.description' => ['required'],
+            'translations' => [
+                'array',
+                new ValidateTranslationRule(['description']),
+            ],
             // 'is_active' => [
             //     'required',
             // ],

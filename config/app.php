@@ -182,6 +182,7 @@ return [
         Project\Domains\Admin\University\Infrastructure\UniversityServiceProvider::class,
         Project\Domains\Admin\Country\Infrastructure\CountryServiceProvider::class,
         Project\Domains\Admin\Language\Infrastructure\LanguageServiceProvider::class,
+        Project\Domains\Admin\Student\Infrastructure\StudentServiceProvider::class,
 
         // Company
         Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,
@@ -192,6 +193,7 @@ return [
         // Public
         Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,
         Project\Domains\Public\Language\Infrastructure\LanguageServiceProvider::class,
+        Project\Domains\Public\Student\Infrastructure\StudentServiceProvider::class,
 
         App\Providers\DoctrineServiceProvider::class,
     ])->toArray(),

@@ -76,6 +76,7 @@ Route::group(
     ['prefix' => 'applications', 'controller' => ApplicationController::class],
     static function (Router $router): void {
         $router->get('/', 'index');
+        $router->get('/{student_uuid}/applications', 'studentApplications');
         $router->post('/', 'store');
         $router->get('/status-list', 'statusList');
         $router->get('/{uuid}', 'show');

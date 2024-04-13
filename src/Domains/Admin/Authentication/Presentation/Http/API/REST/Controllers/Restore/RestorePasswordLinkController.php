@@ -6,7 +6,7 @@ namespace Project\Domains\Admin\Authentication\Presentation\Http\API\REST\Contro
 
 use App\Http\Requests\Api\Admin\Authentication\Restore\RestorePasswordLinkRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Project\Domains\Admin\Authentication\Application\Commands\RestorePasswordLink\Command;
+use Project\Domains\Admin\Authentication\Application\Authentication\Commands\RestorePasswordLink\Command;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Symfony\Component\HttpFoundation\Response;
 

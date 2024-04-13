@@ -9,6 +9,8 @@ use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
 use Project\Domains\Admin\Country\Infrastructure\Country\Filters\QueryFilter;
+use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Filter\FilterPipelineDTO;
+use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Filter\FilterQueryBuilder;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
@@ -23,8 +25,14 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
     {
         $query = $this->entityRepository->createQueryBuilder('c');
 
-        $query->where('c.isActive = :isActive')
-            ->setParameter('isActive', true);
+        FilterQueryBuilder::build(
+            new FilterPipelineDTO(
+                $query,
+                $httpQueryFilterDTO
+            )
+        );
+
+//        dd($query->getQuery()->getDQL());
 
         return new CountryCollection($query->getQuery()->getResult());
     }

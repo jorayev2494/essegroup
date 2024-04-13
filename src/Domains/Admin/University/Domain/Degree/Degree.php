@@ -6,6 +6,7 @@ namespace Project\Domains\Admin\University\Domain\Degree;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Value;
@@ -37,11 +38,14 @@ class Degree implements EntityUuid, TranslatableInterface, ArrayableInterface
     #[ORM\Column(type: ValueType::NAME, nullable: true)]
     private Value $value;
 
-    #[ORM\ManyToMany(targetEntity: Department::class, mappedBy: 'degrees')]
+    #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'degree')]
     private Collection $departments;
 
     #[ORM\OneToMany(targetEntity: DegreeTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
+
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'degree')]
+    private Collection $applications;
 
     private function __construct(Uuid $uuid, bool $isActive)
     {
@@ -96,6 +100,16 @@ class Degree implements EntityUuid, TranslatableInterface, ArrayableInterface
 //        };
 //
 //        $this->record($domainEvent);
+    }
+
+    public function isEqual(self $other): bool
+    {
+        return $this->uuid->value === $other->getUuid()->value;
+    }
+
+    public function isNotEqual(self $other): bool
+    {
+        return $this->uuid->value !== $other->getUuid()->value;
     }
 
     public function toArray(): array

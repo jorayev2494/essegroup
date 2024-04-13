@@ -35,10 +35,10 @@ readonly class CommandHandler implements CommandHandlerInterface
             throw new CompanyNotFoundDomainException();
         }
 
-        $this->logoService->update($company, $command->logo);
         $company->changeName(Name::fromValue($command->name));
         $company->changeEmail(Email::fromValue($command->email));
         $company->changeDomain(Domain::fromValue($command->domain));
+        $this->logoService->update($company, $command->logo);
 
         $this->repository->save($company);
         $this->eventBus->publish(...$company->pullDomainEvents());

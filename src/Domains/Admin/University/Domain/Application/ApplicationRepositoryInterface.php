@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Domain\Application;
 
-use Project\Domains\Admin\University\Application\Application\Queries\Index\Query;
+use Project\Domains\Admin\University\Application\Application\Queries\Index\Query as IndexQuery;
+use Project\Domains\Admin\University\Application\Application\Queries\ByStudentUuid\Query as ByStudentUuidQuery;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
 interface ApplicationRepositoryInterface
 {
-    public function paginate(Query $httpQuery): Paginator;
+    public function paginate(IndexQuery $httpQuery): Paginator;
+
+    public function paginateByStudentUuid(ByStudentUuidQuery $httpQuery): Paginator;
 
     public function findByUuid(Uuid $uuid): ?Application;
 

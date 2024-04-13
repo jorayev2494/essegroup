@@ -12,11 +12,13 @@ use Project\Domains\Admin\University\Application\Application\Commands\Create\Com
 use Project\Domains\Admin\University\Application\Application\Commands\Delete\Command as DeleteCommand;
 use Project\Domains\Admin\University\Application\Application\Commands\Update\Command as UpdateCommand;
 use Project\Domains\Admin\University\Application\Application\Queries\Index\Query as IndexQuery;
+use Project\Domains\Admin\University\Application\Application\Queries\ByStudentUuid\Query as ByStudentUuidQuery;
 use Project\Domains\Admin\University\Application\Application\Queries\Show\Query as ShowQuery;
 use Project\Domains\Admin\University\Application\Application\Queries\StatusList\Query as StatusListQuery;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
+use Project\Shared\Infrastructure\Repository\Doctrine\PaginatorHttpQueryParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,39 +43,34 @@ readonly class ApplicationController
         );
     }
 
+    public function studentApplications(Request $request, string $studentUuid): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                new ByStudentUuidQuery(
+                    $studentUuid,
+                    PaginatorHttpQueryParams::makeFromRequest($request)
+                )
+            )
+        );
+    }
+
     public function store(ApplicationStoreRequest $request): JsonResponse
     {
         $uuid = $this->uuidGenerator->generate();
 
-        ['additional_documents' => $additionalDocuments] = $request->all();
-
         $this->commandBus->dispatch(
             new CreateCommand(
                 $uuid,
-                $request->get('full_name'),
-                $request->get('birthday'),
-                $request->get('passport_number'),
-                $request->get('email'),
-                $request->get('phone'),
+                $request->get('student_uuid'),
+                $request->get('alias_uuid'),
+                $request->get('language_uuid'),
+                $request->get('degree_uuid'),
+                $request->get('country_uuid'),
                 $request->get('university_uuid'),
                 $request->get('department_uuids'),
-                $request->get('country_uuid'),
-                $request->file('passport'),
-                $request->file('passport_translation'),
-                $request->file('school_attestat'),
-                $request->file('school_attestat_translation'),
-                $request->file('transcript'),
-                $request->file('transcript_translation'),
-                $request->file('equivalence_document'),
-                $request->file('biometric_photo'),
-                $additionalDocuments,
-                $request->boolean('is_agreed_to_share_data', true),
-                'admin',
-                $request->get('company_uuid'),
-                $request->get('father_name'),
-                $request->get('mother_name'),
-                $request->get('friend_phone'),
-                $request->get('home_address'),
+                true,
+                'admin'
             )
         );
 
@@ -99,22 +96,14 @@ readonly class ApplicationController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
-                $request->get('full_name'),
-                $request->get('birthday'),
-                $request->get('passport_number'),
-                $request->get('email'),
-                $request->get('phone'),
+                $request->get('alias_uuid'),
+                $request->get('language_uuid'),
+                $request->get('degree_uuid'),
+                $request->get('country_uuid'),
                 $request->get('university_uuid'),
                 $request->get('department_uuids'),
-                $request->get('country_uuid'),
                 $statusValue,
                 $statusTranslations ?? [],
-                $request->get('company_uuid'),
-
-                $request->get('father_name'),
-                $request->get('mother_name'),
-                $request->get('friend_phone'),
-                $request->get('home_address')
             )
         );
 

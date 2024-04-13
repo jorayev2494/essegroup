@@ -15,6 +15,9 @@ use Project\Shared\Domain\File\FileSystemInterface;
 use Project\Shared\Infrastructure\File\Laravel\FileSystem;
 use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
 use Project\Shared\Domain\Translation\TranslationColumnService;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Transport;
 
 class InfrastructureServiceProvider extends ServiceProvider
 {
@@ -27,5 +30,6 @@ class InfrastructureServiceProvider extends ServiceProvider
         $this->app->singleton(TokenGeneratorInterface::class, TokenGenerator::class);
         $this->app->singleton(PasswordHasherInterface::class, PasswordHasher::class);
         $this->app->singleton(TranslationColumnServiceInterface::class, TranslationColumnService::class);
+        $this->app->bind(MailerInterface::class, static fn () => new Mailer(Transport::fromDsn(env('MAILER_DSN'))));
     }
 }

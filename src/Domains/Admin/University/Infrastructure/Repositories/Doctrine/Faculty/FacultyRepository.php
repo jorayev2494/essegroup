@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty;
 
+use Doctrine\ORM\Query\Expr\Join;
 use Project\Domains\Admin\University\Application\Faculty\Queries\Index\Query;
+use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyCollection;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Infrastructure\Faculty\Filters\QueryFilter;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
@@ -41,8 +44,27 @@ class FacultyRepository extends BaseAdminEntityRepository implements FacultyRepo
     {
         $query = $this->entityRepository->createQueryBuilder('f');
 
+        if (count($queryFilter->countryUuids) > 0) {
+            $query->innerJoin(Department::class, 'fd_c', Join::WITH, 'fd_c.facultyUuid = f.uuid')
+                ->innerJoin(University::class, 'fdu_c', Join::WITH, 'fdu_c.uuid = fd_c.universityUuid')
+                ->andWhere('fdu_c.countryUuid IN (:countryUuids)')
+                ->setParameter('countryUuids', $queryFilter->countryUuids);
+        }
+
+        if (count($queryFilter->languageUuids) > 0) {
+            $query->innerJoin(Department::class, 'fd_l', Join::WITH, 'fd_l.facultyUuid = f.uuid')
+                ->andWhere('fd_l.languageUuid IN (:languageUuids)')
+                ->setParameter('languageUuids', $queryFilter->languageUuids);
+        }
+
+        if (count($queryFilter->degreeUuids) > 0) {
+            $query->innerJoin(Department::class, 'fd_d', Join::WITH, 'fd_d.facultyUuid = f.uuid')
+                ->andWhere('fd_d.degreeUuid IN (:degreeUuids)')
+                ->setParameter('degreeUuids', $queryFilter->degreeUuids);
+        }
+
         if (count($queryFilter->universityUuids) > 0) {
-            $query->where('f.universityUuid IN (:universityUuids)')
+            $query->andWhere('f.universityUuid IN (:universityUuids)')
                 ->setParameter('universityUuids', $queryFilter->universityUuids);
         }
 

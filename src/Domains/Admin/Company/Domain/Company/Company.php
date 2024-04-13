@@ -11,6 +11,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyDomainWasChangedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyEmailWasChangedDomainEvent;
+use Project\Domains\Admin\Company\Domain\Company\Events\CompanyLogoWasDeletedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyNameWasChangedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasCreatedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasDeletedDomainEvent;
@@ -26,6 +27,7 @@ use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\T
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\EmailType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\NameType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\UuidType;
+use Project\Domains\Admin\Student\Domain\Student\Student;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
@@ -73,6 +75,9 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
 
     #[ORM\OneToMany(targetEntity: Department::class, mappedBy: 'company', cascade: ['persist'])]
     private Collection $departments;
+
+    #[ORM\OneToMany(targetEntity: Student::class, mappedBy: 'company', cascade: ['persist'])]
+    private Collection $students;
 
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'company', cascade: ['persist'])]
     private Collection $applications;
@@ -240,6 +245,16 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
     public function delete(): void
     {
         $this->record(new CompanyWasDeletedDomainEvent($this->uuid));
+    }
+
+    public function isEqual(self $other): bool
+    {
+        return $this->uuid->value === $other->getUuid()->value;
+    }
+
+    public function isNotEqual(self $other): bool
+    {
+        return $this->uuid->value !== $other->getUuid()->value;
     }
 
     public function toArray(): array

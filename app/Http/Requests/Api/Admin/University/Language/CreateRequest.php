@@ -16,6 +16,12 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'iso' => [
+                'required',
+                'alpha',
+                'max:3',
+                Rule::unique('admin_db.language_languages', 'iso')
+            ],
             'translations' => [
                 'required',
                 new ValidateTranslationRule(['value']),

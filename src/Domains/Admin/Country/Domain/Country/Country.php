@@ -18,6 +18,9 @@ use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Value;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ISOType;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ValueType;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\UuidType;
+use Project\Domains\Admin\University\Domain\Application\Application;
+use Project\Domains\Admin\University\Domain\Department\Department;
+use Project\Domains\Admin\University\Domain\University\University;
 use Project\Shared\Contracts\NullableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
@@ -56,6 +59,12 @@ class Country extends AggregateRoot implements EntityUuid, TranslatableInterface
 
     #[ORM\OneToMany(targetEntity: City::class, mappedBy: 'country', cascade: ['persist', 'remove'])]
     private Collection $cities;
+
+    #[ORM\OneToMany(targetEntity: University::class, mappedBy: 'country')]
+    private Collection $universities;
+
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'country')]
+    private Collection $applications;
 
     private function __construct(Uuid $uuid, ISO $iso, bool $isActive)
     {
@@ -154,7 +163,7 @@ class Country extends AggregateRoot implements EntityUuid, TranslatableInterface
 
     public function isEquals(self $other): bool
     {
-        return $this->value === $other->value;
+        return $this->uuid->value === $other->uuid->value;
     }
 
     public function isNotEquals(self $other): bool
