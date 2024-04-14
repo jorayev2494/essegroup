@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 readonly class AvatarService implements AvatarServiceInterface
 {
     function __construct(
-        private FileSystemInterface $fileSystem,
+        private FileSystemInterface $fileSystem
     ) { }
 
     public function upload(AvatarableInterface $avatarable, ?UploadedFile $uploadedFile): void

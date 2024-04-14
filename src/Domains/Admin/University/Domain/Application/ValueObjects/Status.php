@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Domain\Application\ValueObjects;
 
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -11,12 +12,11 @@ use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Application\Application;
-use Project\Domains\Admin\University\Domain\Application\StatusEnum;
 use Project\Domains\Admin\University\Domain\Application\StatusNoteTranslation;
-use Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusEnumType;
+use Project\Domains\Admin\University\Domain\Application\StatusValue;
+use Project\Domains\Admin\University\Domain\Application\StatusValueTranslate;
 use Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusIdType;
 use Project\Shared\Contracts\ArrayableInterface;
-use DateTimeImmutable;
 use Project\Shared\Domain\Contracts\EntityId;
 use Project\Shared\Domain\Translation\AbstractTranslation;
 use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnum;
@@ -36,8 +36,12 @@ class Status implements EntityId, ArrayableInterface, TranslatableInterface
     #[ORM\Column(type: StatusIdType::NAME)]
     private StatusId $id;
 
-    #[ORM\Column(type: StatusEnumType::NAME, length: 20)]
-    private StatusEnum $value;
+    #[ORM\Column(name: 'status_value_uuid')]
+    private string $statusValueUuid;
+
+    #[ORM\ManyToOne(targetEntity: StatusValue::class, inversedBy: 'statuses')]
+    #[ORM\JoinColumn(name: 'status_value_uuid', referencedColumnName: 'uuid')]
+    private StatusValue $statusValue;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $note;
@@ -55,16 +59,16 @@ class Status implements EntityId, ArrayableInterface, TranslatableInterface
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
     protected DateTimeImmutable $updatedAt;
 
-    private function __construct(StatusEnum $value)
+    private function __construct(StatusValue $statusValue)
     {
-        $this->value = $value;
+        $this->statusValue = $statusValue;
         $this->note = null;
         $this->translations = new ArrayCollection();
     }
 
-    public static function fromPrimitives(string $value): self
+    public static function create(StatusValue $statusValue): self
     {
-        return new self(StatusEnum::from($value));
+        return new self($statusValue);
     }
 
     public function getId(): IdValueObject
@@ -97,9 +101,16 @@ class Status implements EntityId, ArrayableInterface, TranslatableInterface
 //        $this->record($domainEvent);
     }
 
-    public function getValue(): StatusEnum
+    public function setApplication(Application $application): self
     {
-        return $this->value;
+        $this->application = $application;
+
+        return $this;
+    }
+
+    public function getStatusValue(): StatusValue
+    {
+        return $this->statusValue;
     }
 
     public function getNote(): ?string
@@ -112,29 +123,24 @@ class Status implements EntityId, ArrayableInterface, TranslatableInterface
         $this->note = $note;
     }
 
-    public function isEqualsValue(StatusEnum $value): bool
-    {
-        return $this->value->value === $value->value;
-    }
+     public function isEqualsValue(StatusValue $statusValue): bool
+     {
+         return $this->statusValue->isEqual($statusValue);
+     }
 
     public function isEqualsNote(?string $note): bool
     {
         return $this->note === $note;
     }
 
-    public function isNotEqualsValue(StatusEnum $value): bool
-    {
-        return $this->value->value !== $value->value;
-    }
+    // public function isNotEqualsValue(StatusEnum $value): bool
+    // {
+    //     return $this->value->value !== $value->value;
+    // }
 
     public function isNotEqualsNote(?string $note): bool
     {
         return $this->note !== $note;
-    }
-
-    public function setApplication(Application $application): void
-    {
-        $this->application = $application;
     }
 
     public function getTranslationClass(): string
@@ -159,8 +165,8 @@ class Status implements EntityId, ArrayableInterface, TranslatableInterface
     public function toArray(): array
     {
         return [
-            'value' => $this->value,
             'note' => $this->note,
+            'value' => StatusValueTranslate::execute($this->statusValue)?->toArray(),
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];

@@ -21,7 +21,7 @@ class StatusService implements StatusServiceInterface
     #[\Override]
     public function changeStatus(Application $application, Status $status, array $noteTranslations): void
     {
-        if ($application->getStatus()->isNotEqualsValue($status->getValue())) {
+        if ($application->getStatus()->getStatusValue()->isNotEqual($status->getStatusValue())) {
             $this->translationColumnService->addTranslations($status, $noteTranslations);
             $application->addStatues($status);
         } else {

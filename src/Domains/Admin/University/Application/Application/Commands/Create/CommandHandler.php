@@ -5,21 +5,24 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\University\Application\Application\Commands\Create;
 
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
+use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid as CountryUuid;
 use Project\Domains\Admin\Language\Domain\Language\LanguageRepositoryInterface;
+use Project\Domains\Admin\Language\Domain\Language\ValueObjects\Uuid as LanguageUuid;
 use Project\Domains\Admin\Student\Domain\Student\StudentRepositoryInterface;
+use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Uuid as StudentUuid;
 use Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Alias\ValueObjects\Uuid as AliasUuid;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Application\Exceptions\StatusValueNotFoundDomainException;
 use Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface;
+use Project\Domains\Admin\University\Domain\Application\StatusValueRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Degree\DegreeRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Uuid as DegreeUuid;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Uuid as StudentUuid;
-use Project\Domains\Admin\University\Domain\Alias\ValueObjects\Uuid as AliasUuid;
-use Project\Domains\Admin\Language\Domain\Language\ValueObjects\Uuid as LanguageUuid;
-use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Uuid as DegreeUuid;
-use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid as CountryUuid;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Shared\Domain\Bus\Event\EventBusInterface;
 
@@ -33,6 +36,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private DegreeRepositoryInterface $degreeRepository,
         private CountryRepositoryInterface $countryRepository,
         private UniversityRepositoryInterface $universityRepository,
+        private StatusValueRepositoryInterface $statusValueRepository,
         private ApplicationServiceInterface $service,
         private EventBusInterface $eventBus
     ) { }
@@ -45,6 +49,9 @@ readonly class CommandHandler implements CommandHandlerInterface
         $degree = $this->degreeRepository->findByUuid(DegreeUuid::fromValue($command->degreeUuid));
         $country = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->countryUuid));
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
+        $statusValue = $this->statusValueRepository->findFirst();
+
+        $statusValue ?? throw new StatusValueNotFoundDomainException();
 
         $application = Application::create(
             Uuid::fromValue($command->uuid),
@@ -54,6 +61,7 @@ readonly class CommandHandler implements CommandHandlerInterface
             $degree,
             $country,
             $university,
+            Status::create($statusValue),
             $command->isAgreedToShareData,
             $command->creatorRole
         );

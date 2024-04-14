@@ -14,7 +14,7 @@ abstract class AbstractTranslation extends AbstractPersonalTranslation implement
         $this->setContent($value);
     }
 
-    public static function make(string $locale, string $field, string $value): static
+    public static function make(string $locale, string $field, ?string $value): static
     {
         return new static($locale, $field, $value);
     }

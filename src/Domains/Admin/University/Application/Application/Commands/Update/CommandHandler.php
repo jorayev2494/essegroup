@@ -4,30 +4,19 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Application\Application\Commands\Update;
 
-use DateTimeImmutable;
-use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
-use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid as CompanyUuid;
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid as CountryUuid;
 use Project\Domains\Admin\Language\Domain\Language\LanguageRepositoryInterface;
 use Project\Domains\Admin\Language\Domain\Language\ValueObjects\Uuid as LanguageUuid;
-use Project\Domains\Admin\Student\Domain\Student\StudentRepositoryInterface;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Email;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\FatherName;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\FriendPhone;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\FirstName;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\HomeAddress;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\MotherName;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\PassportNumber;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Phone;
-use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Uuid as StudentUuid;
 use Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Alias\ValueObjects\Uuid as AliasUuid;
 use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Application\Exceptions\ApplicationNotFoundDomainException;
 use Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface;
 use Project\Domains\Admin\University\Domain\Application\Services\Contracts\StatusServiceInterface;
+use Project\Domains\Admin\University\Domain\Application\StatusValueRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\StatusValueUuid;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Degree\DegreeRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Uuid as DegreeUuid;
@@ -45,6 +34,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private DegreeRepositoryInterface $degreeRepository,
         private CountryRepositoryInterface $countryRepository,
         private ApplicationServiceInterface $service,
+        private StatusValueRepositoryInterface $statusValueRepository,
         private StatusServiceInterface $statusService
     )
     {
@@ -57,6 +47,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $application ?? throw new ApplicationNotFoundDomainException();
 
+        $statusValue = $this->statusValueRepository->findByUuid(StatusValueUuid::fromValue($command->statusValueUuid));
         $alias = $this->aliasRepository->findByUuid(AliasUuid::fromValue($command->aliasUuid));
         $language = $this->languageRepository->findByUuid(LanguageUuid::fromValue($command->languageUuid));
         $degree = $this->degreeRepository->findByUuid(DegreeUuid::fromValue($command->degreeUuid));
@@ -69,7 +60,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $application->changeCountry($country);
         $application->changeUniversity($university);
 
-        $this->statusService->changeStatus($application, Status::fromPrimitives($command->status), $command->statusNotes);
+        $this->statusService->changeStatus($application, Status::create($statusValue), $command->statusNotes);
         $this->service->updateDepartments($application, $command->departmentUuids);
 
         $this->applicationRepository->save($application);

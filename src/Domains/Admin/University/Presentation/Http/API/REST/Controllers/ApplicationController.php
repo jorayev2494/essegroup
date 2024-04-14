@@ -11,10 +11,9 @@ use Illuminate\Http\Request;
 use Project\Domains\Admin\University\Application\Application\Commands\Create\Command as CreateCommand;
 use Project\Domains\Admin\University\Application\Application\Commands\Delete\Command as DeleteCommand;
 use Project\Domains\Admin\University\Application\Application\Commands\Update\Command as UpdateCommand;
-use Project\Domains\Admin\University\Application\Application\Queries\Index\Query as IndexQuery;
 use Project\Domains\Admin\University\Application\Application\Queries\ByStudentUuid\Query as ByStudentUuidQuery;
+use Project\Domains\Admin\University\Application\Application\Queries\Index\Query as IndexQuery;
 use Project\Domains\Admin\University\Application\Application\Queries\Show\Query as ShowQuery;
-use Project\Domains\Admin\University\Application\Application\Queries\StatusList\Query as StatusListQuery;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
@@ -89,7 +88,6 @@ readonly class ApplicationController
     public function update(ApplicationUpdateRequest $request, string $uuid): Response
     {
         [
-            'value' => $statusValue,
             'translations' => $statusTranslations,
         ] = $request->get('status');
 
@@ -102,7 +100,7 @@ readonly class ApplicationController
                 $request->get('country_uuid'),
                 $request->get('university_uuid'),
                 $request->get('department_uuids'),
-                $statusValue,
+                $request->get('status_value_uuid'),
                 $statusTranslations ?? [],
             )
         );
@@ -117,14 +115,5 @@ readonly class ApplicationController
         );
 
         return $this->response->noContent();
-    }
-
-    public function statusList(): JsonResponse
-    {
-        return $this->response->json(
-            $this->queryBus->ask(
-                new StatusListQuery()
-            )
-        );
     }
 }
