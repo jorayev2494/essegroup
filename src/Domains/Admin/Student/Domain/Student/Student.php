@@ -89,7 +89,11 @@ class Student implements EntityUuid,
     #[ORM\Column(type: UuidType::NAME)]
     private Uuid $uuid;
 
-    #[ORM\OneToOne(targetEntity: Avatar::class, mappedBy: 'student', cascade: ['persist', 'remove'])]
+    #[ORM\Column(name: 'avatar_uuid', nullable: true)]
+    private string $avatarUuid;
+
+    #[ORM\OneToOne(targetEntity: Avatar::class, inversedBy: 'student', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'avatar_uuid', referencedColumnName: 'uuid')]
     private ?Avatar $avatar;
 
     #[ORM\Embedded(class: FullName::class, columnPrefix: false)]
@@ -366,7 +370,6 @@ class Student implements EntityUuid,
     {
         if ($this->avatar === null || $this->avatar->isNotEquals($avatar)) {
             $this->avatar = $avatar;
-            $this->avatar->setStudent($this);
         }
 
         return $this;

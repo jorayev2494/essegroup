@@ -41,6 +41,8 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Domain\Application\Services\Contracts\StatusServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\StatusService::class],
         \Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\ApplicationService::class],
         \Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Alias\Repositories\Doctrine\AliasRepository::class],
+
+        \Project\Domains\Admin\University\Domain\Application\StatusValueRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\StatusValueRepository::class],
     ];
 
     /** @var array<array-key, string> */
@@ -75,7 +77,11 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Application\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Application\Queries\ByStudentUuid\QueryHandler::class,
         \Project\Domains\Admin\University\Application\Application\Queries\Show\QueryHandler::class,
-        \Project\Domains\Admin\University\Application\Application\Queries\StatusList\QueryHandler::class,
+
+        // Application Status Value
+        \Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\Show\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\List\QueryHandler::class,
 
         // Degree
         \Project\Domains\Admin\University\Application\Degree\Queries\Index\QueryHandler::class,
@@ -117,6 +123,11 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\UuidType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusEnumType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusIdType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusValueUuidType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusValueTextColorType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusValueBackgroundColorType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusValueDescriptionType::class,
+        \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusValueValueType::class,
 
         // Degree
         \Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\Types\UuidType::class,
@@ -157,6 +168,11 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\Application\Commands\Create\CommandHandler::class,
         \Project\Domains\Admin\University\Application\Application\Commands\Update\CommandHandler::class,
         \Project\Domains\Admin\University\Application\Application\Commands\Delete\CommandHandler::class,
+
+        // Application Status Item
+        \Project\Domains\Admin\University\Application\ApplicationStatusValue\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\ApplicationStatusValue\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\ApplicationStatusValue\Commands\Delete\CommandHandler::class,
 
         // Degree
         \Project\Domains\Admin\University\Application\Degree\Commands\Create\CommandHandler::class,

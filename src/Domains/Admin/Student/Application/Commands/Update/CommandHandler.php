@@ -108,9 +108,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $student->changeGender(Gender::from($command->gender));
         $student->changeMaritalType(MaritalType::from($command->maritalType));
-
-        $this->avatarService->update($student, $command->avatar);
-
+        // dd($student);
         $this->avatarService->update($student, $command->avatar);
         $this->passportService->update($student, $command->passport);
         $this->passportTranslationService->update($student, $command->passportTranslation);

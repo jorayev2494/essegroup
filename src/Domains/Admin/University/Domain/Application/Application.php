@@ -138,12 +138,13 @@ class Application extends AggregateRoot implements
         Degree $degree,
         Country $country,
         University $university,
+        Status $status,
         bool $isAgreedToShareData,
         string $creatorRole
     ): self
     {
         $application = new self($uuid, $student, $alias, $language, $degree, $country, $university, $isAgreedToShareData, $creatorRole);
-        $application->addStatues(Status::fromPrimitives(StatusEnum::PENDING->value));
+        $application->addStatues($status);
 
         return $application;
     }
@@ -250,6 +251,7 @@ class Application extends AggregateRoot implements
             'university_uuid' => $this->university->getUuid()->value,
             'university' => UniversityTranslate::execute($this->university)?->toArray(),
             'departments' => array_map(static fn (ArrayableInterface $item): array => DepartmentTranslate::execute($item)->toArray(), $this->departments->toArray()),
+            'status_value_uuid' => $this->getStatus()?->getStatusValue()?->getUuid()?->value,
             'status' => StatusTranslate::execute($this->getStatus())?->toArrayWithTranslations(),
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),

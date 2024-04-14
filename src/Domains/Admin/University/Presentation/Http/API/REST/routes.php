@@ -10,6 +10,7 @@ use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\Depa
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\ApplicationController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\DegreeController;
 use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\AliasController;
+use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\ApplicationStatusValueController;
 
 Route::group(
     ['prefix' => 'universities', 'controller' => UniversityController::class],
@@ -78,10 +79,21 @@ Route::group(
         $router->get('/', 'index');
         $router->get('/{student_uuid}/applications', 'studentApplications');
         $router->post('/', 'store');
-        $router->get('/status-list', 'statusList');
         $router->get('/{uuid}', 'show');
         $router->put('/{uuid}', 'update');
         $router->delete('/{uuid}', 'delete');
+
+        $router->group(
+            ['prefix' => 'statuses', 'controller' => ApplicationStatusValueController::class],
+            static function (Router $router): void {
+                $router->get('/', 'index');
+                $router->get('/list', 'list');
+                $router->post('/', 'store');
+                $router->get('/{uuid}', 'show');
+                $router->put('/{uuid}', 'update');
+                $router->delete('/{uuid}', 'delete');
+            }
+        );
     }
 );
 

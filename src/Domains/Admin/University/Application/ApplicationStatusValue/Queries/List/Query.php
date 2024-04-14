@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Project\Domains\Admin\University\Application\Application\Queries\StatusList;
+namespace Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\List;
 
 use Project\Shared\Domain\Bus\Query\QueryInterface;
 

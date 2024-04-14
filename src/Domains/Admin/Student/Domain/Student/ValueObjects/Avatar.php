@@ -20,17 +20,6 @@ class Avatar extends File implements AvatarInterface
         return 'admin/domain/student/avatars';
     }
 
-    #[ORM\Column(name: 'student_uuid')]
-    private string $studentUuid;
-
-    #[ORM\OneToOne(targetEntity: Student::class, inversedBy: 'avatar')]
-    #[ORM\JoinColumn(name: 'student_uuid', referencedColumnName: 'uuid')]
-    private ?Student $student = null;
-
-    public function setStudent(Student $student): self
-    {
-        $this->student = $student;
-
-        return $this;
-    }
+    #[ORM\OneToOne(targetEntity: Student::class, mappedBy: 'avatar')]
+    private ?Student $student;
 }

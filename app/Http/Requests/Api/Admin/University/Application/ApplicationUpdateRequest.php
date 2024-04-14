@@ -5,9 +5,19 @@ namespace App\Http\Requests\Api\Admin\University\Application;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Project\Domains\Admin\University\Domain\Application\StatusEnum;
+use Project\Domains\Admin\University\Domain\Application\StatusValue;
+use Project\Domains\Admin\University\Domain\Application\StatusValueRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\StatusValueUuid;
 
 class ApplicationUpdateRequest extends FormRequest
 {
+    private StatusValueRepositoryInterface $statusValueRepository;
+
+    protected function prepareForValidation(): void
+    {
+        $this->statusValueRepository = resolve(StatusValueRepositoryInterface::class);
+    }
+
     public function authorize(): bool
     {
         return true;
@@ -15,6 +25,9 @@ class ApplicationUpdateRequest extends FormRequest
 
     public function rules(): array
     {
+        /** @var StatusValue $statusValue */
+        $statusValue = $this->statusValueRepository->findByUuid(StatusValueUuid::fromValue($this->get('status_value_uuid')));
+
         return [
             'student_uuid' => [
                 'required',
@@ -54,14 +67,19 @@ class ApplicationUpdateRequest extends FormRequest
                 Rule::exists('admin_db.university_departments', 'uuid'),
             ],
 
-            // 'status.value' => ['required', Rule::in(StatusEnum::MANAGEMENT_NOTE_REQUIRED)],
-            // 'status.notes' => ['array'],
-            // 'status.translations.*.note' => [
-            //     'nullable',
-            //     'string',
-            //     'max:500',
-            //     Rule::requiredIf(StatusEnum::managementNoteRequired(StatusEnum::from($this->get('status')['value'])))
-            // ],
+            'status_value_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.university_application_status_values', 'uuid')
+                    // ->where('is_first', false)
+                ,
+            ],
+
+            'status.notes' => ['array'],
+            'status.translations.*.note' => [
+                Rule::requiredIf($statusValue->getIsRequiredNote()),
+                'max:500',
+            ],
         ];
     }
 }

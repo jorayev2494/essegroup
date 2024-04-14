@@ -22,7 +22,7 @@ class Command implements CommandInterface
         public readonly string $countryUuid,
         public readonly string $universityUuid,
         public readonly array $departmentUuids,
-        public readonly string $status,
+        public readonly string $statusValueUuid,
         array $statusNotes,
     )
     {
@@ -35,7 +35,7 @@ class Command implements CommandInterface
 
         foreach ($statusNotes as $locale => $translates) {
             foreach ($translates as $field => $value) {
-                $this->statusNotes[$locale][] = new CommandTranslateValue($field, $value);
+                $this->statusNotes[$locale][] = new CommandTranslateValue($field, $value ?? '');
             }
         }
     }

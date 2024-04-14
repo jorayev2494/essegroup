@@ -53,6 +53,12 @@ class ApplicationStoreRequest extends FormRequest
                 'uuid',
                 Rule::exists('admin_db.university_departments', 'uuid'),
             ],
+
+            // 'status_value_uuid' => [
+            //     'required',
+            //     'uuid',
+            //     Rule::exists('admin_db.university_application_status_values', 'uuid'),
+            // ],
         ];
     }
 }
