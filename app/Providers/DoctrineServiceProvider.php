@@ -4,18 +4,13 @@ namespace App\Providers;
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\Migrations\Version\Comparator;
-use Gedmo\Mapping\Driver\AttributeReader;
-use Gedmo\Translatable\TranslatableListener;
-use Project\Shared\Infrastructure\Repository\Doctrine\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Illuminate\Support\ServiceProvider;
 use Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\AdminEntityManagerInterface;
-use Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\CompanyEntityManagerInterface;
 use Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\ClientEntityManagerInterface;
+use Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\CompanyEntityManagerInterface;
+use Project\Shared\Infrastructure\Repository\Doctrine\EntityManager;
 use Project\Shared\Infrastructure\Repository\Doctrine\MigrationEventSubscriber;
-use Project\Shared\Infrastructure\Repository\Doctrine\ProjectVersionComparator;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class DoctrineServiceProvider extends ServiceProvider
 {

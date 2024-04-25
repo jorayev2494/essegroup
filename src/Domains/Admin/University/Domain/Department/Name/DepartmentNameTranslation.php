@@ -15,6 +15,9 @@ use Project\Shared\Domain\Translation\AbstractTranslation;
 #[ORM\UniqueConstraint(name: 'university_department_name_translation_idx', columns: ['locale', 'field', 'department_name_uuid'])]
 class DepartmentNameTranslation extends AbstractTranslation
 {
+    #[ORM\Column(name: 'department_name_uuid')]
+    private string $departmentNameUuid;
+
     #[ORM\ManyToOne(targetEntity: DepartmentName::class, fetch: 'LAZY', inversedBy: 'translations')]
     #[ORM\JoinColumn(name: 'department_name_uuid', referencedColumnName: 'uuid', onDelete: 'CASCADE')]
     protected $object;

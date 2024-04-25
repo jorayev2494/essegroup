@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine;
 
+use Doctrine\ORM\Query\Expr\Join;
+use Project\Domains\Admin\Student\Domain\Student\Student;
 use Project\Domains\Admin\University\Application\Application\Queries\Index\Query as IndexQuery;
 use Project\Domains\Admin\University\Application\Application\Queries\ByStudentUuid\Query as ByStudentUuidQuery;
 use Project\Domains\Admin\University\Domain\Application\Application;
@@ -24,6 +26,12 @@ class ApplicationRepository extends BaseAdminEntityRepository implements Applica
     public function paginate(IndexQuery $httpQuery): Paginator
     {
         $query = $this->entityRepository->createQueryBuilder('a');
+
+        if (count($httpQuery->filter->companyUuids) > 0) {
+            $query->innerJoin(Student::class, 'ass', Join::WITH, 'ass.uuid = a.studentUuid')
+                ->andWhere('ass.companyUuid IN (:companyUuids)')
+                ->setParameter('companyUuids', $httpQuery->filter->companyUuids);
+        }
 
         return $this->paginator($query->getQuery(), $httpQuery->paginator);
     }

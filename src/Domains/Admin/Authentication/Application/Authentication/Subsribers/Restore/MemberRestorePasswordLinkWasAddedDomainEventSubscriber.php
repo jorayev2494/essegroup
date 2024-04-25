@@ -14,6 +14,7 @@ readonly class MemberRestorePasswordLinkWasAddedDomainEventSubscriber implements
     public function __construct(
         private MailerInterface $mailer,
     ) { }
+
     public static function subscribedTo(): array
     {
         return [

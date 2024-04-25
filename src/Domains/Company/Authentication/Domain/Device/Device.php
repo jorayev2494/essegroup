@@ -6,12 +6,12 @@ namespace Project\Domains\Company\Authentication\Domain\Device;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Project\Domains\Company\Authentication\Domain\Member\Member;
+use Project\Domains\Admin\Company\Domain\Employee\Employee;
 use Project\Infrastructure\Services\Authentication\Contracts\DeviceInterface;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'auth_devices')]
+#[ORM\Table(name: 'employee_auth_devices')]
 #[ORM\HasLifecycleCallbacks]
 class Device implements DeviceInterface
 {
@@ -42,9 +42,9 @@ class Device implements DeviceInterface
     #[ORM\Column(name: 'author_uuid', type: Types::STRING)]
     private string $authorUuid;
 
-    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'devices', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: Employee::class, inversedBy: 'devices', cascade: ['persist'])]
     #[ORM\JoinColumn(name: 'author_uuid', referencedColumnName: 'uuid', nullable: false)]
-    private Member $author;
+    private Employee $author;
 
     private function __construct(
         string $uuid,
@@ -66,12 +66,12 @@ class Device implements DeviceInterface
         return $this->uuid;
     }
 
-    public function getAuthor(): Member
+    public function getAuthor(): Employee
     {
         return $this->author;
     }
 
-    public function setAuthor(Member $author): self
+    public function setAuthor(Employee $author): self
     {
         $this->author = $author;
 

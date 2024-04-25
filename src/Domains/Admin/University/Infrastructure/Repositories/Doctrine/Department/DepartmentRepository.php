@@ -9,6 +9,8 @@ use Project\Domains\Admin\University\Application\Department\Queries\Index\Query;
 use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Department\DepartmentCollection;
 use Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Department\Name\DepartmentName;
+use Project\Domains\Admin\University\Domain\Department\Name\DepartmentNameTranslation;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Infrastructure\Department\Filters\QueryFilter;
@@ -100,9 +102,52 @@ class DepartmentRepository extends BaseAdminEntityRepository implements Departme
 
     public function paginate(Query $httpQuery): Paginator
     {
-        $query = $this->entityRepository->createQueryBuilder('d')->getQuery();
+        $query = $this->entityRepository->createQueryBuilder('d');
 
-        return $this->paginator($query, $httpQuery->paginator);
+        if ($httpQuery->search->searchBy === 'name' && $httpQuery->search->search !== null) {
+            $query->innerJoin(DepartmentName::class, 'dn', Join::WITH, 'dn.uuid = d.nameUuid')
+                ->innerJoin(DepartmentNameTranslation::class, 'dn_dnt', Join::WITH, 'dn_dnt.departmentNameUuid = dn.uuid')
+                ->andWhere('dn_dnt.content LIKE :name')
+                ->setParameter('name', '%' . $httpQuery->search->search . '%');
+        }
+
+        if (count($httpQuery->filter->countryUuids) > 0) {
+            $query->innerJoin(University::class, 'du_c', Join::WITH, 'du_c.uuid = d.universityUuid')
+                ->andWhere('du_c.countryUuid IN (:countryUuids)')
+                ->setParameter('countryUuids', $httpQuery->filter->countryUuids);
+        }
+
+        if (count($httpQuery->filter->aliasUuids) > 0) {
+            $query->andWhere('d.aliasUuid IN (:aliasUuids)')
+                ->setParameter('aliasUuids', $httpQuery->filter->aliasUuids);
+        }
+
+        if (count($httpQuery->filter->languageUuids) > 0) {
+            $query->andWhere('d.languageUuid IN (:languageUuids)')
+                ->setParameter('languageUuids', $httpQuery->filter->languageUuids);
+        }
+
+        if (count($httpQuery->filter->degreeUuids) > 0) {
+            $query->andWhere('d.degreeUuid IN (:degreeUuids)')
+                ->setParameter('degreeUuids', $httpQuery->filter->degreeUuids);
+        }
+
+        if (count($httpQuery->filter->universityUuids) > 0) {
+            $query->andWhere('d.universityUuid IN (:universityUuids)')
+                ->setParameter('universityUuids', $httpQuery->filter->universityUuids);
+        }
+
+        if (count($httpQuery->filter->facultyUuids) > 0) {
+            $query->andWhere('d.facultyUuid IN (:facultyUuids)')
+                ->setParameter('facultyUuids', $httpQuery->filter->facultyUuids);
+        }
+
+        if (count($httpQuery->filter->uuids) > 0) {
+            $query->andWhere('d.uuid IN (:uuids)')
+                ->setParameter('uuids', $httpQuery->filter->uuids);
+        }
+
+        return $this->paginator($query->getQuery(), $httpQuery->paginator);
     }
 
     public function save(Department $department): void

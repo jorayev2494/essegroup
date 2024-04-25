@@ -30,6 +30,11 @@ class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepo
     {
         $query = $this->entityRepository->createQueryBuilder('c');
 
+        if (count($httpQuery->filter->companyUuids) > 0) {
+            $query->where('e.companyUuid IN (:companyUuids)')
+                ->setParameter('companyUuids', $httpQuery->filter->companyUuids);
+        }
+
         return $this->paginator($query->getQuery(), $httpQuery->paginator)->toArray();
     }
 

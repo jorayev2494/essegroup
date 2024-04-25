@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Project\Domains\Company\Authentication\Domain\Code;
 
-use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
-use Project\Domains\Company\Authentication\Domain\Member\Member;
+use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\Company\Domain\Employee\Employee;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'auth_codes')]
+#[ORM\Table(name: 'employee_auth_codes')]
 #[ORM\HasLifecycleCallbacks]
 class Code
 {
@@ -25,12 +25,12 @@ class Code
     #[ORM\Column(type: Types::STRING, unique: true)]
     private string $value;
 
-    #[ORM\Column(name: 'author_uuid', type: Types::STRING)]
+    #[ORM\Column(name: 'author_uuid', type: Types::GUID)]
     private ?string $authorUuid;
 
-    #[ORM\OneToOne(targetEntity: Member::class, inversedBy: 'code', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Employee::class, inversedBy: 'code')]
     #[ORM\JoinColumn(name: 'author_uuid', referencedColumnName: 'uuid', unique: true)]
-    private ?Member $author;
+    private ?Employee $author;
 
     #[ORM\Column(name: 'expired_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $expiredAt;
@@ -46,7 +46,7 @@ class Code
         return new self($value, $expiredAt);
     }
 
-    public function setAuthor(?Member $author = null): self
+    public function setAuthor(?Employee $author): self
     {
         $this->author = $author;
 
@@ -77,7 +77,7 @@ class Code
         return $this;
     }
 
-    public function getAuthor(): Member
+    public function getAuthor(): Employee
     {
         return $this->author;
     }

@@ -2,16 +2,11 @@
 
 namespace Project\Domains\Admin\Company\Domain\Company;
 
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyDomainWasChangedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyEmailWasChangedDomainEvent;
-use Project\Domains\Admin\Company\Domain\Company\Events\CompanyLogoWasDeletedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyNameWasChangedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasCreatedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasDeletedDomainEvent;
@@ -22,6 +17,7 @@ use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Email;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Logo;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
+use Project\Domains\Admin\Company\Domain\Employee\Employee;
 use Project\Domains\Admin\Company\Domain\Status\Status;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\DomainType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\EmailType;
@@ -82,6 +78,9 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'company', cascade: ['persist'])]
     private Collection $applications;
 
+    #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'company', cascade: ['persist'])]
+    private Collection $employees;
+
     private function __construct(Uuid $uuid, Name $name, Email $email, Domain $domain)
     {
         $this->uuid = $uuid;
@@ -93,6 +92,7 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
         $this->faculties = new ArrayCollection();
         $this->departments = new ArrayCollection();
         $this->applications = new ArrayCollection();
+        $this->employees = new ArrayCollection();
     }
 
     public static function create(Uuid $uuid, Name $name, Email $email, Domain $domain, Status $status): self
@@ -240,6 +240,16 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
     public function getApplications(): Collection
     {
         return $this->applications;
+    }
+
+    public function addEmployee(Employee $employee): self
+    {
+        if (! $this->employees->contains($employee)) {
+            $this->employees->add($employee);
+            $employee->setCompany($this);
+        }
+
+        return $this;
     }
 
     public function delete(): void
