@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Project\Domains\Company\Authentication\Application\Authentication\Commands\Login;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Project\Domains\Company\Authentication\Domain\Member\MemberRepositoryInterface;
-use Project\Domains\Company\Authentication\Domain\Member\Services\DeviceService;
-use Project\Domains\Company\Authentication\Domain\Member\ValueObjects\Email;
+use Project\Domains\Admin\Company\Domain\Employee\EmployeeRepositoryInterface;
+use Project\Domains\Admin\Company\Domain\Employee\Exceptions\EmployeeNotFoundDomainException;
+use Project\Domains\Admin\Company\Domain\Employee\Services\DeviceService;
+use Project\Domains\Admin\Company\Domain\Employee\ValueObjects\Email;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticationServiceInterface;
 use Project\Infrastructure\Services\Authentication\DTOs\CredentialsDTO;
 use Project\Infrastructure\Services\Authentication\Enums\GuardType;
@@ -15,7 +15,7 @@ use Project\Infrastructure\Services\Authentication\Enums\GuardType;
 readonly class CommandHandler
 {
     public function __construct(
-        private MemberRepositoryInterface $repository,
+        private EmployeeRepositoryInterface $repository,
         private AuthenticationServiceInterface $authenticationService,
         private DeviceService $deviceService,
     )
@@ -25,21 +25,28 @@ readonly class CommandHandler
 
     public function __invoke(Command $command): array
     {
-        $foundMember = $this->repository->findByEmail(Email::fromValue($command->email));
+        $employee = $this->repository->findByEmail(Email::fromValue($command->email));
 
-        if ($foundMember === null) {
-            throw new ModelNotFoundException();
+        if ($employee === null) {
+            throw new EmployeeNotFoundDomainException();
         }
 
         $accessToken = $this->authenticationService->authenticate(
             new CredentialsDTO($command->email, $command->password),
             GuardType::COMPANY,
-            $foundMember->getClaims()
+            $employee->getClaims()
         );
 
-        $device = $this->deviceService->handle($foundMember, $command->deviceId);
-        $this->repository->save($foundMember);
+        $device = $this->deviceService->handle($employee, $command->deviceId);
+        $this->repository->save($employee);
 
-        return $this->authenticationService->authToken($accessToken, $foundMember, $device);
+        $data = $this->authenticationService->authToken($accessToken, $employee, $device);
+
+        $data['auth_data'] = array_merge(
+            $data['auth_data'],
+            ['company' => $employee->getCompany()->toArray()]
+        );
+
+        return $data;
     }
 }

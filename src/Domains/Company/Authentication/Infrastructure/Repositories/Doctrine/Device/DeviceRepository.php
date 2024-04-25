@@ -6,9 +6,9 @@ namespace Project\Domains\Company\Authentication\Infrastructure\Repositories\Doc
 
 use Project\Domains\Company\Authentication\Domain\Device\Device;
 use Project\Domains\Company\Authentication\Domain\Device\DeviceRepositoryInterface;
-use Project\Shared\Infrastructure\Repository\Contracts\BaseCompanyEntityRepository;
+use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 
-class DeviceRepository extends BaseCompanyEntityRepository implements DeviceRepositoryInterface
+class DeviceRepository extends BaseAdminEntityRepository implements DeviceRepositoryInterface
 {
     protected function getEntity(): string
     {

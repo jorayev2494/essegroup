@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Project\Domains\Company\Authentication\Application\Authentication\Commands\RestorePasswordLink;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Project\Domains\Admin\Company\Domain\Employee\EmployeeRepositoryInterface;
+use Project\Domains\Admin\Company\Domain\Employee\Exceptions\EmployeeNotFoundDomainException;
+use Project\Domains\Admin\Company\Domain\Employee\ValueObjects\Email;
 use Project\Domains\Company\Authentication\Domain\Code\Code;
-use Project\Domains\Company\Authentication\Domain\Member\MemberRepositoryInterface;
-use Project\Domains\Company\Authentication\Domain\Member\ValueObjects\Email;
 use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     function __construct(
-        private MemberRepositoryInterface $repository,
-        private TokenGeneratorInterface $tokenGenerator,
+        private EmployeeRepositoryInterface $repository,
+        private TokenGeneratorInterface $tokenGenerator
     )
     {
 
@@ -23,15 +23,15 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $member = $this->repository->findByEmail(Email::fromValue($command->email));
+        $employee = $this->repository->findByEmail(Email::fromValue($command->email));
 
-        if ($member === null) {
-            throw new ModelNotFoundException();
+        if ($employee === null) {
+            throw new EmployeeNotFoundDomainException();
         }
 
-        if ($member->hasCode()) {
-            $member->removeCode();
-            $this->repository->save($member);
+        if ($employee->hasCode()) {
+            $employee->removeCode();
+            $this->repository->save($employee);
         }
 
         $code = Code::fromPrimitives(
@@ -39,7 +39,7 @@ readonly class CommandHandler implements CommandHandlerInterface
             new \DateTimeImmutable('+ 1 hour')
         );
 
-        $member->addCode($code);
-        $this->repository->save($member);
+        $employee->addCode($code);
+        $this->repository->save($employee);
     }
 }

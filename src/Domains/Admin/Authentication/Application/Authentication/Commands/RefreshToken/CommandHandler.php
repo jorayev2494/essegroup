@@ -30,7 +30,7 @@ readonly class CommandHandler
         }
 
         $accessToken = $this->authenticationService->authenticateByUuid(
-            $foundDevice->getAuthor()->getUuid(),
+            $foundDevice->getAuthor()->getUuid()->value,
             GuardType::ADMIN,
             $foundDevice->getAuthor()->getClaims()
         );

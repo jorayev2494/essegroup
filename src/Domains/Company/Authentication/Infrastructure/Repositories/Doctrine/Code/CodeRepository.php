@@ -6,9 +6,9 @@ namespace Project\Domains\Company\Authentication\Infrastructure\Repositories\Doc
 
 use Project\Domains\Company\Authentication\Domain\Code\Code;
 use Project\Domains\Company\Authentication\Domain\Code\CodeRepositoryInterface;
-use Project\Shared\Infrastructure\Repository\Contracts\BaseCompanyEntityRepository;
+use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 
-final class CodeRepository extends BaseCompanyEntityRepository implements CodeRepositoryInterface
+final class CodeRepository extends BaseAdminEntityRepository implements CodeRepositoryInterface
 {
     protected function getEntity(): string
     {

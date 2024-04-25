@@ -4,15 +4,9 @@ namespace App\Http\Requests\Api\Admin\University\Application;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Project\Domains\Admin\University\Domain\Application\StatusEnum;
 
 class ApplicationStoreRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [

@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Project\Domains\Company\Authentication\Application\Authentication\Commands\RestorePassword;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Project\Domains\Admin\Company\Domain\Employee\EmployeeRepositoryInterface;
+use Project\Domains\Admin\Company\Domain\Employee\ValueObjects\Password;
 use Project\Domains\Company\Authentication\Domain\Code\CodeRepositoryInterface;
-use Project\Domains\Company\Authentication\Domain\Member\MemberRepositoryInterface;
-use Project\Domains\Company\Authentication\Domain\Member\ValueObjects\Password;
 use Project\Infrastructure\Hashers\Contracts\PasswordHasherInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     function __construct(
-        private MemberRepositoryInterface $repository,
+        private EmployeeRepositoryInterface $repository,
         private CodeRepositoryInterface $codeRepository,
         private PasswordHasherInterface $passwordHasher,
     )
@@ -30,10 +30,10 @@ readonly class CommandHandler implements CommandHandlerInterface
             throw new ModelNotFoundException();
         }
 
-        $member = $foundCode->getAuthor();
-        $member->changePassword(Password::fromValue($this->passwordHasher->hash($command->password)));
-        $member->removeCode();
+        $employee = $foundCode->getAuthor();
+        $employee->changePassword(Password::fromValue($this->passwordHasher->hash($command->password)));
+        $employee->removeCode();
 
-        $this->repository->save($member);
+        $this->repository->save($employee);
     }
 }

@@ -3,10 +3,9 @@
 namespace Project\Infrastructure\Services\Authentication\Contracts;
 
 use Project\Shared\Contracts\ArrayableInterface;
+use Project\Shared\Domain\Contracts\EntityUuid;
 
-interface AuthenticatableInterface extends ArrayableInterface
+interface AuthenticatableInterface extends EntityUuid, ArrayableInterface
 {
-    public function getUuid(): string;
-
     public function getClaims(): array;
 }

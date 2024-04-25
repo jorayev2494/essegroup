@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Shared\Infrastructure\Bus\Messenger;
 
-use App\Shared\Infrastructure\Bus\QueryNotRegistered;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryInterface;
-use Project\Shared\Domain\Bus\Query\ResponseInterface;
 use Project\Shared\Infrastructure\Bus\CallableFirstParameterExtractor;
 use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
 use Symfony\Component\Messenger\Handler\HandlersLocator;

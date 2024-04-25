@@ -30,7 +30,7 @@ readonly class CommandHandler
         }
 
         $accessToken = $this->authenticationService->authenticateByUuid(
-            $foundDevice->getAuthor()->getUuid(),
+            $foundDevice->getAuthor()->getUuid()->value,
             GuardType::COMPANY,
             $foundDevice->getAuthor()->getClaims()
         );
@@ -38,6 +38,13 @@ readonly class CommandHandler
 
         $this->deviceRepository->save($foundDevice);
 
-        return $this->authenticationService->authToken($accessToken, $foundDevice->getAuthor(), $foundDevice);
+        $data = $this->authenticationService->authToken($accessToken, $foundDevice->getAuthor(), $foundDevice);
+
+        $data['auth_data'] = array_merge(
+            $data['auth_data'],
+            ['company' => $foundDevice->getAuthor()->getCompany()->toArray()]
+        );
+
+        return $data;
     }
 }

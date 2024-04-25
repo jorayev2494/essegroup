@@ -22,6 +22,11 @@ class StudentRepository extends BaseAdminEntityRepository implements StudentRepo
     {
         $query = $this->entityRepository->createQueryBuilder('s');
 
+        if (count($companyUuids = $httpQuery->filter->companyUuids) > 0) {
+            $query->andWhere('s.companyUuid IN (:companyUuids)')
+                ->setParameter('companyUuids', $companyUuids);
+        }
+
         $query->orderBy('s.createdAt', 'DESC');
 
         return $this->paginator($query, $httpQuery->paginator);

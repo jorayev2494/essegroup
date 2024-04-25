@@ -186,9 +186,11 @@ return [
 
         // Company
         Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,
-        Project\Domains\Company\Company\Infrastructure\CompanyServiceProvider::class,
+        Project\Domains\Company\Employee\Infrastructure\EmployeeServiceProvider::class,
+        Project\Domains\Company\Profile\Infrastructure\ProfileServiceProvider::class,
+        Project\Domains\Company\Student\Infrastructure\StudentServiceProvider::class,
         Project\Domains\Company\University\Infrastructure\UniversityServiceProvider::class,
-        Project\Domains\Company\Manager\Infrastructure\ManagerServiceProvider::class,
+        Project\Domains\Company\Language\Infrastructure\LanguageServiceProvider::class,
 
         // Public
         Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,

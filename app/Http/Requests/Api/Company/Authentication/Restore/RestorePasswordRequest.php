@@ -7,15 +7,10 @@ use Illuminate\Validation\Rule;
 
 class RestorePasswordRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
-            'token' => ['required', 'string', Rule::exists('admin_db.auth_codes', 'value')],
+            'token' => ['required', 'string', Rule::exists('admin_db.employee_auth_codes', 'value')],
             'password' => ['required', 'string', 'confirmed'],
         ];
     }

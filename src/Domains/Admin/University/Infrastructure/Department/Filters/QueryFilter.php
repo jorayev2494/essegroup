@@ -15,7 +15,8 @@ readonly class QueryFilter extends BaseQueryFilter
         public array $languageUuids,
         public array $degreeUuids,
         public array $universityUuids,
-        public array $facultyUuids
+        public array $facultyUuids,
+        public array $uuids
     ) {
 
     }
@@ -34,6 +35,7 @@ readonly class QueryFilter extends BaseQueryFilter
             $data['degree_uuids'] ?? [],
             $data['university_uuids'] ?? [],
             $data['faculty_uuids'] ?? [],
+            $data['uuids'] ?? [],
         );
     }
 
@@ -47,6 +49,7 @@ readonly class QueryFilter extends BaseQueryFilter
             'degree_uuids' => $this->degreeUuids,
             'university_uuids' => $this->universityUuids,
             'faculty_uuids' => $this->facultyUuids,
+            'uuids' => $this->uuids,
         ];
     }
 }

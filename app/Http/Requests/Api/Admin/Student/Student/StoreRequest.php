@@ -16,11 +16,6 @@ class StoreRequest extends FormRequest
         'image/jpeg',
     ];
 
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [

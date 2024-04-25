@@ -18,6 +18,7 @@ use Project\Domains\Admin\Authentication\Infrastructure\Repositories\Doctrine\Me
 use Project\Domains\Admin\Authentication\Infrastructure\Repositories\Doctrine\Member\Types\UuidType;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\ValueObject\UuidValueObject;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'auth_members')]
@@ -36,7 +37,7 @@ class Member extends AggregateRoot implements AuthenticatableInterface
     #[ORM\OneToMany(targetEntity: Device::class, mappedBy: 'author', cascade: ['persist', 'remove'])]
     private Collection $devices;
 
-    #[ORM\OneToOne(targetEntity: Code::class, mappedBy: 'author', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Code::class, mappedBy: 'author', cascade: ['persist', 'remove'], orphanRemoval: true)]
     public ?Code $code;
 
     private function __construct(Uuid $uuid, Email $email, Password $password)
@@ -96,9 +97,9 @@ class Member extends AggregateRoot implements AuthenticatableInterface
     }
 
     #[\Override]
-    public function getUuid(): string
+    public function getUuid(): UuidValueObject
     {
-        return $this->uuid->value;
+        return $this->uuid;
     }
 
     #[\Override]
