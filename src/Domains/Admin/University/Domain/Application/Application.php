@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Country\Domain\Country\Country;
-use Project\Domains\Admin\Country\Domain\Country\CountryTranslate;
+use Project\Domains\Admin\Country\Domain\Country\AnnouncementTranslate;
 use Project\Domains\Admin\Language\Domain\Language\Language;
 use Project\Domains\Admin\Language\Domain\Language\LanguageTranslate;
 use Project\Domains\Admin\Student\Domain\Student\Student;
@@ -247,7 +247,7 @@ class Application extends AggregateRoot implements
             'degree_uuid' => $this->degreeUuid,
             'degree' => DegreeTranslate::execute($this->degree)?->toArray(),
             'country_uuid' => $this->countryUuid,
-            'country' => CountryTranslate::execute($this->country)?->toArray(),
+            'country' => AnnouncementTranslate::execute($this->country)?->toArray(),
             'university_uuid' => $this->university->getUuid()->value,
             'university' => UniversityTranslate::execute($this->university)?->toArray(),
             'departments' => array_map(static fn (ArrayableInterface $item): array => DepartmentTranslate::execute($item)->toArray(), $this->departments->toArray()),

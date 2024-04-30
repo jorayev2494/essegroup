@@ -6,17 +6,17 @@ namespace Project\Domains\Admin\Authentication\Application\Authentication\Comman
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Project\Domains\Admin\Authentication\Domain\Code\CodeRepositoryInterface;
-use Project\Domains\Admin\Authentication\Domain\Member\MemberRepositoryInterface;
-use Project\Domains\Admin\Authentication\Domain\Member\ValueObjects\Password;
+use Project\Domains\Admin\Manager\Domain\Manager\ManagerRepositoryInterface;
+use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Password;
 use Project\Infrastructure\Hashers\Contracts\PasswordHasherInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     function __construct(
-        private MemberRepositoryInterface $repository,
-        private CodeRepositoryInterface $codeRepository,
-        private PasswordHasherInterface $passwordHasher,
+        private ManagerRepositoryInterface $repository,
+        private CodeRepositoryInterface    $codeRepository,
+        private PasswordHasherInterface    $passwordHasher,
     )
     {
 

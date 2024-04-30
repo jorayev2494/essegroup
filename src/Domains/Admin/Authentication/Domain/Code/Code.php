@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\Authentication\Domain\Code;
 
-use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
-use Project\Domains\Admin\Authentication\Domain\Member\Member;
+use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\Manager\Domain\Manager\Manager;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
@@ -28,9 +28,9 @@ class Code
     #[ORM\Column(name: 'author_uuid', type: Types::STRING)]
     private ?string $authorUuid;
 
-    #[ORM\OneToOne(targetEntity: Member::class, inversedBy: 'code')]
+    #[ORM\OneToOne(targetEntity: Manager::class, inversedBy: 'code')]
     #[ORM\JoinColumn(name: 'author_uuid', referencedColumnName: 'uuid', unique: true)]
-    private ?Member $author;
+    private ?Manager $author;
 
     #[ORM\Column(name: 'expired_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $expiredAt;
@@ -46,7 +46,7 @@ class Code
         return new self($value, $expiredAt);
     }
 
-    public function setAuthor(?Member $author = null): self
+    public function setAuthor(?Manager $author = null): self
     {
         $this->author = $author;
 
@@ -77,7 +77,7 @@ class Code
         return $this;
     }
 
-    public function getAuthor(): Member
+    public function getAuthor(): Manager
     {
         return $this->author;
     }

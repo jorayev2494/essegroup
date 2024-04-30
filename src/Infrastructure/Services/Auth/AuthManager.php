@@ -11,6 +11,9 @@ use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Domains\Admin\Company\Domain\Employee\Employee;
 use Project\Domains\Admin\Company\Domain\Employee\EmployeeRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Employee\ValueObjects\Uuid as EmployeeUuid;
+use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Uuid as ManagerUuid;
+use Project\Domains\Admin\Manager\Domain\Manager\Manager;
+use Project\Domains\Admin\Manager\Domain\Manager\ManagerRepositoryInterface;
 use Project\Infrastructure\Services\Authentication\Enums\GuardType;
 use Project\Shared\Domain\ValueObject\UuidValueObject;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -44,5 +47,13 @@ class AuthManager
         $employeeRepository = app()->make(EmployeeRepositoryInterface::class);
 
         return $employeeRepository->findByUuid(EmployeeUuid::fromValue(self::uuid(GuardType::COMPANY)->value));
+    }
+
+    public static function manager(): ?Manager
+    {
+        /** @var ManagerRepositoryInterface $managerRepository */
+        $managerRepository = app()->make(ManagerRepositoryInterface::class);
+
+        return $managerRepository->findByUuid(ManagerUuid::fromValue(self::uuid(GuardType::MANAGER)->value));
     }
 }

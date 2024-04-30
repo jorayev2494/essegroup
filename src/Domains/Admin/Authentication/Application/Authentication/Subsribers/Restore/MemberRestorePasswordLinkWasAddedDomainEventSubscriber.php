@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\Authentication\Application\Authentication\Subsribers\Restore;
 
-use Project\Domains\Admin\Authentication\Domain\Member\Events\Restore\MemberRestorePasswordLinkWasAddedDomainEvent;
+use Project\Domains\Admin\Manager\Domain\Manager\Events\Restore\MemberRestorePasswordLinkWasAddedDomainEvent;
 use Project\Shared\Domain\Bus\Event\DomainEventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;

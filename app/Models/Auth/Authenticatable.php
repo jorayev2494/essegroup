@@ -11,8 +11,6 @@ class Authenticatable extends JWTAuthenticatable
 
     protected $primaryKey = 'uuid';
 
-    protected $table = 'auth_members';
-
     public $timestamps = false;
 
     protected $hidden = [
