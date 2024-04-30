@@ -89,6 +89,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
     /** @var array<string, string> */
     protected const ENTITY_PATHS = [
         __DIR__ . '/../Domain/Company',
+        __DIR__ . '/../Domain/Employee',
         __DIR__ . '/../Domain/Company/ValueObjects',
         __DIR__ . '/../Domain/Status',
     ];

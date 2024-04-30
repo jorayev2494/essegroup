@@ -21,7 +21,7 @@ class UpdateRequest extends FormRequest
                 'required',
                 'email',
                 Rule::unique('admin_db.company_employees', 'email')
-                    ->ignore($this->route('uuid', AuthManager::employee()->getUuid()->value), 'uuid'),
+                    ->ignore($this->route('uuid', AuthManager::employee()?->getUuid()->value), 'uuid'),
             ],
             'avatar' => [
                 'nullable',

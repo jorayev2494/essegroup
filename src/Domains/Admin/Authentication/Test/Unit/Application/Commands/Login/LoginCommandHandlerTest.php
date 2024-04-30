@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use PHPUnit\Framework\TestCase;
 use Project\Domains\Admin\Authentication\Application\Authentication\Commands\Login\Command;
 use Project\Domains\Admin\Authentication\Application\Authentication\Commands\Login\CommandHandler;
-use Project\Domains\Admin\Authentication\Domain\Member\MemberRepositoryInterface;
-use Project\Domains\Admin\Authentication\Domain\Member\Services\DeviceService;
-use Project\Domains\Admin\Authentication\Domain\Member\ValueObjects\Email;
 use Project\Domains\Admin\Authentication\Test\Unit\Fixtures\Factories\DeviceFactory;
 use Project\Domains\Admin\Authentication\Test\Unit\Fixtures\Factories\MemberFactory;
+use Project\Domains\Admin\Manager\Domain\Manager\ManagerRepositoryInterface;
+use Project\Domains\Admin\Manager\Domain\Manager\Services\DeviceService;
+use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Email;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticationServiceInterface;
 use Project\Infrastructure\Services\Authentication\DTOs\CredentialsDTO;
 use Project\Infrastructure\Services\Authentication\Enums\GuardType;
@@ -22,7 +22,7 @@ class LoginCommandHandlerTest extends TestCase
     public function testAdminLoginSuccess(): void
     {
         $handler = new CommandHandler(
-            $repository = $this->createMock(MemberRepositoryInterface::class),
+            $repository = $this->createMock(ManagerRepositoryInterface::class),
             $authenticationService = $this->createMock(AuthenticationServiceInterface::class),
             $deviceService = $this->createMock(DeviceService::class)
         );
@@ -36,7 +36,7 @@ class LoginCommandHandlerTest extends TestCase
             ->method('authenticate')
             ->with(
                 new CredentialsDTO(MemberFactory::EMAIL, MemberFactory::PASSWORD),
-                GuardType::ADMIN
+                GuardType::MANAGER
             )
             ->willReturn($accessToken = 'access_token-12345');
 
@@ -84,7 +84,7 @@ class LoginCommandHandlerTest extends TestCase
         $this->expectException(ModelNotFoundException::class);
 
         $handler = new CommandHandler(
-            $repository = $this->createMock(MemberRepositoryInterface::class),
+            $repository = $this->createMock(ManagerRepositoryInterface::class),
             $authenticationService = $this->createMock(AuthenticationServiceInterface::class),
             $deviceService = $this->createMock(DeviceService::class)
         );

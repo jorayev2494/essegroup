@@ -6,8 +6,8 @@ namespace Project\Domains\Admin\Authentication\Application\Authentication\Comman
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Project\Domains\Admin\Authentication\Domain\Code\Code;
-use Project\Domains\Admin\Authentication\Domain\Member\MemberRepositoryInterface;
-use Project\Domains\Admin\Authentication\Domain\Member\ValueObjects\Email;
+use Project\Domains\Admin\Manager\Domain\Manager\ManagerRepositoryInterface;
+use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Email;
 use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Shared\Domain\Bus\Event\EventBusInterface;
@@ -15,9 +15,9 @@ use Project\Shared\Domain\Bus\Event\EventBusInterface;
 readonly class CommandHandler implements CommandHandlerInterface
 {
     function __construct(
-        private MemberRepositoryInterface $repository,
-        private TokenGeneratorInterface $tokenGenerator,
-        private EventBusInterface $eventBus
+        private ManagerRepositoryInterface $repository,
+        private TokenGeneratorInterface    $tokenGenerator,
+        private EventBusInterface          $eventBus
     ) { }
 
     public function __invoke(Command $command): void

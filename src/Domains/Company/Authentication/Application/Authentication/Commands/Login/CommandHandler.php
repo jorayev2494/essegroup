@@ -27,14 +27,10 @@ readonly class CommandHandler
     {
         $employee = $this->repository->findByEmail(Email::fromValue($command->email));
 
-        if ($employee === null) {
-            throw new EmployeeNotFoundDomainException();
-        }
-
         $accessToken = $this->authenticationService->authenticate(
             new CredentialsDTO($command->email, $command->password),
             GuardType::COMPANY,
-            $employee->getClaims()
+            $employee?->getClaims() ?? []
         );
 
         $device = $this->deviceService->handle($employee, $command->deviceId);

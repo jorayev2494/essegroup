@@ -31,7 +31,7 @@ readonly class CommandHandler
 
         $accessToken = $this->authenticationService->authenticateByUuid(
             $foundDevice->getAuthor()->getUuid()->value,
-            GuardType::ADMIN,
+            GuardType::MANAGER,
             $foundDevice->getAuthor()->getClaims()
         );
         $foundDevice->setRefreshToken($this->tokenGenerator->generate());

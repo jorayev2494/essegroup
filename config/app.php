@@ -183,6 +183,8 @@ return [
         Project\Domains\Admin\Country\Infrastructure\CountryServiceProvider::class,
         Project\Domains\Admin\Language\Infrastructure\LanguageServiceProvider::class,
         Project\Domains\Admin\Student\Infrastructure\StudentServiceProvider::class,
+        Project\Domains\Admin\Announcement\Infrastructure\AnnouncementServiceProvider::class,
+        Project\Domains\Admin\Manager\Infrastructure\ManagerServiceProvider::class,
 
         // Company
         Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,
@@ -191,6 +193,7 @@ return [
         Project\Domains\Company\Student\Infrastructure\StudentServiceProvider::class,
         Project\Domains\Company\University\Infrastructure\UniversityServiceProvider::class,
         Project\Domains\Company\Language\Infrastructure\LanguageServiceProvider::class,
+        Project\Domains\Company\Announcement\Infrastructure\AnnouncementServiceProvider::class,
 
         // Public
         Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,

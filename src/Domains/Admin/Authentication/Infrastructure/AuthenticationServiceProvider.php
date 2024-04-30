@@ -5,16 +5,16 @@ namespace Project\Domains\Admin\Authentication\Infrastructure;
 use App\Providers\Domains\AdminDomainServiceProvider;
 use Project\Domains\Admin\Authentication\Domain\Code\CodeRepositoryInterface;
 use Project\Domains\Admin\Authentication\Domain\Device\DeviceRepositoryInterface;
-use Project\Domains\Admin\Authentication\Domain\Member\MemberRepositoryInterface;
 use Project\Domains\Admin\Authentication\Infrastructure\Repositories\Doctrine\Code\CodeRepository;
 use Project\Domains\Admin\Authentication\Infrastructure\Repositories\Doctrine\Device\DeviceRepository;
-use Project\Domains\Admin\Authentication\Infrastructure\Repositories\Doctrine\Member\MemberRepository;
+use Project\Domains\Admin\Manager\Domain\Manager\ManagerRepositoryInterface;
+use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\ManagerRepository;
 
 class AuthenticationServiceProvider extends AdminDomainServiceProvider
 {
     /** @var array<string, string> */
     protected const SERVICES = [
-        MemberRepositoryInterface::class => [self::SERVICE_BIND, MemberRepository::class],
+        ManagerRepositoryInterface::class => [self::SERVICE_BIND, ManagerRepository::class],
         DeviceRepositoryInterface::class => [self::SERVICE_BIND, DeviceRepository::class],
         CodeRepositoryInterface::class => [self::SERVICE_BIND, CodeRepository::class],
     ];
@@ -38,9 +38,7 @@ class AuthenticationServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<string, string> */
     protected const ENTITY_TYPES = [
-        \Project\Domains\Admin\Authentication\Infrastructure\Repositories\Doctrine\Member\Types\UuidType::class,
-        \Project\Domains\Admin\Authentication\Infrastructure\Repositories\Doctrine\Member\Types\EmailType::class,
-        \Project\Domains\Admin\Authentication\Infrastructure\Repositories\Doctrine\Member\Types\PasswordType::class,
+
     ];
 
     /** @var array<array-key, string> */
@@ -51,7 +49,7 @@ class AuthenticationServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<string, string> */
     protected const ENTITY_PATHS = [
-        __DIR__ . '/../Domain/Member',
+        // __DIR__ . '/../Domain/Member',
         __DIR__ . '/../Domain/Device',
         __DIR__ . '/../Domain/Code',
     ];
@@ -67,6 +65,6 @@ class AuthenticationServiceProvider extends AdminDomainServiceProvider
 
     public function register(): void
     {
-        $this->app->bind(MemberRepositoryInterface::class, MemberRepository::class);
+        $this->app->bind(ManagerRepositoryInterface::class, ManagerRepository::class);
     }
 }
