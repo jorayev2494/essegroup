@@ -40,7 +40,7 @@ readonly class MemberRestorePasswordLinkWasAddedDomainEventSubscriber implements
 
     private function makeRestoreLink(MemberRestorePasswordLinkWasAddedDomainEvent $event): string
     {
-        $url = config('admin_dashboard.admin_url') . config('admin_dashboard.page_routers.reset_password');
+        $url = config('admin_dashboard.url') . config('admin_dashboard.page_routers.reset_password');
 
         return $url . '?' . http_build_query(['token' => $event->codeValue]);
     }

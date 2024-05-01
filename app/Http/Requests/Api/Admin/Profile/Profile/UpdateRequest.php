@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Admin\Manager\Manager;
+namespace App\Http\Requests\Api\Admin\Profile\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Project\Infrastructure\Services\Auth\AuthManager;
+use Project\Infrastructure\Services\Authentication\Enums\GuardType;
 
 class UpdateRequest extends FormRequest
 {
@@ -21,7 +23,7 @@ class UpdateRequest extends FormRequest
                 'required',
                 'email',
                 Rule::unique('admin_db.auth_members', 'email')
-                    ->ignore($this->route('uuid'),'uuid'),
+                    ->ignore(AuthManager::uuid(GuardType::MANAGER)->value,'uuid'),
             ],
         ];
     }

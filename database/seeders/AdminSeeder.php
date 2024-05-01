@@ -30,8 +30,8 @@ class AdminSeeder extends Seeder
             Admin::factory(array_merge(
                 $data,
                 [
-                    // 'created_at' => $createdAt,
-                    // 'updated_at' => $createdAt,
+                    'created_at' => $createdAt,
+                    'updated_at' => $createdAt,
                 ]
             ))->create();
         }
