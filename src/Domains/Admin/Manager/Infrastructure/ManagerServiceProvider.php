@@ -5,22 +5,33 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\Manager\Infrastructure;
 
 use App\Providers\Domains\AdminDomainServiceProvider;
+use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarServiceInterface;
+use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\AvatarService;
 
 class ManagerServiceProvider extends AdminDomainServiceProvider
 {
     /** @var array<string, string> */
     protected const SERVICES = [
-        // CurrencyRepositoryInterface::class => [self::SERVICE_BIND, CurrencyRepository::class],
+        AvatarServiceInterface::class => [self::SERVICE_BIND, AvatarService::class],
     ];
 
     /** @var array<array-key, string> */
-    protected const QUERY_HANDLERS = [];
+    protected const QUERY_HANDLERS = [
+        \Project\Domains\Admin\Manager\Application\Manager\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\Manager\Application\Manager\Queries\Show\QueryHandler::class,
+    ];
 
     /** @var array<array-key, string> */
-    protected const COMMAND_HANDLERS = [];
+    protected const COMMAND_HANDLERS = [
+        \Project\Domains\Admin\Manager\Application\Manager\Commands\Create\CommandHandler::class,
+        \Project\Domains\Admin\Manager\Application\Manager\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\Manager\Application\Manager\Commands\Delete\CommandHandler::class,
+    ];
 
     /** @var array<array-key, string> */
-    protected const DOMAIN_EVENT_SUBSCRIBERS = [];
+    protected const DOMAIN_EVENT_SUBSCRIBERS = [
+        \Project\Domains\Admin\Manager\Application\Manager\Subscribers\ManagerWasCreatedDomainEventSubscriber::class,
+    ];
 
     /** @var array<string, string> */
     protected const ENTITY_TYPES = [
@@ -45,7 +56,7 @@ class ManagerServiceProvider extends AdminDomainServiceProvider
     protected const ROUTE_PATHS = [
         [
             'middleware' => ['api', 'auth:admin'],
-            'prefix' => 'api/admin',
+            'prefix' => 'api/admin/managers',
             'path' => __DIR__ . '/../Presentation/Http/API/REST/routes.php',
         ],
     ];

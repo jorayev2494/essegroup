@@ -6,7 +6,7 @@ namespace Project\Domains\Admin\Manager\Domain\Manager\ValueObjects;
 
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Manager\Domain\Manager\Manager;
-use Project\Domains\Admin\Company\Domain\Employee\Services\Avatar\Contracts\AvatarInterface;
+use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarInterface;
 use Project\Shared\Domain\File\File;
 
 #[ORM\Entity]

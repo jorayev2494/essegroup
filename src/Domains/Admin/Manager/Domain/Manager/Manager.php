@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\Manager\Domain\Manager;
 
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Announcement\Domain\Announcement\Announcement;
 use Project\Domains\Admin\Authentication\Domain\Code\Code;
 use Project\Domains\Admin\Authentication\Domain\Device\Device;
+use Project\Domains\Admin\Manager\Domain\Manager\Events\ManagerWasCreatedDomainEvent;
 use Project\Domains\Admin\Manager\Domain\Manager\Events\Restore\MemberRestorePasswordLinkWasAddedDomainEvent;
+use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarableInterface;
+use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarInterface;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Avatar;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Email;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\FirstName;
@@ -24,13 +29,15 @@ use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\T
 use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\Types\UuidType;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
+use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 use Project\Shared\Domain\ValueObject\UuidValueObject;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'auth_members')]
-class Manager extends AggregateRoot implements AuthenticatableInterface
+#[ORM\HasLifecycleCallbacks]
+class Manager extends AggregateRoot implements AuthenticatableInterface, AvatarableInterface
 {
-    // use CreatedAtAndUpdatedAtTrait;
+    use CreatedAtAndUpdatedAtTrait;
 
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
@@ -45,7 +52,7 @@ class Manager extends AggregateRoot implements AuthenticatableInterface
     #[ORM\Column(name: 'avatar_uuid', type: Types::GUID, nullable: true)]
     private ?string $avatarUuid;
 
-    #[ORM\OneToOne(targetEntity: Avatar::class, inversedBy: 'employee', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Avatar::class, inversedBy: 'manager', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'avatar_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
     private ?Avatar $avatar;
 
@@ -74,7 +81,18 @@ class Manager extends AggregateRoot implements AuthenticatableInterface
 
     public static function create(Uuid $uuid, FullName $fullName, Email $email, Password $password): self
     {
-        return new self($uuid, $fullName, $email, $password);
+        $manager = new self($uuid, $fullName, $email, $password);
+        $manager->record(
+            new ManagerWasCreatedDomainEvent(
+                $uuid->value,
+                $fullName->getFirstName()->value,
+                $fullName->getLastName()->value,
+                $email->value,
+                $password->value
+            )
+        );
+
+        return $manager;
     }
 
     public static function fromPrimitives(string $uuid, string $firstName, string $lastName, string $email, string $password): self
@@ -129,10 +147,43 @@ class Manager extends AggregateRoot implements AuthenticatableInterface
         $this->code = null;
     }
 
+    public function getFullName(): FullName
+    {
+        return $this->fullName;
+    }
+
     #[\Override]
     public function getUuid(): UuidValueObject
     {
         return $this->uuid;
+    }
+
+    public function getAvatar(): ?AvatarInterface
+    {
+        return $this->avatar;
+    }
+
+    public function changeAvatar(?AvatarInterface $avatar): static
+    {
+        if ($this->avatar === null || $this->avatar->isNotEquals($avatar)) {
+            $this->avatar = $avatar;
+        }
+
+        return $this;
+    }
+
+    public function changeEmail(Email $email): self
+    {
+        if ($this->email->isNotEquals($email)) {
+            $this->email = $email;
+        }
+
+        return $this;
+    }
+
+    public function deleteAvatar(): static
+    {
+        return $this;
     }
 
     #[\Override]
@@ -143,6 +194,17 @@ class Manager extends AggregateRoot implements AuthenticatableInterface
         ];
     }
 
+    #[ORM\PrePersist]
+    public function prePersisting(PrePersistEventArgs $event): void
+    {
+        $this->createdAt = $this->createdAt ?? new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+
+        if ($this->createdAt->getTimestamp() === $this->updatedAt->getTimestamp()) {
+            $this->password = Password::fromValue($this->password->hash());
+        }
+    }
+
     public function toArray(): array
     {
         return [
@@ -150,6 +212,8 @@ class Manager extends AggregateRoot implements AuthenticatableInterface
             ...$this->fullName->toArray(),
             'avatar' => $this->avatar?->toArray(),
             'email' => $this->email->value,
+            'created_at' => $this->createdAt->getTimestamp(),
+            'updated_at' => $this->updatedAt->getTimestamp(),
         ];
     }
 }
