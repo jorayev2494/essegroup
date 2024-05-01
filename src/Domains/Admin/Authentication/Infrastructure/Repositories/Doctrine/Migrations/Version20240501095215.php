@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240430131544 extends AbstractMigration
+final class Version20240501095215 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -28,8 +28,6 @@ final class Version20240430131544 extends AbstractMigration
         $this->addSql('ALTER TABLE auth_members ADD avatar_uuid CHAR(36) DEFAULT NULL COMMENT \'(DC2Type:guid)\', ADD first_name VARCHAR(255) NOT NULL, ADD last_name VARCHAR(255) NOT NULL');
         $this->addSql('ALTER TABLE auth_members ADD CONSTRAINT FK_B84F20C43DB3B7D FOREIGN KEY (avatar_uuid) REFERENCES company_manager_avatars (uuid) ON DELETE SET NULL');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_B84F20C43DB3B7D ON auth_members (avatar_uuid)');
-        $this->addSql('ALTER TABLE employee_auth_codes ADD CONSTRAINT FK_B15820EC3590D879 FOREIGN KEY (author_uuid) REFERENCES company_employees (uuid)');
-        $this->addSql('ALTER TABLE employee_auth_devices ADD CONSTRAINT FK_711645293590D879 FOREIGN KEY (author_uuid) REFERENCES company_employees (uuid)');
         $this->addSql('ALTER TABLE faculty_faculties CHANGE description description text DEFAULT NULL');
         $this->addSql('ALTER TABLE university_department_name_translations CHANGE department_name_uuid department_name_uuid VARCHAR(255) NOT NULL');
         $this->addSql('ALTER TABLE university_departments CHANGE description description text DEFAULT NULL');
@@ -47,10 +45,8 @@ final class Version20240430131544 extends AbstractMigration
         $this->addSql('DROP TABLE company_manager_avatars');
         $this->addSql('DROP INDEX UNIQ_B84F20C43DB3B7D ON auth_members');
         $this->addSql('ALTER TABLE auth_members DROP avatar_uuid, DROP first_name, DROP last_name');
-        $this->addSql('ALTER TABLE employee_auth_codes DROP FOREIGN KEY FK_B15820EC3590D879');
-        $this->addSql('ALTER TABLE employee_auth_devices DROP FOREIGN KEY FK_711645293590D879');
-        $this->addSql('ALTER TABLE faculty_faculties CHANGE description description TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE university_department_name_translations CHANGE department_name_uuid department_name_uuid VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE faculty_faculties CHANGE description description TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE university_departments CHANGE description description TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE university_universities CHANGE description description TEXT DEFAULT NULL');
     }
