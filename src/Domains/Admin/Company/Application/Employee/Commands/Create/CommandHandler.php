@@ -17,13 +17,15 @@ use Project\Domains\Admin\Company\Domain\Employee\ValueObjects\Password;
 use Project\Domains\Admin\Company\Domain\Employee\ValueObjects\Uuid;
 use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use Project\Shared\Domain\Bus\Event\EventBusInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private CompanyRepositoryInterface $companyRepository,
         private TokenGeneratorInterface $tokenGenerator,
-        private AvatarServiceInterface $avatarService
+        private AvatarServiceInterface $avatarService,
+        private EventBusInterface $eventBus
     ) { }
 
     public function __invoke(Command $command): void
@@ -46,5 +48,6 @@ readonly class CommandHandler implements CommandHandlerInterface
         $company->addEmployee($employee);
 
         $this->companyRepository->save($company);
+        $this->eventBus->publish(...$employee->pullDomainEvents());
     }
 }

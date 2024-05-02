@@ -173,7 +173,7 @@ class Country extends AggregateRoot implements EntityUuid, TranslatableInterface
 
     public function getTranslationClass(): string
     {
-        return AnnouncementTranslation::class;
+        return CountryTranslation::class;
     }
 
     public function toArray(): array

@@ -57,7 +57,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
-        // \Project\Domains\Admin\Company\Application\Company\Subsribers\Company\CompanyLogoWasDeletedDomainEventSubscriber::class,
+        \Project\Domains\Admin\Company\Application\Employee\Subscribers\EmployeeWasCreatedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */
