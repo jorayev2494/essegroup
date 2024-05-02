@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Company;
+use Project\Domains\Admin\Company\Domain\Employee\Events\EmployeeWasCreatedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Employee\Services\Avatar\Contracts\AvatarableInterface;
 use Project\Domains\Admin\Company\Domain\Employee\Services\Avatar\Contracts\AvatarInterface;
 use Project\Domains\Admin\Company\Domain\Employee\ValueObjects\Avatar;
@@ -24,13 +25,14 @@ use Project\Domains\Admin\Company\Infrastructure\Employee\Repositories\Types\Uui
 use Project\Domains\Company\Authentication\Domain\Code\Code;
 use Project\Domains\Company\Authentication\Domain\Device\Device;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
+use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Traits\ActivableTrait;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'company_employees')]
 #[ORM\HasLifecycleCallbacks]
-class Employee implements AuthenticatableInterface, AvatarableInterface
+class Employee extends AggregateRoot implements AuthenticatableInterface, AvatarableInterface
 {
     use ActivableTrait, CreatedAtAndUpdatedAtTrait;
 
@@ -80,7 +82,18 @@ class Employee implements AuthenticatableInterface, AvatarableInterface
 
     public static function create(Uuid $uuid, FullName $fullName, Email $email, Password $password): self
     {
-        return new self($uuid, $fullName, $email, $password);
+        $employee = new self($uuid, $fullName, $email, $password);
+        $employee->record(
+            new EmployeeWasCreatedDomainEvent(
+                $employee->uuid->value,
+                $employee->getFullName()->getFirstName()->value,
+                $employee->getFullName()->getLastName()->value,
+                $employee->getEmail()->value,
+                $employee->password->value
+            )
+        );
+
+        return $employee;
     }
 
     public function getUuid(): Uuid
@@ -100,6 +113,11 @@ class Employee implements AuthenticatableInterface, AvatarableInterface
         }
 
         return $this;
+    }
+
+    public function getEmail(): Email
+    {
+        return $this->email;
     }
 
     public function setAvatar(Avatar $avatar): self

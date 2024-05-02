@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Country\Domain\City\City;
 use Project\Domains\Admin\Country\Domain\City\CityTranslate;
 use Project\Domains\Admin\Country\Domain\Country\Country;
-use Project\Domains\Admin\Country\Domain\Country\AnnouncementTranslate;
+use Project\Domains\Admin\Country\Domain\Country\CountryTranslate;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
@@ -377,7 +377,7 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
             'cover' => $this->cover?->toArray(),
             'youtube_video_id' => $this->youTubeVideoId->value,
             'country_uuid' => $this->country->getUuid()->value,
-            'country' => AnnouncementTranslate::execute($this->country)?->toArray(),
+            'country' => CountryTranslate::execute($this->country)?->toArray(),
             'city_uuid' => $this->city->getUuid()->value,
             'city' => CityTranslate::execute($this->city)?->toArray(),
             'description' => $this->description->value,

@@ -11,7 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\Country\Domain\Country\Country;
-use Project\Domains\Admin\Country\Domain\Country\AnnouncementTranslate;
+use Project\Domains\Admin\Country\Domain\Country\CountryTranslate;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarableInterface;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarInterface;
 use Project\Domains\Admin\Student\Domain\Student\Traits\Files\AdditionalDocumentTrait;
@@ -404,12 +404,12 @@ class Student implements EntityUuid,
             'company_uuid' => $this->company->getUuid()->value,
             'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
             'nationality_uuid' => $this->nationality->getUuid()->value,
-            'nationality' => AnnouncementTranslate::execute($this->nationality)?->toArray(),
+            'nationality' => CountryTranslate::execute($this->nationality)?->toArray(),
             'country_of_residence_uuid' => $this->countryOfResidence->getUuid()->value,
-            'country_of_residence' => AnnouncementTranslate::execute($this->countryOfResidence)?->toArray(),
+            'country_of_residence' => CountryTranslate::execute($this->countryOfResidence)?->toArray(),
             ...$this->highSchool->toArray(),
             'high_school_country_uuid' => $this->highSchoolCountry->getUuid()->value,
-            'high_school_country' => AnnouncementTranslate::execute($this->highSchoolCountry)?->toArray(),
+            'high_school_country' => CountryTranslate::execute($this->highSchoolCountry)?->toArray(),
             'phone' => $this->phone->value,
             'friend_phone' => $this->friendPhone->value,
             'home_address' => $this->homeAddress->value,

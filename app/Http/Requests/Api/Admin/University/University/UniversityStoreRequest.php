@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\Admin\University\University;
 
+use App\Rules\ValidateTranslationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -46,10 +47,10 @@ class UniversityStoreRequest extends FormRequest
                 // Rule::dimensions()->width(self::COVER_WIDTH)->height(self::COVER_HEIGHT),
             ],
             'youtube_video_id' => ['required', 'string', 'max:15'],
-            'translations' => ['required', 'array'],
-            'translations.*.name' => 'required',
-            'translations.*.label' => 'required',
-            'translations.*.description' => 'required',
+            'translations' => [
+                'required',
+                new ValidateTranslationRule(['name', 'label', 'description']),
+            ],
             'is_on_the_country_list' => ['required', 'boolean'],
         ];
     }
