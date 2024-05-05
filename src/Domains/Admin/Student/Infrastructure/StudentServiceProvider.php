@@ -14,6 +14,7 @@ class StudentServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\Student\Domain\Student\StudentRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\StudentRepository::class],
 
         // Student Services
+        \Project\Domains\Admin\Student\Domain\Student\Services\Contracts\StudentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Domain\Student\Services\StudentService::class],
         \Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Domain\Student\Services\Avatar\AvatarService::class],
         \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\BiometricPhoto\Contracts\BiometricPhotoServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\BiometricPhoto\BiometricPhotoService::class],
         \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\Passport\Contracts\PassportServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\Passport\PassportService::class],

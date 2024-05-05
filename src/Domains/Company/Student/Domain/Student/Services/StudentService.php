@@ -49,15 +49,11 @@ class StudentService implements StudentServiceInterface
                 $command->avatar,
                 $command->birthday,
                 $command->passportNumber,
-                $command->passportDateOfIssue,
-                $command->passportDateOfExpiry,
                 $command->email,
                 $command->phone,
                 $command->nationalityUuid,
                 $command->countryOfResidenceUuid,
-                $command->highSchoolName,
                 $command->highSchoolCountryUuid,
-                $command->highSchoolGradeAverage,
                 'company',
                 $command->passport,
                 $command->passportTranslation,
@@ -74,7 +70,11 @@ class StudentService implements StudentServiceInterface
                 $command->friendPhone,
                 $command->homeAddress,
                 $command->gender,
-                $command->maritalType
+                $command->maritalType,
+                $command->passportDateOfIssue,
+                $command->passportDateOfExpiry,
+                $command->highSchoolName,
+                $command->highSchoolGradeAverage
             )
         );
     }

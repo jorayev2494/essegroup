@@ -23,17 +23,18 @@ class CompanyStoreRequest extends FormRequest
                 'email',
                 Rule::unique('admin_db.company_companies', 'email'),
             ],
-            'domain' => [
-                'required',
-                'string',
-                'alpha',
-                Rule::unique('admin_db.company_companies', 'domain'),
-            ],
             'logo' => [
                 'required',
                 'file',
                 'mimetypes:image/*',
                 // Rule::dimensions()->width(self::LOGO_WIDTH)->height(self::LOGO_HEIGHT),
+            ],
+            'is_main' => [
+                'required',
+                'boolean',
+                Rule::unique('admin_db.company_companies', 'is_main')
+                    ->where('is_main', true)
+                    ->ignore($this->route('uuid'),'uuid'),
             ],
         ];
     }

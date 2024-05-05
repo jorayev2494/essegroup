@@ -65,7 +65,6 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
         // Company
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\UuidType::class,
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\NameType::class,
-        \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\DomainType::class,
         \Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\EmailType::class,
 
         // Status

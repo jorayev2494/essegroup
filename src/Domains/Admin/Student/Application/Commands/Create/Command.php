@@ -16,15 +16,11 @@ readonly class Command implements CommandInterface
         public ?UploadedFile $avatar,
         public string $birthday,
         public string $passportNumber,
-        public string $passportDateOfIssue,
-        public string $passportDateOfExpiry,
         public string $email,
         public string $phone,
         public string $nationalityUuid,
         public string $countryOfResidenceUuid,
-        public string $highSchoolName,
         public string $highSchoolCountryUuid,
-        public string $highSchoolGradeAverage,
         public string $creatorRole,
         public UploadedFile $passport,
         public UploadedFile $passportTranslation,
@@ -41,6 +37,10 @@ readonly class Command implements CommandInterface
         public ?string $friendPhone,
         public ?string $homeAddress,
         public ?string $gender,
-        public ?string $maritalType
+        public ?string $maritalType,
+        public ?string $passportDateOfIssue,
+        public ?string $passportDateOfExpiry,
+        public ?string $highSchoolName,
+        public ?string $highSchoolGradeAverage
     ) { }
 }

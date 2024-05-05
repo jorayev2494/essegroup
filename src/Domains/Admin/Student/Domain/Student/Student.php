@@ -33,6 +33,8 @@ use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Enums\Gender;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Enums\MaritalType;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Files\AdditionalDocument;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\FriendPhone;
+use Project\Domains\Admin\Student\Domain\Student\ValueObjects\GradeAverage;
+use Project\Domains\Admin\Student\Domain\Student\ValueObjects\HighSchoolName;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\HomeAddress;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Phone;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Uuid;
@@ -177,7 +179,6 @@ class Student implements EntityUuid,
         Company $company,
         Country $nationality,
         Country $countryOfResidence,
-        HighSchool $highSchool,
         Country $highSchoolCountry,
         string $creatorRole
     ) {
@@ -191,7 +192,10 @@ class Student implements EntityUuid,
         $this->company = $company;
         $this->nationality = $nationality;
         $this->countryOfResidence = $countryOfResidence;
-        $this->highSchool = $highSchool;
+        $this->highSchool = HighSchool::make(
+            HighSchoolName::fromValue(null),
+            GradeAverage::fromValue(null)
+        );
         $this->highSchoolCountry = $highSchoolCountry;
         $this->creatorRole = $creatorRole;
         $this->friendPhone = FriendPhone::fromValue(null);
@@ -213,7 +217,6 @@ class Student implements EntityUuid,
         Company $company,
         Country $nationality,
         Country $countryOfResidence,
-        HighSchool $highSchool,
         Country $highSchoolCountry,
         string $creatorRole
     ): self
@@ -229,7 +232,6 @@ class Student implements EntityUuid,
             $company,
             $nationality,
             $countryOfResidence,
-            $highSchool,
             $highSchoolCountry,
             $creatorRole
         );
@@ -341,6 +343,11 @@ class Student implements EntityUuid,
         if ($this->phone->isNotEquals($phone)) {
             $this->phone = $phone;
         }
+    }
+
+    public function getHighSchool(): HighSchool
+    {
+        return $this->highSchool;
     }
 
     public function changeHighSchool(HighSchool $highSchool): self

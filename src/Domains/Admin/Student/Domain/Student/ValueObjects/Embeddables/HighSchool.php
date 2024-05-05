@@ -15,19 +15,19 @@ use Project\Shared\Contracts\ArrayableInterface;
 class HighSchool implements ArrayableInterface
 {
 
-    #[ORM\Column(name: 'name', type: HighSchoolNameType::NAME)]
-    private HighSchoolName $name;
+    #[ORM\Column(name: 'name', type: HighSchoolNameType::NAME, nullable: true)]
+    private ?HighSchoolName $name;
 
     #[ORM\Column(name: 'grade_average', type: GradeAverageType::NAME, length: 5, nullable: true)]
-    private GradeAverage $gradeAverage;
+    private ?GradeAverage $gradeAverage;
 
-    public function __construct(HighSchoolName $name, GradeAverage $gradeAverage)
+    private function __construct(?HighSchoolName $name, ?GradeAverage $gradeAverage)
     {
         $this->name = $name;
         $this->gradeAverage = $gradeAverage;
     }
 
-    public static function make(HighSchoolName $name, GradeAverage $gradeAverage): self
+    public static function make(?HighSchoolName $name, ?GradeAverage $gradeAverage): self
     {
         return new self($name, $gradeAverage);
     }
@@ -37,9 +37,23 @@ class HighSchool implements ArrayableInterface
         return $this->name;
     }
 
+    public function setName(HighSchoolName $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
     public function getGradeAverage(): GradeAverage
     {
         return $this->gradeAverage;
+    }
+
+    public function setGradeAverage(GradeAverage $gradeAverage): self
+    {
+        $this->gradeAverage = $gradeAverage;
+
+        return $this;
     }
 
     public function isEquals(self $other): bool

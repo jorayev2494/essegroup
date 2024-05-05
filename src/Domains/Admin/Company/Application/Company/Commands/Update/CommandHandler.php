@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\Company\Application\Company\Commands\Update;
 
 use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
-use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyDomainAlreadyExistsDomainException;
-use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNameAlreadyExistsDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNotFoundDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoServiceInterface;
-use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Email;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
@@ -37,7 +34,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $company->changeName(Name::fromValue($command->name));
         $company->changeEmail(Email::fromValue($command->email));
-        $company->changeDomain(Domain::fromValue($command->domain));
+        $company->changeIsMain($command->isMain);
         $this->logoService->update($company, $command->logo);
 
         $this->repository->save($company);

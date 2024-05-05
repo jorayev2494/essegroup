@@ -14,7 +14,7 @@ readonly class Command implements CommandInterface
         public UploadedFile $logo,
         public string $name,
         public string $email,
-        public string $domain,
+        public bool $isMain
     )
     {
 

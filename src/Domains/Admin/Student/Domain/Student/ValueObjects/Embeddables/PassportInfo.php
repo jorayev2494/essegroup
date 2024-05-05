@@ -18,22 +18,22 @@ class PassportInfo implements ArrayableInterface
     #[ORM\Column(type: PassportNumberType::NAME, length: 50)]
     private PassportNumber $number;
 
-    #[ORM\Column(name: 'date_of_issue', type: Types::DATE_IMMUTABLE)]
-    private DateTimeImmutable $dateOfIssue;
+    #[ORM\Column(name: 'date_of_issue', type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $dateOfIssue;
 
-    #[ORM\Column(name: 'date_of_expiry', type: Types::DATE_IMMUTABLE)]
-    private DateTimeImmutable $dateOfExpiry;
+    #[ORM\Column(name: 'date_of_expiry', type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $dateOfExpiry;
 
-    public function __construct(PassportNumber $number, DateTimeImmutable $dateOfIssue, DateTimeImmutable $dateOfExpiry)
+    private function __construct(PassportNumber $number)
     {
         $this->number = $number;
-        $this->dateOfIssue = $dateOfIssue;
-        $this->dateOfExpiry = $dateOfExpiry;
+        $this->dateOfIssue = null;
+        $this->dateOfExpiry = null;
     }
 
-    public static function make(PassportNumber $number, DateTimeImmutable $dateOfIssue, DateTimeImmutable $dateOfExpiry)
+    public static function make(PassportNumber $number): self
     {
-        return new self($number, $dateOfIssue, $dateOfExpiry);
+        return new self($number);
     }
 
     public function getNumber(): PassportNumber
@@ -57,7 +57,7 @@ class PassportInfo implements ArrayableInterface
 
     public function changeDateOfIssue(DateTimeImmutable $dateOfIssue): self
     {
-        if ($this->dateOfIssue->getTimestamp() !== $dateOfIssue->getTimestamp()) {
+        if ($this->dateOfIssue?->getTimestamp() !== $dateOfIssue->getTimestamp()) {
             $this->dateOfIssue = $dateOfIssue;
         }
 
@@ -71,7 +71,7 @@ class PassportInfo implements ArrayableInterface
 
     public function changeDateOfExpiry(DateTimeImmutable $dateOfExpiry): self
     {
-        if ($this->dateOfExpiry->getTimestamp() !== $dateOfExpiry->getTimestamp()) {
+        if ($this->dateOfExpiry?->getTimestamp() !== $dateOfExpiry->getTimestamp()) {
             $this->dateOfExpiry = $dateOfExpiry;
         }
 
@@ -96,8 +96,8 @@ class PassportInfo implements ArrayableInterface
     {
         return [
             'passport_number' => $this->number->value,
-            'passport_date_of_issue' => $this->dateOfIssue->getTimestamp(),
-            'passport_date_of_expiry' => $this->dateOfExpiry->getTimestamp(),
+            'passport_date_of_issue' => $this->dateOfIssue?->getTimestamp(),
+            'passport_date_of_expiry' => $this->dateOfExpiry?->getTimestamp(),
         ];
     }
 }

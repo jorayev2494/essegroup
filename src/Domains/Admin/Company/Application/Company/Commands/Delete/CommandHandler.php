@@ -10,7 +10,6 @@ use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyDomainAlready
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNameAlreadyExistsDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNotFoundDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoServiceInterface;
-use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;

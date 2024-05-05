@@ -8,7 +8,6 @@ use Project\Domains\Admin\Company\Application\Company\Queries\Index\Query;
 use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\Company\Domain\Company\CompanyCollection;
 use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
-use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
@@ -24,6 +23,15 @@ class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepo
     public function findByUuid(Uuid $uuid): ?Company
     {
         return $this->entityRepository->find($uuid);
+    }
+
+    public function findMain(): ?Company
+    {
+        return $this->entityRepository->createQueryBuilder('c')
+            ->where('c.isMain = :isMain')
+            ->setParameter('isMain', true)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function paginate(Query $httpQuery): array
@@ -55,12 +63,6 @@ class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepo
     public function findByName(Name $name): ?Company
     {
         return $this->entityRepository->findOneBy(['name' => $name]);
-    }
-
-    #[\Override]
-    public function findByDomain(Domain $domain): ?Company
-    {
-        return $this->entityRepository->findOneBy(['domain' => $domain]);
     }
 
     #[\Override]
