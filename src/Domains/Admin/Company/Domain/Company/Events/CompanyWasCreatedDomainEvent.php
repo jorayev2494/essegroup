@@ -12,7 +12,6 @@ readonly class CompanyWasCreatedDomainEvent extends DomainEvent
         public string $uuid,
         public string $name,
         public string $email,
-        public string $domain,
         public string $status,
         string $eventId = null,
         string $occurredOn = null,
@@ -28,7 +27,6 @@ readonly class CompanyWasCreatedDomainEvent extends DomainEvent
             'uuid' => $uuid,
             'name' => $name,
             'email' => $email,
-            'domain' => $domain,
         ] = $body;
 
         return new self($uuid, $name, $email, $domain, $eventId, $occurredOn);
@@ -52,7 +50,6 @@ readonly class CompanyWasCreatedDomainEvent extends DomainEvent
                 'uuid' => $this->uuid,
                 'name' => $this->name,
                 'email' => $this->email,
-                'domain' => $this->domain,
             ],
             'event_id' => $this->eventId(),
             'occurred_on' => $this->occurredOn(),

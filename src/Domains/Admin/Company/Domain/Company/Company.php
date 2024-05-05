@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Project\Domains\Admin\Company\Domain\Company;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyDomainWasChangedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyEmailWasChangedDomainEvent;
@@ -12,14 +15,12 @@ use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasCreatedDomainE
 use Project\Domains\Admin\Company\Domain\Company\Events\CompanyWasDeletedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoInterface;
-use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Email;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Logo;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
 use Project\Domains\Admin\Company\Domain\Employee\Employee;
 use Project\Domains\Admin\Company\Domain\Status\Status;
-use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\DomainType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\EmailType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\NameType;
 use Project\Domains\Admin\Company\Infrastructure\Repositories\Doctrine\Company\Types\UuidType;
@@ -54,8 +55,8 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
     #[ORM\Column(type: NameType::NAME)]
     private Name $name;
 
-    #[ORM\Column(type: DomainType::NAME)]
-    private Domain $domain;
+    #[ORM\Column(name: 'is_main', type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $isMain;
 
     // #[ORM\OneToOne(targetEntity: Status::class, mappedBy: 'company')]
     // private Status $status;
@@ -81,12 +82,12 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
     #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'company', cascade: ['persist'])]
     private Collection $employees;
 
-    private function __construct(Uuid $uuid, Name $name, Email $email, Domain $domain)
+    private function __construct(Uuid $uuid, Name $name, Email $email, bool $isMain)
     {
         $this->uuid = $uuid;
         $this->name = $name;
         $this->email = $email;
-        $this->domain = $domain;
+        $this->isMain = $isMain;
         $this->statuses = new ArrayCollection();
         $this->universities = new ArrayCollection();
         $this->faculties = new ArrayCollection();
@@ -95,19 +96,18 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
         $this->employees = new ArrayCollection();
     }
 
-    public static function create(Uuid $uuid, Name $name, Email $email, Domain $domain, Status $status): self
+    public static function create(Uuid $uuid, Name $name, Email $email, Status $status, bool $isMain): self
     {
-        $company = new self($uuid, $name, $email, $domain);
+        $company = new self($uuid, $name, $email, $isMain);
         $company->addStatus($status);
-        $company->record(
-            new CompanyWasCreatedDomainEvent(
-                $company->getUuid()->value,
-                $company->getName()->value,
-                $company->getEmail()->value,
-                $company->getDomain()->value,
-                $company->getStatus()->getValue()->value,
-            )
-        );
+//        $company->record(
+//            new CompanyWasCreatedDomainEvent(
+//                $company->getUuid()->value,
+//                $company->getName()->value,
+//                $company->getEmail()->value,
+//                $company->getStatus()->getValue()->value,
+//            )
+//        );
 
         return $company;
     }
@@ -125,11 +125,6 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
     public function getEmail(): Email
     {
         return $this->email;
-    }
-
-    public function getDomain(): Domain
-    {
-        return $this->domain;
     }
 
     public function getLogo(): ?Logo
@@ -162,11 +157,10 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
         return $this;
     }
 
-    public function changeDomain(Domain $domain): self
+    public function changeIsMain(bool $isMain): self
     {
-        if ($this->domain->isNotEquals($domain)) {
-            $this->domain = $domain;
-            $this->record(new CompanyDomainWasChangedDomainEvent($this->uuid->value, $this->domain->value));
+        if ($this->isMain !== $isMain) {
+            $this->isMain = $isMain;
         }
 
         return $this;
@@ -254,7 +248,7 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
 
     public function delete(): void
     {
-        $this->record(new CompanyWasDeletedDomainEvent($this->uuid));
+        // $this->record(new CompanyWasDeletedDomainEvent($this->uuid->value));
     }
 
     public function isEqual(self $other): bool
@@ -274,7 +268,7 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
             'logo' => $this->logo?->toArray(),
             'name' => $this->name->value,
             'email' => $this->email->value,
-            'domain' => $this->domain->value,
+            'is_main' => $this->isMain,
             'status' => $this->getStatus()->toArray(),
             'statuses' => array_map(static fn (ArrayableInterface $status): array => $status->toArray(), $this->statuses->toArray()),
             'created_at' => $this->createdAt->getTimestamp(),

@@ -9,6 +9,7 @@ use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid as CompanyUui
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid as CountryUuid;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarServiceInterface;
+use Project\Domains\Admin\Student\Domain\Student\Services\Contracts\StudentServiceInterface;
 use Project\Domains\Admin\Student\Domain\Student\Student;
 use Project\Domains\Admin\Student\Domain\Student\StudentRepositoryInterface;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Email;
@@ -47,6 +48,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private StudentRepositoryInterface $studentRepository,
         private CompanyRepositoryInterface $companyRepository,
         private CountryRepositoryInterface $countryRepository,
+        private StudentServiceInterface $service,
         private PassportServiceInterface $passportService,
         private PassportTranslationServiceInterface $passportTranslationService,
         private SchoolAttestatServiceInterface $schoolAttestatService,
@@ -74,22 +76,19 @@ readonly class CommandHandler implements CommandHandlerInterface
             ParentsName::make(FatherName::fromValue($command->fatherName), MotherName::fromValue($command->motherName)),
             new DateTimeImmutable($command->birthday),
             PassportInfo::make(
-                PassportNumber::fromValue($command->passportNumber),
-                new DateTimeImmutable($command->passportDateOfIssue),
-                new DateTimeImmutable($command->passportDateOfExpiry)
+                PassportNumber::fromValue($command->passportNumber)
             ),
             Email::fromValue($command->email),
             Phone::fromValue($command->phone),
             $company,
             $nationality,
             $countryOfResidence,
-            HighSchool::make(
-                HighSchoolName::fromValue($command->highSchoolName),
-                GradeAverage::fromValue($command->highSchoolGradeAverage)
-            ),
             $highSchoolCountry,
             $command->creatorRole
         );
+
+        $this->service->passportInfo($student, $command->passportDateOfIssue, $command->passportDateOfExpiry);
+        $this->service->highSchool($student, $command->highSchoolName, $command->highSchoolGradeAverage);
 
         if ($command->creatorRole !== 'client') {
             $student->changeGender(Gender::from($command->gender));

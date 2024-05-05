@@ -57,7 +57,7 @@ readonly class CompanyController
                 $request->file('logo'),
                 $request->get('name'),
                 $request->get('email'),
-                $request->get('domain'),
+                $request->boolean('is_main')
             )
         );
 
@@ -83,7 +83,7 @@ readonly class CompanyController
                 $request->file('logo'),
                 $request->get('name'),
                 $request->get('email'),
-                $request->get('domain'),
+                $request->boolean('is_main')
             )
         );
         return $this->response->noContent(Response::HTTP_ACCEPTED);

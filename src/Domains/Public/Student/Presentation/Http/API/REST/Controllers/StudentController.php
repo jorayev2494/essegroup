@@ -33,15 +33,11 @@ readonly class StudentController
                 $request->file('avatar'),
                 $request->get('birthday'),
                 $request->get('passport_number'),
-                $request->get('passport_date_of_issue'),
-                $request->get('passport_date_of_expiry'),
                 $request->get('email'),
                 $request->get('phone'),
                 $request->get('nationality_uuid'),
                 $request->get('country_of_residence_uuid'),
-                $request->get('high_school_name'),
                 $request->get('high_school_country_uuid'),
-                $request->get('high_school_grade_average'),
 
                 'client',
                 $request->file('passport'),
@@ -60,7 +56,11 @@ readonly class StudentController
                 $request->get('friend_phone'),
                 $request->get('home_address'),
                 $request->get('gender'),
-                $request->get('marital_type')
+                $request->get('marital_type'),
+                $request->get('passport_date_of_issue'),
+                $request->get('passport_date_of_expiry'),
+                $request->get('high_school_name'),
+                $request->get('high_school_grade_average')
             )
         );
 

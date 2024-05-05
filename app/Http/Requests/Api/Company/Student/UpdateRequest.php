@@ -12,6 +12,7 @@ class UpdateRequest extends FormRequest
     private static array $documentMimeTypes = [
         'application/pdf',
         'image/jpeg',
+        'image/png',
     ];
 
     public function rules(): array

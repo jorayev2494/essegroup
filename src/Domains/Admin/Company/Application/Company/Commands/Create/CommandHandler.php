@@ -9,7 +9,6 @@ use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyDomainAlreadyExistsDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Exceptions\CompanyNameAlreadyExistsDomainException;
 use Project\Domains\Admin\Company\Domain\Company\Services\Logo\Contracts\LogoServiceInterface;
-use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Email;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Name;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid;
@@ -36,8 +35,8 @@ readonly class CommandHandler implements CommandHandlerInterface
             Uuid::fromValue($command->uuid),
             Name::fromValue($command->name),
             Email::fromValue($command->email),
-            Domain::fromValue($command->domain),
-            Status::fromPrimitives($this->uuidGenerator->generate(), 'new')
+            Status::fromPrimitives($this->uuidGenerator->generate(), 'new'),
+            $command->isMain
         );
 
         $this->logoService->upload($company, $command->logo);

@@ -8,7 +8,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
-use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Domain;
 
 class ApplicationStoreRequest extends FormRequest
 {
@@ -23,7 +22,7 @@ class ApplicationStoreRequest extends FormRequest
         $companyRepository = resolve(CompanyRepositoryInterface::class);
 
         /** @var Company $company */
-        $company = $companyRepository->findByDomain(Domain::fromValue($this->getHostName()));
+        $company = $companyRepository->findMain();
         if ($company->getUuid()->isNotNull()) {
             $this->merge([
                 'company_uuid' => $company->getUuid()->value,
