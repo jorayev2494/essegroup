@@ -25,6 +25,7 @@ readonly class Query extends BaseHttpQueryParams
 
     protected function fromArray(array $data): static
     {
+        $this->paginator = PaginatorHttpQueryParams::makeFromArray($data);
         $this->filter = QueryFilter::makeFromArray($data);
 
         return $this;
@@ -33,6 +34,7 @@ readonly class Query extends BaseHttpQueryParams
     public function toArray(): array
     {
         return [
+            ...$this->paginator->toArray(),
             ...$this->filter->toArray(),
         ];
     }

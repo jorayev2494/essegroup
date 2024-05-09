@@ -24,8 +24,8 @@ readonly class BaseSearch extends BaseHttpQueryParams implements ArrayableInterf
 
     protected function fromArray(array $data): static
     {
-        $this->search = $data['search'];
-        $this->searchBy = $data['search_by'];
+        $this->search = $data['search'] ?? null;
+        $this->searchBy = $data['search_by'] ?? null;
 
         return $this;
     }

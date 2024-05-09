@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\Currency\Domain\Currency\Currency;
 use Project\Domains\Admin\Language\Domain\Language\Language;
 use Project\Domains\Admin\Language\Domain\Language\LanguageTranslate;
 use Project\Domains\Admin\University\Domain\Alias\Alias;
@@ -20,12 +21,14 @@ use Project\Domains\Admin\University\Domain\Department\Events\DepartmentWasDelet
 use Project\Domains\Admin\University\Domain\Department\Name\DepartmentName;
 use Project\Domains\Admin\University\Domain\Department\Name\DepartmentNameTranslate;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Description;
+use Project\Domains\Admin\University\Domain\Department\ValueObjects\Price;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyTranslate;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType;
+use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\PriceType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
@@ -100,6 +103,16 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\ManyToMany(targetEntity: Application::class, mappedBy: 'departments')]
     private Collection $applications;
 
+    #[ORM\Column(name: 'price', type: PriceType::NAME, length: 10, nullable: true)]
+    private Price $price;
+
+    #[ORM\Column(name: 'price_currency_uuid', nullable: true)]
+    private ?string $priceCurrencyUuid;
+
+    #[ORM\ManyToOne(targetEntity: Currency::class, inversedBy: 'departments')]
+    #[ORM\JoinColumn(name: 'price_currency_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private Currency $priceCurrency;
+
     #[ORM\Column(name: 'is_filled', type: Types::BOOLEAN)]
     private bool $isFilled;
 
@@ -111,6 +124,8 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         Faculty $faculty,
         Degree $degree,
         Language $language,
+        Price $price,
+        Currency $priceCurrency,
         bool $isActive
     )
 
@@ -122,12 +137,15 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         $this->faculty = $faculty;
         $this->degree = $degree;
         $this->language = $language;
+        $this->price = $price;
+        $this->priceCurrency = $priceCurrency;
         $this->description = Description::fromValue(null);
         $this->translations = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->isActive = $isActive;
         $this->isFilled = false;
     }
+
     public static function create(
         Uuid $uuid,
         DepartmentName $name,
@@ -136,10 +154,12 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         Faculty $faculty,
         Degree $degree,
         Language $language,
+        Price $price,
+        Currency $priceCurrency,
         bool $isActive
     ): self
     {
-        return new self($uuid, $name, $alias, $university, $faculty, $degree, $language, $isActive);
+        return new self($uuid, $name, $alias, $university, $faculty, $degree, $language, $price, $priceCurrency, $isActive);
     }
 
     public function getUuid(): UUid
@@ -284,6 +304,24 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         return DepartmentTranslation::class;
     }
 
+    public function changePrice(Price $price): self
+    {
+        if ($this->price->isNotEquals($price)) {
+            $this->price = $price;
+        }
+
+        return $this;
+    }
+
+    public function changePriceCurrency(Currency $priceCurrency): self
+    {
+        if ($priceCurrency->isNotEquals($priceCurrency)) {
+            $this->priceCurrency = $priceCurrency;
+        }
+
+        return $this;
+    }
+
     public function getIsFilled(): bool
     {
        return $this->isFilled;
@@ -321,6 +359,9 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
             'degree' => DegreeTranslate::execute($this->degree)?->toArray(),
             'language_uuid' => $this->languageUuid,
             'language' => LanguageTranslate::execute($this->language)?->toArray(),
+            'price' => $this->price->value,
+            'price_currency_uuid' => $this->priceCurrencyUuid,
+            'price_currency' => $this->priceCurrency->getUuid()->isNotNull() ? $this->priceCurrency->toArray() : null,
             'is_filled' => $this->isFilled,
             'is_active' => $this->isActive,
             'created_at' => $this->createdAt->getTimestamp(),

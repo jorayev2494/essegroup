@@ -51,6 +51,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     /** @var array<array-key, string> */
     protected const QUERY_HANDLERS = [
         // University
+        \Project\Domains\Public\University\Application\University\Queries\Index\QueryHandler::class,
         \Project\Domains\Public\University\Application\University\Queries\Show\QueryHandler::class,
         \Project\Domains\Public\University\Application\University\Queries\Search\QueryHandler::class,
 
@@ -66,8 +67,13 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         // Faculty Name
         \Project\Domains\Public\University\Application\FacultyName\Queries\List\QueryHandler::class,
 
+        // Department
+        \Project\Domains\Public\University\Application\Department\Queries\Index\QueryHandler::class,
+        \Project\Domains\Public\University\Application\Department\Queries\List\QueryHandler::class,
+
         // Department Name
         \Project\Domains\Public\University\Application\DepartmentName\Queries\List\QueryHandler::class,
+        \Project\Domains\Public\University\Application\DepartmentName\Queries\Show\QueryHandler::class,
     ];
 
     /** @var array<array-key, string> */

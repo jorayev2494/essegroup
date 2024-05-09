@@ -186,6 +186,7 @@ return [
         Project\Domains\Admin\Announcement\Infrastructure\AnnouncementServiceProvider::class,
         Project\Domains\Admin\Manager\Infrastructure\ManagerServiceProvider::class,
         Project\Domains\Admin\Profile\Infrastructure\ProfileServiceProvider::class,
+        Project\Domains\Admin\Currency\Infrastructure\CurrencyServiceProvider::class,
 
         // Company
         Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,

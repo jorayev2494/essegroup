@@ -8,11 +8,6 @@ use Illuminate\Validation\Rule;
 
 class DepartmentStoreRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
@@ -54,6 +49,15 @@ class DepartmentStoreRequest extends FormRequest
                 'required',
                 'string',
                 Rule::exists('admin_db.language_languages', 'uuid'),
+            ],
+            'price' => [
+                'required',
+                'numeric',
+            ],
+            'price_currency_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.currency_currencies', 'uuid'),
             ],
             'is_filled' => [
                 'required',

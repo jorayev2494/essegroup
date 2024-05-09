@@ -50,6 +50,15 @@ class DepartmentUpdateRequest extends FormRequest
                 'string',
                 Rule::exists('admin_db.language_languages', 'uuid'),
             ],
+            'price' => [
+                'required',
+                'numeric',
+            ],
+            'price_currency_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.currency_currencies', 'uuid'),
+            ],
             'is_filled' => [
                 'required',
                 'boolean',

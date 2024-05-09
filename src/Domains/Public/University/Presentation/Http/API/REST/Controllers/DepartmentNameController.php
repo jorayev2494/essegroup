@@ -6,7 +6,8 @@ namespace Project\Domains\Public\University\Presentation\Http\API\REST\Controlle
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Project\Domains\Public\University\Application\DepartmentName\Queries\List\Query;
+use Project\Domains\Public\University\Application\DepartmentName\Queries\List\Query as ListQuery;
+use Project\Domains\Public\University\Application\DepartmentName\Queries\Show\Query as ShowQuery;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -23,7 +24,16 @@ readonly class DepartmentNameController
     {
         return $this->response->json(
             $this->queryBus->ask(
-                Query::makeFromRequest($request)
+                ListQuery::makeFromRequest($request)
+            )
+        );
+    }
+
+    public function show(string $uuid): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                new ShowQuery($uuid)
             )
         );
     }

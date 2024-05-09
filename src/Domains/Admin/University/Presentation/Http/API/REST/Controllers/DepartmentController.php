@@ -64,6 +64,8 @@ readonly class DepartmentController
                 $request->get('degree_uuid'),
                 $request->get('language_uuid'),
                 $request->get('translations'),
+                $request->get('price'),
+                $request->get('price_currency_uuid'),
                 $request->boolean('is_filled'),
                 $request->boolean('is_active', true)
             )
@@ -93,6 +95,8 @@ readonly class DepartmentController
                 $request->get('degree_uuid'),
                 $request->get('language_uuid'),
                 $request->get('translations'),
+                $request->get('price'),
+                $request->get('price_currency_uuid'),
                 $request->boolean('is_filled'),
                 $request->boolean('is_active', true)
             )

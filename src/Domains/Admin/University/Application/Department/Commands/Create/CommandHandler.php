@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Application\Department\Commands\Create;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Project\Domains\Admin\Currency\Domain\Currency\CurrencyRepositoryInterface;
 use Project\Domains\Admin\Language\Domain\Language\LanguageRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Degree\DegreeRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Uuid as DegreeUuid;
+use Project\Domains\Admin\University\Domain\Department\ValueObjects\Price;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid as FacultyUuid;
 use Project\Domains\Admin\University\Domain\Department\Department;
@@ -22,6 +23,7 @@ use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
 use Project\Domains\Admin\University\Domain\Department\Name\ValueObjects\Uuid as DepartmentNameUuid;
 use Project\Domains\Admin\University\Domain\Alias\ValueObjects\Uuid as AliasUuid;
 use Project\Domains\Admin\Language\Domain\Language\ValueObjects\Uuid as LanguageUuid;
+use Project\Domains\Admin\Currency\Domain\Currency\ValueObjects\Uuid as CurrencyUuid;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
@@ -33,6 +35,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private DegreeRepositoryInterface $degreeRepository,
         private AliasRepositoryInterface $aliasRepository,
         private LanguageRepositoryInterface $languageRepository,
+        private CurrencyRepositoryInterface $currencyRepository,
         private TranslationColumnServiceInterface $translationService
     )
     {
@@ -47,6 +50,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $faculty = $this->facultyRepository->findByUuid(FacultyUuid::fromValue($command->facultyUuid));
         $alias = $this->aliasRepository->findByUuid(AliasUuid::fromValue($command->aliasUuid));
         $language = $this->languageRepository->findByUuid(LanguageUuid::fromValue($command->languageUuid));
+        $currency = $this->currencyRepository->findByUuid(CurrencyUuid::fromValue($command->priceCurrencyUuid));
 
         $department = Department::create(
             Uuid::fromValue( ($command->uuid)),
@@ -56,6 +60,8 @@ readonly class CommandHandler implements CommandHandlerInterface
             $faculty,
             $degree,
             $language,
+            Price::fromValue($command->price),
+            $currency,
             $command->isActive
         );
 

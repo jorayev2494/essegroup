@@ -6,23 +6,34 @@ namespace Project\Domains\Public\University\Presentation\Http\API\REST\Controlle
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Project\Domains\Public\University\Application\Department\Queries\List\QueryHandler as ListQueryHandler;
+use Project\Domains\Public\University\Application\Department\Queries\Index\Query as IndexQuery;
 use Project\Domains\Public\University\Application\Department\Queries\List\Query as ListQuery;
+use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 readonly class DepartmentController
 {
     public function __construct(
-        private ResponseFactory $response
+        private ResponseFactory $response,
+        private QueryBusInterface $queryBus
     )
     {
 
     }
 
-    public function list(Request $request, ListQueryHandler $queryHandler): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         return $this->response->json(
-            $queryHandler(
+            $this->queryBus->ask(
+                IndexQuery::makeFromRequest($request)
+            )
+        );
+    }
+
+    public function list(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
                 ListQuery::makeFromRequest($request)
             )
         );

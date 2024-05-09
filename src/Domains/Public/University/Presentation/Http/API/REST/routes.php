@@ -16,6 +16,7 @@ use Project\Domains\Public\University\Presentation\Http\API\REST\Controllers\Dep
 Route::group(
     ['prefix' => 'universities', 'controller' => UniversityController::class],
     static function (Router $router): void {
+        $router->get('/', 'index');
         $router->get('/list', 'list');
         $router->get('/search', 'search');
         $router->get('/{uuid}', 'show');
@@ -25,12 +26,14 @@ Route::group(
 Route::group(
     ['prefix' => 'departments', 'controller' => DepartmentController::class],
     static function (Router $router): void {
+        $router->get('/', 'index');
         $router->get('/list', 'list');
 
         $router->group(
             ['prefix' => 'names', 'controller' => DepartmentNameController::class],
             static function (Router $router): void {
                 $router->get('/list', 'list');
+                $router->get('/{uuid}', 'show');
             }
         );
     }
