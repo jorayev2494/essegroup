@@ -18,7 +18,7 @@ class StoreRequest extends FormRequest
         return [
             'translations' => [
                 'required',
-                new ValidateTranslationRule(['value']),
+                new ValidateTranslationRule(['value', 'description']),
             ],
             'translations.*.value' => [
                 Rule::unique('admin_db.university_department_name_translations', 'content'),

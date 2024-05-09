@@ -61,8 +61,8 @@ case "$1" in
     bash)
         bash
     ;;
-    migrate)
-        migrate ${@:2}
+    migrations)
+        migrations ${@:2}
     ;;
 #    cc)
 #        cc

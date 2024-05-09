@@ -7,6 +7,7 @@ namespace Project\Domains\Public\University\Domain\DepartmentName\Services;
 use Project\Domains\Public\University\Application\DepartmentName\Queries\List\Query;
 use Project\Domains\Public\University\Domain\DepartmentName\Services\Contracts\DepartmentNameServiceInterface;
 use Project\Domains\Admin\University\Application\DepartmentName\Queries\List\Query as ListQuery;
+use Project\Domains\Admin\University\Application\DepartmentName\Queries\Show\Query as ShowQuery;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 
 class DepartmentNameService implements DepartmentNameServiceInterface
@@ -17,5 +18,13 @@ class DepartmentNameService implements DepartmentNameServiceInterface
         $queryBus = resolve(QueryBusInterface::class);
 
         return $queryBus->ask(ListQuery::makeFromArray($query->toArray()));
+    }
+
+    public function show(string $uuid): array
+    {
+        /** @var QueryBusInterface $queryBus */
+        $queryBus = resolve(QueryBusInterface::class);
+
+        return $queryBus->ask(new ShowQuery($uuid));
     }
 }

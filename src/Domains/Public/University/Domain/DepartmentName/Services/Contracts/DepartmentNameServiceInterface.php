@@ -9,4 +9,6 @@ use Project\Domains\Public\University\Application\DepartmentName\Queries\List\Qu
 interface DepartmentNameServiceInterface
 {
     public function list(Query $query): array;
+
+    public function show(string $uuid): array;
 }

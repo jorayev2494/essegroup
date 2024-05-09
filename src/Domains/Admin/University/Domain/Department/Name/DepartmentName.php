@@ -8,10 +8,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\University\Domain\Department\Department;
+use Project\Domains\Admin\University\Domain\Department\Name\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\Department\Name\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Department\Name\ValueObjects\Value;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Name\Types\UuidType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Name\Types\ValueType;
+use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Name\Types\DescriptionType;
 use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\ActivableTrait;
@@ -35,6 +37,9 @@ class DepartmentName implements EntityUuid, TranslatableInterface, ArrayableInte
     #[ORM\Column(type: ValueType::NAME, nullable: true)]
     private Value $value;
 
+    #[ORM\Column(type: DescriptionType::NAME, nullable: true)]
+    private Description $description;
+
     #[ORM\OneToMany(targetEntity: DepartmentNameTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $translations;
 
@@ -45,6 +50,7 @@ class DepartmentName implements EntityUuid, TranslatableInterface, ArrayableInte
     {
         $this->uuid = $uuid;
         $this->value = Value::fromValue(null);
+        $this->description = Description::fromValue(null);
         $this->translations = new ArrayCollection();
         $this->isActive = $isActive;
     }
@@ -66,6 +72,13 @@ class DepartmentName implements EntityUuid, TranslatableInterface, ArrayableInte
         return $this;
     }
 
+    public function setDescription(Description $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
     public function getTranslationClass(): string
     {
         return DepartmentNameTranslation::class;
@@ -76,6 +89,7 @@ class DepartmentName implements EntityUuid, TranslatableInterface, ArrayableInte
         return [
             'uuid' => $this->uuid->value,
             'value' => $this->value->value,
+            'description' => $this->description->value,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];

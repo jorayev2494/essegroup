@@ -20,6 +20,8 @@ class Command implements CommandInterface
         public readonly string $degreeUuid,
         public readonly string $languageUuid,
         array $translations,
+        public readonly string $price,
+        public readonly string $priceCurrencyUuid,
         public readonly bool $isFilled,
         public readonly bool $isActive,
     )

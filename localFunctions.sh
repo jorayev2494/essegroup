@@ -44,22 +44,19 @@ function build() {
 	docker compose --file $SERVER_COMPOSE_FILE_PATH build ${@:1}
 }
 
-function migrate() {
-    CONNECTION=$1
-    COMMAND=$2
+function migrations() {
+    ARGS=${@:1};
 
-    # if [[ $COMMAND == 'migrate' ]]; then
-        MIG_COMMAND=$COMMAND;
-    # fi
+    if [[ ${@:1} == *"execute --down"* ]]; then
+        ARGS="execute --down 'Project\\Domains\\Admin\\Authentication\\Infrastructure\\Repositories\\Doctrine\\Migrations\\$3'"
+    fi
 
-#    if [[ ]]; then
-#    if
-#
-#    if [[ -z $COMMAND ]]; then
-#        MIG_COMMAND='-h';
-#    fi
+    if [[ $1 == "rm" && $2 != -z ]]; then
+        docker compose --file $SERVER_COMPOSE_FILE_PATH run --rm php-cli bash -c "rm './src/Domains/Admin/Authentication/Infrastructure/Repositories/Doctrine/Migrations/$2.php'"
+        exit;
+    fi
 
-    docker compose --file $SERVER_COMPOSE_FILE_PATH run --rm php-cli bash -c "ENTITY=${CONNECTION} php ./vendor/bin/doctrine-migrations ${MIG_COMMAND}"
+    docker compose --file $SERVER_COMPOSE_FILE_PATH run --rm php-cli bash -c "ENTITY=admin php ./vendor/bin/doctrine-migrations migrations:$ARGS"
 }
 
 function bash()
