@@ -17,6 +17,8 @@ interface CountryRepositoryInterface
 
     public function findByUuid(Uuid $uuid): ?Country;
 
+    public function findManyByUuids(array $uuids): CountryCollection;
+
     public function save(Country $country): void;
 
     public function delete(Country $country): void;

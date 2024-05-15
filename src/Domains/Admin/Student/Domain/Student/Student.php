@@ -297,6 +297,11 @@ class Student implements EntityUuid,
         return $this;
     }
 
+    public function getCompany(): Company
+    {
+        return $this->company;
+    }
+
     public function changeCompany(Company $company): self
     {
         if ($this->company->isNotEqual($company)) {
@@ -368,7 +373,7 @@ class Student implements EntityUuid,
         return $this;
     }
 
-    public function getAvatar(): ?AvatarInterface
+    public function getAvatar(): ?Avatar
     {
         return $this->avatar;
     }
