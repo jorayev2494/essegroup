@@ -16,6 +16,8 @@ interface StatusValueRepositoryInterface
 
     public function findByUuid(StatusValueUuid $uuid): ?StatusValue;
 
+    public function findManyByUuids(array $uuids): StatusValueCollection;
+
     public function findFirst(): ?StatusValue;
 
     public function save(StatusValue $statusItem): void;

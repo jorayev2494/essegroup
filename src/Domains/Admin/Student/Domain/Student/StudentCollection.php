@@ -18,4 +18,15 @@ class StudentCollection extends Collection
     {
         return '';
     }
+
+    public function getRandomFirst(): ?Student
+    {
+        if ($this->isEmpty()) {
+            return null;
+        }
+
+        $items = $this->getValues();
+
+        return $items[array_rand($items)];
+    }
 }

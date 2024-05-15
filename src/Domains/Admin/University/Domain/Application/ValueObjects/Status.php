@@ -46,6 +46,9 @@ class Status implements EntityId, ArrayableInterface, TranslatableInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $note;
 
+    #[ORM\Column(name: 'application_uuid', type: Types::STRING)]
+    private string $applicationUuid;
+
     #[ORM\ManyToOne(targetEntity: Application::class, inversedBy: 'statues')]
     #[ORM\JoinColumn(name: 'application_uuid', referencedColumnName: 'uuid', nullable: false)]
     private Application $application;

@@ -30,8 +30,8 @@ class StatusValueRepository extends BaseAdminEntityRepository implements StatusV
     {
         return new StatusValueCollection(
             $this->entityRepository->createQueryBuilder('s')
-                ->where('s.isFirst = :isFirst')
-                ->setParameter('isFirst', false)
+                // ->where('s.isFirst = :isFirst')
+                // ->setParameter('isFirst', false)
                 ->getQuery()
                 ->getResult()
         );
@@ -40,6 +40,17 @@ class StatusValueRepository extends BaseAdminEntityRepository implements StatusV
     public function findByUuid(StatusValueUuid $uuid): ?StatusValue
     {
         return $this->entityRepository->find($uuid);
+    }
+
+    public function findManyByUuids(array $uuids): StatusValueCollection
+    {
+        return new StatusValueCollection(
+            $this->entityRepository->createQueryBuilder('s')
+                ->where('s.uuid IN (:uuids)')
+                ->setParameter('uuids', $uuids)
+                ->getQuery()
+                ->getResult()
+        );
     }
 
     public function findFirst(): ?StatusValue

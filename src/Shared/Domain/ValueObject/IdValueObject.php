@@ -17,9 +17,9 @@ class IdValueObject implements NullableInterface, \Stringable
         $this->value = $value;
     }
 
-    public static function fromValue(?string $value): static
+    public static function fromValue(?int $value): static
     {
-        return new static((int) $value);
+        return new static($value);
     }
 
     private function assertIsValidId(?int $value): void

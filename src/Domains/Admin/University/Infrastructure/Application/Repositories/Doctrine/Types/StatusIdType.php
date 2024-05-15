@@ -37,7 +37,7 @@ class StatusIdType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform): StatusId
     {
-        return StatusId::fromValue((string) $value);
+        return StatusId::fromValue($value);
     }
 
     #[\Override]

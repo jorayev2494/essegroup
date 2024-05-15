@@ -49,6 +49,7 @@ class StudentServiceProvider extends AdminDomainServiceProvider
     protected const ENTITY_TYPES = [
         // Student
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\UuidType::class,
+        \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\IdentityType::class,
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\PassportNumberType::class,
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\FatherNameType::class,
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\MotherNameType::class,

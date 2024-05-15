@@ -32,8 +32,6 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
             )
         );
 
-//        dd($query->getQuery()->getDQL());
-
         return new CountryCollection($query->getQuery()->getResult());
     }
 
@@ -47,6 +45,17 @@ class CountryRepository extends BaseAdminEntityRepository implements CountryRepo
     public function findByUuid(Uuid $uuid): ?Country
     {
         return $this->entityRepository->find($uuid);
+    }
+
+    public function findManyByUuids(array $uuids): CountryCollection
+    {
+        return new CountryCollection(
+            $this->entityRepository->createQueryBuilder('c')
+                ->where('c.uuid IN (:uuids)')
+                ->setParameter('uuids', $uuids)
+                ->getQuery()
+                ->getResult()
+        );
     }
 
     public function save(Country $country): void
