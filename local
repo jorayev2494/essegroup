@@ -64,18 +64,18 @@ case "$1" in
     migrations)
         migrations ${@:2}
     ;;
-#    cc)
-#        cc
-#    ;;
-#    database)
-#        database ${@:2}
-#    ;;
-#    artisan)
-#        artisan ${@:2}
-#    ;;
-#    composer)
-#        composer ${@:2}
-#    ;;
+    cc)
+        cc
+    ;;
+    database)
+        database ${@:2}
+    ;;
+    artisan)
+        artisan ${@:2}
+    ;;
+    composer)
+        composer ${@:2}
+    ;;
     *)
         printCommandsInfo
 
