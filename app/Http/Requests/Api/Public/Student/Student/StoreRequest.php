@@ -17,19 +17,19 @@ class StoreRequest extends FormRequest
         'image/png',
     ];
 
-    protected function prepareForValidation(): void
-    {
-        /** @var CompanyRepositoryInterface $companyRepository */
-        $companyRepository = resolve(CompanyRepositoryInterface::class);
-
-        /** @var Company|null $company */
-        $company = $companyRepository->findMain();
-        if ($company !== null) {
-            $this->merge([
-                'company_uuid' => $company->getUuid()->value,
-            ]);
-        }
-    }
+    // protected function prepareForValidation(): void
+    // {
+    //     /** @var CompanyRepositoryInterface $companyRepository */
+    //     $companyRepository = resolve(CompanyRepositoryInterface::class);
+    //
+    //     /** @var Company|null $company */
+    //     $company = $companyRepository->findMain();
+    //     if ($company !== null) {
+    //         $this->merge([
+    //             'company_uuid' => $company->getUuid()->value,
+    //         ]);
+    //     }
+    // }
 
     public function rules(): array
     {
