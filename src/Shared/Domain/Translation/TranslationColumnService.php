@@ -14,7 +14,9 @@ class TranslationColumnService implements TranslationColumnServiceInterface
         foreach ($translations as $locale => $translates) {
             /** @var CommandTranslateValue $translate */
             foreach ($translates as $translate) {
-                $translatable->addTranslation($translatable->getTranslationClass()::make($locale, $translate->field, $translate->value));
+                $translatable->addTranslation(
+                    $translatable->getTranslationClass()::make($locale, $translate->field, $translate->value)
+                );
             }
         }
     }
