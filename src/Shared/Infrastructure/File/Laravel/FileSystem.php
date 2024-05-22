@@ -11,6 +11,7 @@ use Project\Shared\Domain\File\FileSystemInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class FileSystem implements FileSystemInterface
 {
@@ -50,6 +51,13 @@ final class FileSystem implements FileSystemInterface
     private function generateFileName(string $extension): string
     {
         return Str::random($this->lengthRandomName) . '.' . $extension;
+    }
+
+    public function download(File $file, ?string $name = null, array $headers = []): StreamedResponse
+    {
+        $name = ! is_null($name) ? sprintf('%s.%s', $name, $file->getExtension()) : $file->getFileName();
+
+        return Storage::download($file->getFullPath(), $name, $headers);
     }
 
     public function delete(?File $file): bool

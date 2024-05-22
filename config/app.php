@@ -189,6 +189,7 @@ return [
         Project\Domains\Admin\Currency\Infrastructure\CurrencyServiceProvider::class,
         Project\Domains\Admin\Contest\Infrastructure\ContestServiceProvider::class,
         Project\Domains\Admin\StaticPage\Infrastructure\StaticPageServiceProvider::class,
+        Project\Domains\Admin\Document\Infrastructure\DocumentServiceProvider::class,
 
         // Company
         Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,
@@ -205,6 +206,7 @@ return [
         Project\Domains\Public\Student\Infrastructure\StudentServiceProvider::class,
         Project\Domains\Public\StaticPage\Infrastructure\StaticPageServiceProvider::class,
         Project\Domains\Public\Company\Infrastructure\CompanyServiceProvider::class,
+        Project\Domains\Public\Document\Infrastructure\DocumentServiceProvider::class,
 
         App\Providers\DoctrineServiceProvider::class,
     ])->toArray(),
