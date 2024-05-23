@@ -70,3 +70,8 @@ function artisan()
 
     docker compose --file $SERVER_COMPOSE_FILE_PATH run --rm php-cli bash -c "php artisan $ARGS"
 }
+
+function composer()
+{
+    docker compose --file $SERVER_COMPOSE_FILE_PATH run --rm php-cli bash -c "composer ${@:1}"
+}

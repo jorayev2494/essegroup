@@ -50,9 +50,10 @@ class StaticPage implements EntityUuid, TranslatableInterface, ArrayableInterfac
     #[ORM\Column(name: 'cover_uuid', type: Types::GUID, nullable: true)]
     private ?string $coverUuid;
 
-    #[ORM\OneToOne(targetEntity: Cover::class, inversedBy: 'staticPage', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    /** @var Cover|null $cover */
+    #[ORM\OneToOne(targetEntity: Cover::class, inversedBy: 'staticPage', cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'cover_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private ?Cover $cover;
+    private mixed $cover;
 
     /**
      * @var StaticPageTranslation[] $translations

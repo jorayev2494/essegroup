@@ -7,7 +7,9 @@ namespace Project\Domains\Admin\StaticPage\Infrastructure;
 use App\Providers\Domains\AdminDomainServiceProvider;
 use Project\Domains\Admin\StaticPage\Domain\StaticPage\Services\Cover\Contracts\CoverServiceInterface;
 use Project\Domains\Admin\StaticPage\Domain\StaticPage\Services\Cover\CoverService;
+use Project\Domains\Admin\StaticPage\Domain\StaticPage\StaticPageCacheRepositoryInterface;
 use Project\Domains\Admin\StaticPage\Domain\StaticPage\StaticPageRepositoryInterface;
+use Project\Domains\Admin\StaticPage\Infrastructure\StaticPage\Repositories\Caches\Redis\StaticPageCacheRepository;
 use Project\Domains\Admin\StaticPage\Infrastructure\StaticPage\Repositories\Doctrine\StaticPageRepository;
 
 class StaticPageServiceProvider extends AdminDomainServiceProvider
@@ -15,6 +17,7 @@ class StaticPageServiceProvider extends AdminDomainServiceProvider
     /** @var array<string, string> */
     protected const SERVICES = [
         StaticPageRepositoryInterface::class => [self::SERVICE_SINGLETON, StaticPageRepository::class],
+        StaticPageCacheRepositoryInterface::class => [self::SERVICE_SINGLETON, StaticPageCacheRepository::class],
         CoverServiceInterface::class => [self::SERVICE_SINGLETON, CoverService::class],
     ];
 
