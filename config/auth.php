@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'client',
-        'passwords' => 'clients',
+        'guard' => 'student',
+        'passwords' => 'students',
     ],
 
     /*
@@ -36,10 +36,6 @@ return [
     */
 
     'guards' => [
-        // 'web' => [
-        //     'driver' => 'session',
-        //     'provider' => 'users',
-        // ],
         'admin' => [
             'driver' => 'jwt',
             'provider' => 'admins',
@@ -50,9 +46,9 @@ return [
             'provider' => 'companies',
             'hash' => false,
         ],
-        'client' => [
+        'student' => [
             'driver' => 'jwt',
-            'provider' => 'clients',
+            'provider' => 'students',
             'hash' => false,
         ],
     ],
@@ -75,10 +71,6 @@ return [
     */
 
     'providers' => [
-        // 'users' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\User::class,
-        // ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
@@ -87,15 +79,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Employee::class,
         ],
-        'clients' => [
+        'students' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Client::class,
+            'model' => App\Models\Student::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -118,12 +105,6 @@ return [
     */
 
     'passwords' => [
-        // 'users' => [
-        //     'provider' => 'users',
-        //     'table' => 'password_reset_tokens',
-        //     'expire' => 60,
-        //     'throttle' => 60,
-        // ],
         'admins' => [
             'provider' => 'admins',
             'table' => 'password_resets',
@@ -136,8 +117,8 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        'clients' => [
-            'provider' => 'clients',
+        'students' => [
+            'provider' => 'students',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

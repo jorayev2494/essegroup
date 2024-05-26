@@ -33,6 +33,11 @@ class ApplicationRepository extends BaseAdminEntityRepository implements Applica
                 ->setParameter('companyUuids', $httpQuery->filter->companyUuids);
         }
 
+        if (count($httpQuery->filter->studentUuids) > 0) {
+            $query->andWhere('a.studentUuid IN (:studentUuids)')
+                ->setParameter('studentUuids', $httpQuery->filter->studentUuids);
+        }
+
         return $this->paginator($query->getQuery(), $httpQuery->paginator);
     }
 

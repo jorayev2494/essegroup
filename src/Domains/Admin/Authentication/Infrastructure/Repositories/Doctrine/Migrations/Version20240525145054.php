@@ -1,0 +1,41 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Project\Domains\Admin\Authentication\Infrastructure\Repositories\Doctrine\Migrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20240525145054 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE contest_won_students CHANGE note note text DEFAULT NULL');
+        $this->addSql('ALTER TABLE faculty_faculties CHANGE description description text DEFAULT NULL');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_17E2C129E7927C74 ON student_students (email)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_17E2C1294EF9AAC4 ON student_students (passport_number)');
+        $this->addSql('ALTER TABLE university_departments CHANGE description description text DEFAULT NULL');
+        $this->addSql('ALTER TABLE university_universities CHANGE description description text DEFAULT NULL');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE contest_won_students CHANGE note note TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE faculty_faculties CHANGE description description TEXT DEFAULT NULL');
+        $this->addSql('DROP INDEX UNIQ_17E2C129E7927C74 ON student_students');
+        $this->addSql('DROP INDEX UNIQ_17E2C1294EF9AAC4 ON student_students');
+        $this->addSql('ALTER TABLE university_departments CHANGE description description TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE university_universities CHANGE description description TEXT DEFAULT NULL');
+    }
+}

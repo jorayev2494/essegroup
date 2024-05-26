@@ -58,6 +58,7 @@ class StudentServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\LastNameType::class,
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\EmailType::class,
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\PhoneType::class,
+        \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\PasswordType::class,
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\HomeAddressType::class,
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\GenderType::class,
         \Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\MaritalTypeType::class,
