@@ -10,6 +10,7 @@ use Project\Domains\Admin\Student\Application\Queries\Index\Query;
 use Project\Domains\Admin\Student\Domain\Student\Student;
 use Project\Domains\Admin\Student\Domain\Student\StudentCollection;
 use Project\Domains\Admin\Student\Domain\Student\StudentRepositoryInterface;
+use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Email;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
@@ -98,5 +99,14 @@ class StudentRepository extends BaseAdminEntityRepository implements StudentRepo
         }
 
         return $query;
+    }
+
+    public function findByEmail(Email $email): ?Student
+    {
+        return $this->entityRepository->createQueryBuilder('s')
+            ->where('s.email = :email')
+            ->setParameter('email', $email->value)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

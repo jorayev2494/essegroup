@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\Country\Domain\Country\Country;
@@ -36,6 +37,7 @@ use Project\Domains\Admin\Student\Domain\Student\ValueObjects\FriendPhone;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\GradeAverage;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\HighSchoolName;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\HomeAddress;
+use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Password;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Phone;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Uuid;
 use Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\EmailType;
@@ -43,6 +45,7 @@ use Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\T
 use Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\GenderType;
 use Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\HomeAddressType;
 use Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\MaritalTypeType;
+use Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\PasswordType;
 use Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\PhoneType;
 use Project\Domains\Admin\Student\Infrastructure\Student\Repositories\Doctrine\Types\UuidType;
 use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentableInterface;
@@ -55,6 +58,9 @@ use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\SchoolAt
 use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\Transcript\Contracts\TranscriptableInterface;
 use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\TranscriptTranslation\Contracts\TranscriptTranslationableInterface;
 use Project\Domains\Admin\University\Domain\Application\Application;
+use Project\Domains\Student\Authentication\Domain\Code\Code;
+use Project\Domains\Student\Authentication\Domain\Device\Device;
+use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
 use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
@@ -63,8 +69,7 @@ use Project\Shared\Domain\ValueObject\UuidValueObject;
 #[ORM\Entity]
 #[ORM\Table(name: 'student_students')]
 #[ORM\HasLifecycleCallbacks]
-class Student implements EntityUuid,
-    ArrayableInterface,
+class Student implements EntityUuid, AuthenticatableInterface,
     AvatarableInterface,
     AdditionalDocumentableInterface,
     PassportableInterface,
@@ -107,6 +112,9 @@ class Student implements EntityUuid,
     #[ORM\Embedded(class: ParentsName::class, columnPrefix: false)]
     private ParentsName $parentsName;
 
+    #[ORM\Column(type: PasswordType::NAME, length: 100)]
+    private Password $password;
+
     #[ORM\Column(name: 'gender', type: GenderType::NAME, length: 10, nullable: true)]
     private ?Gender $gender;
 
@@ -119,7 +127,7 @@ class Student implements EntityUuid,
     #[ORM\Column(name: 'friend_phone', type: FriendPhoneType::NAME, length: 50, nullable: true)]
     private FriendPhone $friendPhone;
 
-    #[ORM\Column(type: EmailType::NAME, length: 75)]
+    #[ORM\Column(type: EmailType::NAME, length: 75, unique: true)]
     private Email $email;
 
     #[ORM\Embedded(class: PassportInfo::class, columnPrefix: 'passport_')]
@@ -168,6 +176,12 @@ class Student implements EntityUuid,
     #[ORM\Column(name: 'creator_role', length: 10, nullable: false)]
     private string $creatorRole;
 
+    #[ORM\OneToMany(targetEntity: Device::class, mappedBy: 'author', cascade: ['persist', 'remove'])]
+    private Collection $devices;
+
+    #[ORM\OneToOne(targetEntity: Code::class, mappedBy: 'author', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    public ?Code $code;
+
     private function __construct(
         Uuid $uuid,
         FullName $fullName,
@@ -180,6 +194,7 @@ class Student implements EntityUuid,
         Country $nationality,
         Country $countryOfResidence,
         Country $highSchoolCountry,
+        Password $password,
         string $creatorRole
     ) {
         $this->uuid = $uuid;
@@ -198,12 +213,14 @@ class Student implements EntityUuid,
         );
         $this->highSchoolCountry = $highSchoolCountry;
         $this->creatorRole = $creatorRole;
+        $this->password = $password;
         $this->friendPhone = FriendPhone::fromValue(null);
         $this->homeAddress = HomeAddress::fromValue(null);
         $this->additionalDocuments = new ArrayCollection();
         $this->avatar = null;
         $this->gender = null;
         $this->maritalType = null;
+        $this->devices = new ArrayCollection();
     }
 
     public static function create(
@@ -218,6 +235,7 @@ class Student implements EntityUuid,
         Country $nationality,
         Country $countryOfResidence,
         Country $highSchoolCountry,
+        Password $password,
         string $creatorRole
     ): self
     {
@@ -233,6 +251,7 @@ class Student implements EntityUuid,
             $nationality,
             $countryOfResidence,
             $highSchoolCountry,
+            $password,
             $creatorRole
         );
     }
@@ -392,6 +411,11 @@ class Student implements EntityUuid,
         return $this;
     }
 
+    public function changePassword(Password $password): void
+    {
+        $this->password = $password;
+    }
+
     public function isEqual(self $other): bool
     {
         return $this->uuid->value === $other->getUuid()->value;
@@ -400,6 +424,59 @@ class Student implements EntityUuid,
     public function isNotEqual(self $other): bool
     {
         return $this->uuid->value !== $other->getUuid()->value;
+    }
+
+    #[\Override]
+    public function getClaims(): array
+    {
+        return [
+            'company_uuid' => $this->companyUuid,
+        ];
+    }
+
+    public function getDevices(): Collection
+    {
+        return $this->devices;
+    }
+
+    public function addDevice(Device $device): void
+    {
+        $this->devices->add($device);
+        $device->setAuthor($this);
+    }
+
+    public function getCode(): ?Code
+    {
+        return $this->code;
+    }
+
+    public function hasCode(): bool
+    {
+        return $this->code instanceof (Code::class);
+    }
+
+    public function addCode(Code $code): void
+    {
+        $this->code = $code;
+        $code->setAuthor($this);
+        // $this->record(new MemberRestorePasswordLinkWasAddedDomainEvent($this->uuid, $code->getValue(), $this->email));
+    }
+
+    public function removeCode(): void
+    {
+        $this->code?->setAuthor(null);
+        $this->code = null;
+    }
+
+    #[ORM\PrePersist]
+    public function prePersisting(PrePersistEventArgs $event): void
+    {
+        $this->createdAt = $this->createdAt ?? new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+
+        if ($this->createdAt->getTimestamp() === $this->updatedAt->getTimestamp()) {
+            $this->password = Password::fromValue($this->password->hash());
+        }
     }
 
     public function toArray(): array

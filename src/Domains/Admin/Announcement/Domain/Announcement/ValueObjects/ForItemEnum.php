@@ -12,7 +12,7 @@ enum ForItemEnum : string
 
     case COMPANY = 'company';
 
-    case CLIENT = 'client';
+    case STUDENT = 'student';
 
     public function isNotEquals(self $other): bool
     {

@@ -200,6 +200,13 @@ return [
         Project\Domains\Company\Language\Infrastructure\LanguageServiceProvider::class,
         Project\Domains\Company\Announcement\Infrastructure\AnnouncementServiceProvider::class,
 
+        // Student
+        Project\Domains\Student\Authentication\Infrastructure\AuthenticationServiceProvider::class,
+        Project\Domains\Student\Profile\Infrastructure\ProfileServiceProvider::class,
+        Project\Domains\Student\Announcement\Infrastructure\AnnouncementServiceProvider::class,
+        Project\Domains\Student\University\Infrastructure\UniversityServiceProvider::class,
+        Project\Domains\Student\Language\Infrastructure\LanguageServiceProvider::class,
+
         // Public
         Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,
         Project\Domains\Public\Language\Infrastructure\LanguageServiceProvider::class,

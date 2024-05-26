@@ -11,6 +11,7 @@ readonly class QueryFilter extends BaseQueryFilter
 {
     private function __construct(
         public array $companyUuids,
+        public array $studentUuids
     )
     {
 
@@ -25,6 +26,7 @@ readonly class QueryFilter extends BaseQueryFilter
     {
         return new self(
             $data['company_uuids'] ?? [],
+            $data['student_uuids'] ?? [],
         );
     }
 
@@ -32,6 +34,7 @@ readonly class QueryFilter extends BaseQueryFilter
     {
         return [
             'company_uuids' => $this->companyUuids,
+            'student_uuids' => $this->companyUuids,
         ];
     }
 }

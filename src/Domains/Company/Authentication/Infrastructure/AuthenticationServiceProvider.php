@@ -21,8 +21,6 @@ class AuthenticationServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const COMMAND_HANDLERS = [
-        \Project\Domains\Company\Authentication\Application\Authentication\Commands\Create\CommandHandler::class,
-        \Project\Domains\Company\Authentication\Application\Authentication\Commands\Delete\CommandHandler::class,
         \Project\Domains\Company\Authentication\Application\Authentication\Commands\Login\CommandHandler::class,
         \Project\Domains\Company\Authentication\Application\Authentication\Commands\RefreshToken\CommandHandler::class,
         \Project\Domains\Company\Authentication\Application\Authentication\Commands\RestorePasswordLink\CommandHandler::class,

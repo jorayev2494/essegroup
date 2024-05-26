@@ -15,7 +15,7 @@ use DateTimeImmutable;
 #[ORM\Embeddable]
 class PassportInfo implements ArrayableInterface
 {
-    #[ORM\Column(type: PassportNumberType::NAME, length: 50)]
+    #[ORM\Column(type: PassportNumberType::NAME, length: 50, unique: true)]
     private PassportNumber $number;
 
     #[ORM\Column(name: 'date_of_issue', type: Types::DATE_IMMUTABLE, nullable: true)]

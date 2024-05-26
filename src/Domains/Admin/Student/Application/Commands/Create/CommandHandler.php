@@ -28,6 +28,7 @@ use Project\Domains\Admin\Student\Domain\Student\ValueObjects\HomeAddress;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\LastName;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\MotherName;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\PassportNumber;
+use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Password;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Phone;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Uuid;
 use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentServiceInterface;
@@ -39,12 +40,14 @@ use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\SchoolAt
 use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\SchoolAttestatTranslation\Contracts\SchoolAttestatTranslationServiceInterface;
 use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\Transcript\Contracts\TranscriptServiceInterface;
 use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\TranscriptTranslation\Contracts\TranscriptTranslationServiceInterface;
+use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use DateTimeImmutable;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
+        private TokenGeneratorInterface $tokenGenerator,
         private StudentRepositoryInterface $studentRepository,
         private CompanyRepositoryInterface $companyRepository,
         private CountryRepositoryInterface $countryRepository,
@@ -84,6 +87,7 @@ readonly class CommandHandler implements CommandHandlerInterface
             $nationality,
             $countryOfResidence,
             $highSchoolCountry,
+            Password::fromValue($this->tokenGenerator->generate(6)),
             $command->creatorRole
         );
 
