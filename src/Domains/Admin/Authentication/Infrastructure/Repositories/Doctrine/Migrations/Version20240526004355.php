@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240525143827 extends AbstractMigration
+final class Version20240526004355 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -27,6 +27,8 @@ final class Version20240525143827 extends AbstractMigration
         $this->addSql('ALTER TABLE contest_won_students CHANGE note note text DEFAULT NULL');
         $this->addSql('ALTER TABLE faculty_faculties CHANGE description description text DEFAULT NULL');
         $this->addSql('ALTER TABLE student_students ADD password VARCHAR(100) NOT NULL');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_17E2C129E7927C74 ON student_students (email)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_17E2C1294EF9AAC4 ON student_students (passport_number)');
         $this->addSql('ALTER TABLE university_departments CHANGE description description text DEFAULT NULL');
         $this->addSql('ALTER TABLE university_universities CHANGE description description text DEFAULT NULL');
     }
@@ -40,6 +42,8 @@ final class Version20240525143827 extends AbstractMigration
         $this->addSql('DROP TABLE student_auth_devices');
         $this->addSql('ALTER TABLE contest_won_students CHANGE note note TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE faculty_faculties CHANGE description description TEXT DEFAULT NULL');
+        $this->addSql('DROP INDEX UNIQ_17E2C129E7927C74 ON student_students');
+        $this->addSql('DROP INDEX UNIQ_17E2C1294EF9AAC4 ON student_students');
         $this->addSql('ALTER TABLE student_students DROP password');
         $this->addSql('ALTER TABLE university_departments CHANGE description description TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE university_universities CHANGE description description TEXT DEFAULT NULL');
