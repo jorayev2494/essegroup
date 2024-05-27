@@ -58,8 +58,8 @@ services:
             - ${MYSQL_PORT?Not mysql port}:3306
         env_file:
             -   ./mysql/.env
-#        volumes:
-#            - ./mysql/data:/var/lib/mysql
+        volumes:
+            - ./mysql/data:/var/lib/mysql
 #        entrypoint:
 #            sh -c "
 #                echo 'CREATE DATABASE IF NOT EXISTS admindatabase; GRANT ALL PRIVILEGES ON firstSchema.* TO '\''esseelitegroup'\''@'\''%'\''; ' > /docker-entrypoint-initdb.d/init.sql;
