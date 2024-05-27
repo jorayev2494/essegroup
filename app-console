@@ -20,6 +20,10 @@ ${YELLOW} Available commands: ${ENDCOLOR}${GREEN}
     build [--no-cache] ${BLUE}................................................................${GREEN} Build containers
                                                                                           Options:
                                                                                             --no-cache ${BLUE}..................................${GREEN} Build no cache
+
+    env ${BLUE}...............................................................................${GREEN} Copy project env
+    docker-env [local, develop] ${BLUE}.......................................................${GREEN} Copy docker env
+
     logs ${BLUE}..............................................................................${GREEN} Print logs of containers
     restart-message-broker ${BLUE}............................................................${GREEN} Restart message broker
     bash ${BLUE}..............................................................................${GREEN} Containter interactive terminal bash
@@ -50,10 +54,18 @@ case "$1" in
         pull
     ;;
     build)
-        build ${@:2}
+        build "${@:2}"
     ;;
+
+    env)
+        env
+    ;;
+    docker-env)
+        dockerEnv "${@:2}"
+    ;;
+
 #    logs)
-#        logs ${@:2}
+#        logs "${@:2}"
 #    ;;
 #    restart-message-broker)
 #        restart-message-broker
@@ -62,19 +74,19 @@ case "$1" in
         bash
     ;;
     migrations)
-        migrations ${@:2}
+        migrations "${@:2}"
     ;;
     cc)
         cc
     ;;
     database)
-        database ${@:2}
+        database "${@:2}"
     ;;
     artisan)
-        artisan ${@:2}
+        artisan "${@:2}"
     ;;
     composer)
-        composer ${@:2}
+        composer "${@:2}"
     ;;
     *)
         printCommandsInfo

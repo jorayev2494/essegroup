@@ -26,10 +26,6 @@ RUN apt-get update \
     && apt-get -y install mbstring imagemagick php8.3-imagick php8.3-pcntl php8.3-gd php8.3-pgsql php8.3-mysql php8.3-sqlite nano php8.3-redis php-bcmath php8.3-zmq, pdo_pgsql pdo_mysql pdo \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-# Xdebug
-RUN pecl install xdebug
-RUN docker-php-ext-enable xdebug
-
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 
 # Install MySQLi
@@ -45,6 +41,28 @@ RUN apt-get update && apt-get install -y librabbitmq-dev libssh-dev \
     && docker-php-ext-enable amqp
 #endregion
 
+#COPY ../../../ /var/project
+
+#RUN chown -R laravel:laravel \
+#      /var/project/storage \
+#      /var/project/bootstrap/cache
+
+RUN echo "From Base" >> target.txt
+
 # RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY ./php.ini $PHP_INI_DIR/php.ini
 # Use the default production configuration
+
+
+FROM base as develop
+
+RUN echo "From Develop" >> target.txt
+
+# Xdebug
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
+
+
+FROM base as production
+
+RUN echo "From Production" >> target.txt

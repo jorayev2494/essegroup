@@ -1,3 +1,4 @@
+DOCKER_PATH := ./docker
 DOCKER_COMPOSE_FILE := ./docker/docker-compose.yml
 DOCKER_COMPOSE_DEV_FILE := ./docker/docker-compose.dev.yml
 
@@ -8,7 +9,7 @@ ps-dev:
 	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} ps
 
 up:
-	docker compose -f ${DOCKER_COMPOSE_FILE} up -d --remove-orphans
+	docker compose -f ${DOCKER_COMPOSE_FILE} --env-file ${DOCKER_PATH}/nginx/.env up -d --remove-orphans
 
 up-dev:
 	docker compose -f ${DOCKER_COMPOSE_DEV_FILE} up -d --remove-orphans

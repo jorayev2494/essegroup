@@ -1,4 +1,6 @@
-FROM php:8.3-cli
+FROM php:8.3-cli as base
+
+ENV T_MODE=base
 
 # Fix debconf warnings upon build
 ARG DEBIAN_FRONTEND=noninteractive
@@ -65,8 +67,25 @@ RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 RUN docker-php-ext-install pdo_mysql
 
 # Composer installing
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/ \
-    && ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
+#RUN curl -sS https://getcomposer.org/installer | php \
+#    && mv composer.phar /usr/local/bin/ \
+#    && ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
 
 WORKDIR /var/project
+
+FROM base as develop
+
+ENV T_MODE=develop
+
+# Composer installing
+#RUN curl -sS https://getcomposer.org/installer | php \
+#    && mv composer.phar /usr/local/bin/ \
+#    && ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+FROM base as production
+
+ENV T_MODE=production
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

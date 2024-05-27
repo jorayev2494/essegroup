@@ -1,0 +1,104 @@
+version: '3.9'
+
+x-php-cli: &php-cli
+  build:
+    target: develop
+  extends:
+    file: docker-compose.yml
+    service: php-cli
+  # restart: unless-stopped
+  working_dir: /var/project
+  volumes:
+    - ../:/var/project
+
+services:
+  # Nginx Service
+  nginx:
+    build:
+      context:  ./nginx
+      dockerfile: Dockerfile
+    container_name: ${COMPOSE_PROJECT_NAME?Not project name}-nginx
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ../:/var/project
+    ports:
+      - ${NGINX_PORT?Not nginx port}:80
+    networks:
+      - essegroup
+
+  # PHP Service
+  php-fpm:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+      target: base
+    container_name: ${COMPOSE_PROJECT_NAME?Not project name}-php-fpm
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ../:/var/project
+    depends_on:
+      - mysql
+    networks:
+      - essegroup
+
+  # PHP CLI Service
+  php-cli:
+    <<: *php-cli
+    container_name: ${COMPOSE_PROJECT_NAME?Not project name}-php-cli
+    restart: 'no'
+    # depends_on:
+    # - test-postgres
+    networks:
+      - essegroup
+
+  # Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: ${COMPOSE_PROJECT_NAME?Not project name}-mysql
+    ports:
+      - ${MYSQL_PORT?Not mysql port}:3306
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    #        entrypoint:
+    #            sh -c "
+    #                echo 'CREATE DATABASE IF NOT EXISTS admindatabase; GRANT ALL PRIVILEGES ON firstSchema.* TO '\''esseelitegroup'\''@'\''%'\''; ' > /docker-entrypoint-initdb.d/init.sql;
+    #                echo 'CREATE DATABASE IF NOT EXISTS companydatabase; GRANT ALL PRIVILEGES ON secondSchema.* TO '\''esseelitegroup'\''@'\''%'\''; ' >> /docker-entrypoint-initdb.d/init.sql;
+    #                /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+    #            "
+    networks:
+      - essegroup
+
+
+  # Mailhog Service
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: ${COMPOSE_PROJECT_NAME?Not project name}-mailhog
+    restart: unless-stopped
+    depends_on:
+      - php-fpm
+    ports:
+      - ${MAILHOG_INTERFACE_PORT?Not mailhog port}:8025
+    networks:
+      - essegroup
+
+  # Redis Service
+  redis:
+    image: redis:alpine
+    container_name: ${COMPOSE_PROJECT_NAME?Not project name}-redis
+    restart: unless-stopped
+    ports:
+      - ${REDIS_PORT?Not redis port}:6379
+    volumes:
+      - ./redis/data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      retries: 3
+      timeout: 5s
+    networks:
+      - essegroup
+
+networks:
+  essegroup:
+    driver: bridge
