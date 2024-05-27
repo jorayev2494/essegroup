@@ -107,3 +107,8 @@ function composer()
 {
     docker compose run --rm php-cli bash -c "composer ${@:1}"
 }
+
+function logs()
+{
+    docker compose logs "${@:1}"
+}

@@ -64,9 +64,9 @@ case "$1" in
         dockerEnv "${@:2}"
     ;;
 
-#    logs)
-#        logs "${@:2}"
-#    ;;
+    logs)
+        logs "${@:2}"
+    ;;
 #    restart-message-broker)
 #        restart-message-broker
 #    ;;
