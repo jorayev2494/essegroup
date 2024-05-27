@@ -27,9 +27,9 @@ function env()
 {
     makeCopyFromEnvFile "$1"
 
-    if [ ! -f .env ]; then
+    # if [ ! -f .env ]; then
         cp ./$COPY_FROM_ENV ./.env
-    fi
+    # fi
 }
 
 function dockerEnv()
