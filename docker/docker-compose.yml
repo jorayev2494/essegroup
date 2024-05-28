@@ -55,7 +55,7 @@ services:
         image: mysql:8.0
         container_name: ${COMPOSE_PROJECT_NAME?Not project name}-mysql
         ports:
-            - ${MYSQL_PORT?Not mysql port}:3306
+            - ${MYSQL_SERVICE_PORT?Not mysql port}:3306
         env_file:
             -   ./mysql/.env
         volumes:
