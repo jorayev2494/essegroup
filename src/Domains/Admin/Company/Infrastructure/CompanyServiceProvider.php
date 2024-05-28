@@ -82,7 +82,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
 
     /** @var array<array-key, string> */
     protected const MIGRATION_PATHS = [
-        'Project\Domains\Admin\Country\Infrastructure\Repositories\Doctrine\Migrations' => __DIR__ . '/Repositories/Doctrine/Migrations',
+        // 'Project\Domains\Admin\Country\Infrastructure\Repositories\Doctrine\Migrations' => __DIR__ . '/Repositories/Doctrine/Migrations',
     ];
 
     /** @var array<string, string> */
