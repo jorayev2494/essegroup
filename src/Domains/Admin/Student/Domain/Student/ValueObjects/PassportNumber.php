@@ -8,5 +8,5 @@ use Project\Shared\Domain\ValueObject\StringValueObject;
 
 class PassportNumber extends StringValueObject
 {
-
+    public const REGEX_PATTERN = '/^[a-zA-Z0-9]+$/';
 }

@@ -31,6 +31,9 @@ class ManagerServiceProvider extends AdminDomainServiceProvider
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         \Project\Domains\Admin\Manager\Application\Manager\Subscribers\ManagerWasCreatedDomainEventSubscriber::class,
+
+        // Restore
+        \Project\Domains\Admin\Manager\Application\Manager\Subscribers\Auth\RestorePassword\ManagerRestorePasswordLinkWasAddedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */

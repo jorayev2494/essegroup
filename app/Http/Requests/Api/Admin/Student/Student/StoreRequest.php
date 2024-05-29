@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api\Admin\Student\Student;
 
+use App\Rules\ValidatePassportNumberRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Enums\Gender;
@@ -24,8 +25,19 @@ class StoreRequest extends FormRequest
             'last_name' => ['required', 'string', 'max:255'],
             'avatar' => ['required', 'file', 'mimetypes:image/jpeg,image/png'],
             'birthday' => ['required', 'date', 'max:255'],
-            'passport_number' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'email', 'max:75'],
+            'passport_number' => [
+                'required',
+                'string',
+                'max:255',
+                new ValidatePassportNumberRule(),
+                Rule::unique('admin_db.student_students', 'passport_number'),
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:75',
+                Rule::unique('admin_db.student_students', 'email'),
+            ],
             'phone' => ['required', 'min:5', 'max:50'],
 
             'nationality_uuid' => [

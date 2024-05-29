@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Project\Domains\Admin\Manager\Domain\Manager\Events\Restore;
+namespace Project\Domains\Admin\Manager\Domain\Manager\Events\Auth\RestorePassword;
 
 use Project\Shared\Domain\Bus\Event\DomainEvent;
 
-readonly class MemberRestorePasswordLinkWasAddedDomainEvent extends DomainEvent
+readonly class ManagerRestorePasswordLinkWasAddedDomainEvent extends DomainEvent
 {
     public function __construct(
         public string $uuid,
         public string $email,
+        public string $firstName,
+        public string $lastName,
         public string $codeValue,
         string $eventIs = null,
         string $occurredOn = null
@@ -23,15 +25,17 @@ readonly class MemberRestorePasswordLinkWasAddedDomainEvent extends DomainEvent
         [
             'uuid' => $uuid,
             'email' => $email,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'code_value' => $codeValue,
         ] = $body;
 
-        return new self($uuid, $email, $codeValue, $eventId, $occurredOn);
+        return new self($uuid, $email, $firstName, $lastName, $codeValue, $eventId, $occurredOn);
     }
 
     public static function eventName(): string
     {
-        return 'admin_domain_auth_restore_password_link.was.added';
+        return 'manager_forgot_password_code.was.added';
     }
 
     /**
@@ -44,6 +48,8 @@ readonly class MemberRestorePasswordLinkWasAddedDomainEvent extends DomainEvent
             'body' => [
                 'uuid' => $this->uuid,
                 'email' => $this->email,
+                'first_name' => $this->firstName,
+                'last_name' => $this->lastName,
                 'code_value' => $this->codeValue,
             ],
             'event_id' => $this->eventId(),

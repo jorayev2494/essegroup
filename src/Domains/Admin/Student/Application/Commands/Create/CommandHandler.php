@@ -43,6 +43,7 @@ use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\Transcri
 use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use DateTimeImmutable;
+use Project\Shared\Domain\Bus\Event\EventBusInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
@@ -61,7 +62,8 @@ readonly class CommandHandler implements CommandHandlerInterface
         private EquivalenceDocumentServiceInterface $equivalenceDocumentService,
         private BiometricPhotoServiceInterface $biometricPhotoService,
         private AdditionalDocumentServiceInterface $additionalDocumentService,
-        private AvatarServiceInterface $avatarService
+        private AvatarServiceInterface $avatarService,
+        private EventBusInterface $eventBus
     ) {
 
     }
@@ -114,5 +116,6 @@ readonly class CommandHandler implements CommandHandlerInterface
         $this->additionalDocumentService->uploadDocuments($student, $command->additionalDocuments);
 
         $this->studentRepository->save($student);
+        $this->eventBus->publish(...$student->pullDomainEvents());
     }
 }

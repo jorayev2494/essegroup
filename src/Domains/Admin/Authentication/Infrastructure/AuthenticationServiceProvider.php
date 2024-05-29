@@ -31,10 +31,7 @@ class AuthenticationServiceProvider extends AdminDomainServiceProvider
     ];
 
     /** @var array<array-key, string> */
-    protected const DOMAIN_EVENT_SUBSCRIBERS = [
-        // Restore
-        \Project\Domains\Admin\Authentication\Application\Authentication\Subsribers\Restore\MemberRestorePasswordLinkWasAddedDomainEventSubscriber::class,
-    ];
+    protected const DOMAIN_EVENT_SUBSCRIBERS = [];
 
     /** @var array<string, string> */
     protected const ENTITY_TYPES = [

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Project\Shared\Domain\Bus\Event;
 
-use Illuminate\Contracts\Support\Arrayable;
 use JsonSerializable;
+use Project\Shared\Contracts\ArrayableInterface;
 
-interface Event extends Arrayable
+interface Event extends ArrayableInterface
 {
 }

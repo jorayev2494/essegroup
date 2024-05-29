@@ -2,29 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Project\Domains\Admin\Authentication\Application\Authentication\Subsribers\Restore;
+namespace Project\Domains\Admin\Manager\Application\Manager\Subscribers\Auth\RestorePassword;
 
-use Project\Domains\Admin\Manager\Domain\Manager\Events\Restore\MemberRestorePasswordLinkWasAddedDomainEvent;
+use Project\Domains\Admin\Manager\Domain\Manager\Events\Auth\RestorePassword\ManagerRestorePasswordLinkWasAddedDomainEvent;
 use Project\Shared\Domain\Bus\Event\DomainEventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-readonly class MemberRestorePasswordLinkWasAddedDomainEventSubscriber implements DomainEventSubscriberInterface
+readonly class ManagerRestorePasswordLinkWasAddedDomainEventSubscriber implements DomainEventSubscriberInterface
 {
     public function __construct(
-        private MailerInterface $mailer,
+        private MailerInterface $mailer
     ) { }
 
     public static function subscribedTo(): array
     {
         return [
-            MemberRestorePasswordLinkWasAddedDomainEvent::class,
+            ManagerRestorePasswordLinkWasAddedDomainEvent::class,
         ];
     }
 
-    public function __invoke(MemberRestorePasswordLinkWasAddedDomainEvent $event): void
+    public function __invoke(ManagerRestorePasswordLinkWasAddedDomainEvent $event): void
     {
-        $template = view('mails.admin.auth.restore.restorePasswordLink', [
+        $template = view('mails.auth.restore.restorePasswordLink', [
+            'firstName' => $event->firstName,
+            'lastName' => $event->lastName,
             'restoreLink' => $this->makeRestoreLink($event),
         ])->render();
 
@@ -38,7 +40,7 @@ readonly class MemberRestorePasswordLinkWasAddedDomainEventSubscriber implements
         $this->mailer->send($message);
     }
 
-    private function makeRestoreLink(MemberRestorePasswordLinkWasAddedDomainEvent $event): string
+    private function makeRestoreLink(ManagerRestorePasswordLinkWasAddedDomainEvent $event): string
     {
         $url = config('admin_dashboard.url') . config('admin_dashboard.page_routers.reset_password');
 
