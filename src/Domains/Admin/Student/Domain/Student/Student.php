@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\Country\Domain\Country\Country;
 use Project\Domains\Admin\Country\Domain\Country\CountryTranslate;
+use Project\Domains\Admin\Student\Domain\Student\Events\Auth\RestorePassword\StudentRestorePasswordLinkWasAddedDomainEvent;
+use Project\Domains\Admin\Student\Domain\Student\Events\StudentWasCreatedDomainEvent;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarableInterface;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarInterface;
 use Project\Domains\Admin\Student\Domain\Student\Traits\Files\AdditionalDocumentTrait;
@@ -62,6 +64,7 @@ use Project\Domains\Student\Authentication\Domain\Code\Code;
 use Project\Domains\Student\Authentication\Domain\Device\Device;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
 use Project\Shared\Contracts\ArrayableInterface;
+use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 use Project\Shared\Domain\ValueObject\UuidValueObject;
@@ -69,7 +72,7 @@ use Project\Shared\Domain\ValueObject\UuidValueObject;
 #[ORM\Entity]
 #[ORM\Table(name: 'student_students')]
 #[ORM\HasLifecycleCallbacks]
-class Student implements EntityUuid, AuthenticatableInterface,
+class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterface,
     AvatarableInterface,
     AdditionalDocumentableInterface,
     PassportableInterface,
@@ -239,7 +242,7 @@ class Student implements EntityUuid, AuthenticatableInterface,
         string $creatorRole
     ): self
     {
-        return new self(
+        $student = new self(
             $uuid,
             $fullName,
             $parentsName,
@@ -254,6 +257,18 @@ class Student implements EntityUuid, AuthenticatableInterface,
             $password,
             $creatorRole
         );
+
+        $student->record(
+            new StudentWasCreatedDomainEvent(
+                $uuid->value,
+                $fullName->getFirstName()->value,
+                $fullName->getLastName()->value,
+                $email->value,
+                $password->value
+            )
+        );
+
+        return $student;
     }
 
     public function getUuid(): UuidValueObject
@@ -459,7 +474,15 @@ class Student implements EntityUuid, AuthenticatableInterface,
     {
         $this->code = $code;
         $code->setAuthor($this);
-        // $this->record(new MemberRestorePasswordLinkWasAddedDomainEvent($this->uuid, $code->getValue(), $this->email));
+        $this->record(
+            new StudentRestorePasswordLinkWasAddedDomainEvent(
+                $this->uuid->value,
+                $this->email->value,
+                $this->getFullName()->getFirstName()->value,
+                $this->getFullName()->getLastName()->value,
+                $code->getValue()
+            )
+        );
     }
 
     public function removeCode(): void

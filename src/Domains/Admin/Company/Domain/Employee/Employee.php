@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Company;
+use Project\Domains\Admin\Company\Domain\Employee\Events\Auth\RestorePassword\EmployeeRestorePasswordLinkWasAddedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Employee\Events\EmployeeWasCreatedDomainEvent;
 use Project\Domains\Admin\Company\Domain\Employee\Services\Avatar\Contracts\AvatarableInterface;
 use Project\Domains\Admin\Company\Domain\Employee\Services\Avatar\Contracts\AvatarInterface;
@@ -162,7 +163,15 @@ class Employee extends AggregateRoot implements AuthenticatableInterface, Avatar
     {
         $this->code = $code;
         $code->setAuthor($this);
-        // $this->record(new MemberRestorePasswordLinkWasAddedDomainEvent($this->uuid, $code->getValue(), $this->email));
+        $this->record(
+            new EmployeeRestorePasswordLinkWasAddedDomainEvent(
+                $this->uuid->value,
+                $this->email->value,
+                $this->getFullName()->getFirstName()->value,
+                $this->getFullName()->getLastName()->value,
+                $code->getValue()
+            )
+        );
     }
 
     public function removeCode(): void

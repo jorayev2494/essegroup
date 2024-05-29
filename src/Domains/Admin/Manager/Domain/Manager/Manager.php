@@ -13,8 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Announcement\Domain\Announcement\Announcement;
 use Project\Domains\Admin\Authentication\Domain\Code\Code;
 use Project\Domains\Admin\Authentication\Domain\Device\Device;
+use Project\Domains\Admin\Manager\Domain\Manager\Events\Auth\RestorePassword\ManagerRestorePasswordLinkWasAddedDomainEvent;
 use Project\Domains\Admin\Manager\Domain\Manager\Events\ManagerWasCreatedDomainEvent;
-use Project\Domains\Admin\Manager\Domain\Manager\Events\Restore\MemberRestorePasswordLinkWasAddedDomainEvent;
 use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarableInterface;
 use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarInterface;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Avatar;
@@ -138,7 +138,15 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
     {
         $code->setAuthor($this);
         $this->code = $code;
-        $this->record(new MemberRestorePasswordLinkWasAddedDomainEvent($this->uuid->value, $this->email->value, $code->getValue()));
+        $this->record(
+            new ManagerRestorePasswordLinkWasAddedDomainEvent(
+                $this->uuid->value,
+                $this->email->value,
+                $this->getFullName()->getFirstName()->value,
+                $this->getFullName()->getLastName()->value,
+                $code->getValue()
+            )
+        );
     }
 
     public function removeCode(): void

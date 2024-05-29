@@ -9,7 +9,7 @@ use Project\Shared\Domain\Bus\Event\DomainEventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class EmployeeWasCreatedDomainEventSubscriber implements DomainEventSubscriberInterface
+readonly class EmployeeWasCreatedDomainEventSubscriber implements DomainEventSubscriberInterface
 {
     public function __construct(
         private MailerInterface $mailer
@@ -24,7 +24,7 @@ class EmployeeWasCreatedDomainEventSubscriber implements DomainEventSubscriberIn
 
     public function __invoke(EmployeeWasCreatedDomainEvent $event): void
     {
-        $template = view('mails.admin.employee.created', [
+        $template = view('mails.company.employee.created', [
             'dashboardLink' => $this->makeDashboardLink(),
             'firstName' => $event->firstName,
             'lastName' => $event->lastName,

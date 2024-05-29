@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Project\Domains\Admin\Manager\Application\Manager\Subscribers;
+namespace Project\Domains\Admin\Student\Application\Subscribers;
 
-use Project\Domains\Admin\Manager\Domain\Manager\Events\ManagerWasCreatedDomainEvent;
+use Project\Domains\Admin\Student\Domain\Student\Events\StudentWasCreatedDomainEvent;
 use Project\Shared\Domain\Bus\Event\DomainEventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-readonly class ManagerWasCreatedDomainEventSubscriber implements DomainEventSubscriberInterface
+readonly class StudentWasCreatedDomainEventSubscriber implements DomainEventSubscriberInterface
 {
     public function __construct(
         private MailerInterface $mailer
@@ -18,13 +18,13 @@ readonly class ManagerWasCreatedDomainEventSubscriber implements DomainEventSubs
     public static function subscribedTo(): array
     {
         return [
-            ManagerWasCreatedDomainEvent::class,
+            StudentWasCreatedDomainEvent::class,
         ];
     }
 
-    public function __invoke(ManagerWasCreatedDomainEvent $event): void
+    public function __invoke(StudentWasCreatedDomainEvent $event): void
     {
-        $template = view('mails.manager.created', [
+        $template = view('mails.student.created', [
             'dashboardLink' => $this->makeDashboardLink(),
             'firstName' => $event->firstName,
             'lastName' => $event->lastName,
@@ -44,6 +44,6 @@ readonly class ManagerWasCreatedDomainEventSubscriber implements DomainEventSubs
 
     private function makeDashboardLink(): string
     {
-        return config('admin_dashboard.url') . config('admin_dashboard.page_routers.login');
+        return config('student_dashboard.url') . config('student_dashboard.page_routers.login');
     }
 }

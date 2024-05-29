@@ -43,7 +43,10 @@ class StudentServiceProvider extends AdminDomainServiceProvider
     ];
 
     /** @var array<array-key, string> */
-    protected const DOMAIN_EVENT_SUBSCRIBERS = [];
+    protected const DOMAIN_EVENT_SUBSCRIBERS = [
+        \Project\Domains\Admin\Student\Application\Subscribers\StudentWasCreatedDomainEventSubscriber::class,
+        \Project\Domains\Admin\Student\Application\Subscribers\Auth\RestorePassword\StudentRestorePasswordLinkWasAddedDomainEventSubscriber::class,
+    ];
 
     /** @var array<string, string> */
     protected const ENTITY_TYPES = [

@@ -10,16 +10,15 @@ use Project\Domains\Admin\Company\Domain\Employee\ValueObjects\Email;
 use Project\Domains\Company\Authentication\Domain\Code\Code;
 use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use Project\Shared\Domain\Bus\Event\EventBusInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     function __construct(
         private EmployeeRepositoryInterface $repository,
-        private TokenGeneratorInterface $tokenGenerator
-    )
-    {
-
-    }
+        private TokenGeneratorInterface $tokenGenerator,
+        private EventBusInterface $eventBus
+    ) { }
 
     public function __invoke(Command $command): void
     {
@@ -41,5 +40,6 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $employee->addCode($code);
         $this->repository->save($employee);
+        $this->eventBus->publish(...$employee->pullDomainEvents());
     }
 }
