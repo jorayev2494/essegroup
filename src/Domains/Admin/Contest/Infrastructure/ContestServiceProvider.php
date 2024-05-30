@@ -29,6 +29,7 @@ class ContestServiceProvider extends AdminDomainServiceProvider
         // Contest
         \Project\Domains\Admin\Contest\Application\Contest\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\Contest\Application\Contest\Queries\Show\QueryHandler::class,
+        \Project\Domains\Admin\Contest\Application\WonStudent\Queries\GetByContestAndStudent\QueryHandler::class,
         \Project\Domains\Admin\Contest\Application\Contest\Queries\Participants\QueryHandler::class,
 
         // WonStudent

@@ -35,7 +35,7 @@ readonly class CommandHandler implements CommandHandlerInterface
                 LastName::fromValue($command->lastName)
             ),
             Email::fromValue($command->email),
-            Password::fromValue($this->tokenGenerator->generate(8))
+            Password::fromValue($this->tokenGenerator->generate(Password::LENGTH))
         );
 
         $this->avatarService->upload($manager, $command->avatar);

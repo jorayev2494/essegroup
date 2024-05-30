@@ -8,6 +8,8 @@ use Project\Domains\Admin\Contest\Application\WonStudent\Queries\Index\Query;
 use Project\Domains\Admin\Contest\Domain\WonStudent\ValueObjects\Code;
 use Project\Domains\Admin\Contest\Domain\WonStudent\WonStudent;
 use Project\Domains\Admin\Contest\Domain\WonStudent\WonStudentRepositoryInterface;
+use Project\Domains\Admin\Contest\Domain\Contest\ValueObjects\Uuid as ContestUuid;
+use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Uuid as StudentUuid;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
 
@@ -26,6 +28,17 @@ class WonStudentRepository extends BaseAdminEntityRepository implements WonStude
             ->setParameter('contestUuid', $httpQuery->getContestUuid());
 
         return $this->paginator($query, $httpQuery->paginator);
+    }
+
+    public function findContestStudent(ContestUuid $contestUuid, StudentUuid $studentUuid): ?WonStudent
+    {
+        return $this->entityRepository->createQueryBuilder('w')
+            ->where('w.contestUuid = :contestUuid')
+            ->andWhere('w.studentUuid = :studentUuid')
+            ->setParameter('contestUuid', $contestUuid->value)
+            ->setParameter('studentUuid', $studentUuid->value)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function findByCode(Code $code): ?WonStudent

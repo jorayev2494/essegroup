@@ -206,6 +206,7 @@ return [
         Project\Domains\Student\Announcement\Infrastructure\AnnouncementServiceProvider::class,
         Project\Domains\Student\University\Infrastructure\UniversityServiceProvider::class,
         Project\Domains\Student\Language\Infrastructure\LanguageServiceProvider::class,
+        Project\Domains\Student\Contest\Infrastructure\ContestServiceProvider::class,
 
         // Public
         Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,

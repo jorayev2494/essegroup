@@ -15,12 +15,12 @@ Route::group(
         $router->put('/{uuid}', 'update');
         $router->delete('/{uuid}', 'delete');
 
-
         $router->group(
             ['prefix' => '{uuid}/students', 'controller' => WonStudentController::class],
             static function (Router $router): void {
                 $router->get('/', 'index');
-                $router->get('/{code}', 'show');
+                $router->get('/{studentUuid}', 'showContestStudent');
+                $router->get('/{code}/code', 'show');
                 $router->post('/', 'store');
                 $router->put('/{code}', 'update');
             }

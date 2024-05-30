@@ -10,6 +10,7 @@ use Project\Domains\Admin\Contest\Application\WonStudent\Commands\Create\Command
 use Project\Domains\Admin\Contest\Application\WonStudent\Commands\Create\CommandHandler as SelectWinnerStudentCommandHandler;
 use Project\Domains\Admin\Contest\Application\WonStudent\Commands\Update\Command as UpdateCommand;
 use Project\Domains\Admin\Contest\Application\WonStudent\Queries\Index\Query as WonStudentsQuery;
+use Project\Domains\Admin\Contest\Application\WonStudent\Queries\GetByContestAndStudent\Query as GetByContestAndStudentQuery;
 use Project\Domains\Admin\Contest\Application\WonStudent\Queries\Show\Query as ShowQuery;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
@@ -40,6 +41,18 @@ readonly class WonStudentController
         return $this->response->json(
             $handler(
                 new SelectWinnerStudentCommand($uuid)
+            )
+        );
+    }
+
+    public function showContestStudent(string $contestUuid, string $studentUuid): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                new GetByContestAndStudentQuery(
+                    $contestUuid,
+                    $studentUuid
+                )
             )
         );
     }

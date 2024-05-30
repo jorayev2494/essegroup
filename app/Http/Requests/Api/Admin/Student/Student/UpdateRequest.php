@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Enums\Gender;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Enums\MaritalType;
+use Project\Infrastructure\Services\Auth\AuthManager;
 
 class UpdateRequest extends FormRequest
 {
@@ -29,7 +30,7 @@ class UpdateRequest extends FormRequest
                 'max:50',
                 new ValidatePassportNumberRule(),
                 Rule::unique('admin_db.student_students', 'passport_number')
-                    ->ignore($this->route()->parameter('uuid'), 'uuid'),
+                    ->ignore(AuthManager::studentUuid()->value, 'uuid'),
             ],
             'passport_date_of_issue' => ['required', 'date'],
             'passport_date_of_expiry' => ['required', 'date'],
@@ -38,7 +39,7 @@ class UpdateRequest extends FormRequest
                 'email',
                 'max:75',
                 Rule::unique('admin_db.student_students', 'email')
-                    ->ignore($this->route()->parameter('uuid'), 'uuid'),
+                    ->ignore(AuthManager::studentUuid()->value, 'uuid'),
             ],
             'phone' => ['required', 'min:5', 'max:50'],
 

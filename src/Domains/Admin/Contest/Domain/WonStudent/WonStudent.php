@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Contest\Domain\Contest\Contest;
+use Project\Domains\Admin\Contest\Domain\Contest\ContestTranslate;
 use Project\Domains\Admin\Contest\Domain\WonStudent\ValueObjects\Code;
 use Project\Domains\Admin\Contest\Domain\WonStudent\ValueObjects\Note;
 use Project\Domains\Admin\Contest\Infrastructure\WinnerStudent\Repositories\Doctrine\Types\CodeType;
@@ -98,7 +99,7 @@ class WonStudent implements ArrayableInterface
             'contest_uuid' => $this->contestUuid,
             'contest' => [
                 'uuid' => $this->contest->getUuid()->value,
-                'title' => $this->contest->getUuid()->isNotNull() ? $this->contest->getTitle()->value : null,
+                'title' => ContestTranslate::execute($this->contest)->getTitle()->value,
             ],
             'student_code' => $this->studentUuid,
             'student' => [

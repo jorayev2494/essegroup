@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\Admin\Authentication\Restore;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Password;
 
 class RestorePasswordRequest extends FormRequest
 {
@@ -16,7 +17,7 @@ class RestorePasswordRequest extends FormRequest
     {
         return [
             'token' => ['required', 'string', Rule::exists('admin_db.auth_codes', 'value')],
-            'password' => ['required', 'string', 'confirmed'],
+            'password' => ['required', 'string', 'confirmed', 'min:' . Password::LENGTH],
         ];
     }
 }

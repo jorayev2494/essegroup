@@ -15,8 +15,8 @@ readonly class CommandHandler implements CommandHandlerInterface
 {
     function __construct(
         private ManagerRepositoryInterface $repository,
-        private CodeRepositoryInterface    $codeRepository,
-        private PasswordHasherInterface    $passwordHasher,
+        private CodeRepositoryInterface $codeRepository,
+        private PasswordHasherInterface $passwordHasher,
     )
     {
 
