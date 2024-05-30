@@ -17,6 +17,6 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $this->service->update(AuthManager::uuid(GuardType::COMPANY), $command);
+        $this->service->update(AuthManager::uuid(GuardType::STUDENT), $command);
     }
 }

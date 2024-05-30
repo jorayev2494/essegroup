@@ -89,7 +89,7 @@ readonly class CommandHandler implements CommandHandlerInterface
             $nationality,
             $countryOfResidence,
             $highSchoolCountry,
-            Password::fromValue($this->tokenGenerator->generate(6)),
+            Password::fromValue($this->tokenGenerator->generate(Password::LENGTH)),
             $command->creatorRole
         );
 

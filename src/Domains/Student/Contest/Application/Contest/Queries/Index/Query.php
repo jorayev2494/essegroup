@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Project\Domains\Admin\Contest\Application\Contest\Queries\Index;
+namespace Project\Domains\Student\Contest\Application\Contest\Queries\Index;
 
 use Project\Domains\Admin\Contest\Infrastructure\Contest\Filters\QueryFilter;
 use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;

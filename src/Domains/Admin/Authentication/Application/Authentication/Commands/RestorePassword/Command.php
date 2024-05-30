@@ -10,9 +10,6 @@ readonly class Command implements CommandInterface
 {
     public function __construct(
         public string $token,
-        public string $password,
-    )
-    {
-
-    }
+        public string $password
+    ) { }
 }
