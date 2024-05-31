@@ -15,6 +15,8 @@ interface ManagerRepositoryInterface
 
     public function paginate(Query $httpQuery): Paginator;
 
+    public function list(): ManagerCollection;
+
     public function findByEmail(Email $email): ?Manager;
 
     public function save(Manager $member): void;

@@ -215,6 +215,7 @@ return [
         Project\Domains\Public\StaticPage\Infrastructure\StaticPageServiceProvider::class,
         Project\Domains\Public\Company\Infrastructure\CompanyServiceProvider::class,
         Project\Domains\Public\Document\Infrastructure\DocumentServiceProvider::class,
+        Project\Domains\Public\Manager\Infrastructure\ManagerServiceProvider::class,
 
         App\Providers\DoctrineServiceProvider::class,
     ])->toArray(),

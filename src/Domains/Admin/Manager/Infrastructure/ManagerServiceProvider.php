@@ -18,6 +18,7 @@ class ManagerServiceProvider extends AdminDomainServiceProvider
     /** @var array<array-key, string> */
     protected const QUERY_HANDLERS = [
         \Project\Domains\Admin\Manager\Application\Manager\Queries\Index\QueryHandler::class,
+        \Project\Domains\Admin\Manager\Application\Manager\Queries\List\QueryHandler::class,
         \Project\Domains\Admin\Manager\Application\Manager\Queries\Show\QueryHandler::class,
     ];
 
