@@ -6,6 +6,7 @@ namespace Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doct
 
 use Project\Domains\Admin\Manager\Application\Manager\Queries\Index\Query;
 use Project\Domains\Admin\Manager\Domain\Manager\Manager;
+use Project\Domains\Admin\Manager\Domain\Manager\ManagerCollection;
 use Project\Domains\Admin\Manager\Domain\Manager\ManagerRepositoryInterface;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Email;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Uuid;
@@ -29,6 +30,15 @@ class ManagerRepository extends BaseAdminEntityRepository implements ManagerRepo
         $query = $this->entityRepository->createQueryBuilder('m');
 
         return $this->paginator($query, $httpQuery->paginator);
+    }
+
+    public function list(): ManagerCollection
+    {
+        return new ManagerCollection(
+            $this->entityRepository->createQueryBuilder('m')
+                ->getQuery()
+                ->getResult()
+        );
     }
 
     public function findByEmail(Email $email): ?Manager
