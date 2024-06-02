@@ -4,6 +4,7 @@ namespace Project\Infrastructure\Hashers;
 
 use Illuminate\Support\Facades\Hash;
 use Project\Infrastructure\Hashers\Contracts\PasswordHasherInterface;
+use Project\Infrastructure\Services\Authentication\ValueObjects\PasswordValueObject;
 
 class PasswordHasher implements PasswordHasherInterface
 {
@@ -12,8 +13,8 @@ class PasswordHasher implements PasswordHasherInterface
         return bcrypt($value);
     }
 
-    public function check(string $password, string $hashedPassword): bool
+    public function check(string $password, PasswordValueObject $hashedPassword): bool
     {
-        return Hash::check($password, $hashedPassword);
+        return Hash::check($password, $hashedPassword->value);
     }
 }

@@ -26,6 +26,7 @@ use Project\Domains\Admin\Company\Infrastructure\Employee\Repositories\Types\Uui
 use Project\Domains\Company\Authentication\Domain\Code\Code;
 use Project\Domains\Company\Authentication\Domain\Device\Device;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
+use Project\Infrastructure\Services\Authentication\ValueObjects\PasswordValueObject;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Traits\ActivableTrait;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
@@ -186,6 +187,18 @@ class Employee extends AggregateRoot implements AuthenticatableInterface, Avatar
         return [
             'company_uuid' => $this->companyUuid,
         ];
+    }
+
+    public function getPassword(): PasswordValueObject
+    {
+        return $this->password;
+    }
+
+    public function setPassword(Password $password): static
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     public function getCompany(): Company
