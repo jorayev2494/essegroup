@@ -9,5 +9,6 @@ Route::group(
     static function (Router $router): void {
         $router->get('/', 'show');
         $router->post('/', 'update');
+        $router->post('/change-password', 'changePassword');
     }
 );

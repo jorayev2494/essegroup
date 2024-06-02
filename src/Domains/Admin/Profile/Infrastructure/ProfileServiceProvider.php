@@ -23,6 +23,7 @@ class ProfileServiceProvider extends AdminDomainServiceProvider
     /** @var array<array-key, string> */
     protected const COMMAND_HANDLERS = [
         \Project\Domains\Admin\Profile\Application\Profile\Commands\Update\CommandHandler::class,
+        \Project\Domains\Admin\Profile\Application\Profile\Commands\ChangePassword\CommandHandler::class,
     ];
 
     /** @var array<array-key, string> */

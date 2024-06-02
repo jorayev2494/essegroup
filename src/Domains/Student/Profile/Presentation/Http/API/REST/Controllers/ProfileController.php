@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Project\Domains\Student\Profile\Presentation\Http\API\REST\Controllers;
 
 use App\Http\Requests\Api\Admin\Student\Student\UpdateRequest;
+use App\Http\Requests\Api\Student\Profile\ChangePasswordRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Project\Domains\Student\Profile\Application\Profile\Commands\Update\Command as UpdateCommand;
-use Project\Domains\Student\Profile\Application\Profile\Queries\Show\Query;
+use Project\Domains\Student\Profile\Application\Profile\Queries\Show\Query as ShowQuery;
+use Project\Domains\Student\Profile\Application\Profile\Commands\ChangePassword\Command as ChangePasswordCommand;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +27,7 @@ readonly class ProfileController
     {
         return $this->response->json(
             $this->queryBus->ask(
-                new Query()
+                new ShowQuery()
             )
         );
     }
@@ -68,6 +70,19 @@ readonly class ProfileController
                 $request->get('home_address'),
                 $request->get('gender'),
                 $request->get('marital_type')
+            )
+        );
+
+        return $this->response->noContent(Response::HTTP_ACCEPTED);
+    }
+
+    public function changePassword(ChangePasswordRequest $request): Response
+    {
+        $this->commandBus->dispatch(
+            new ChangePasswordCommand(
+                $request->headers->get('x-device-id'),
+                $request->get('current_password'),
+                $request->get('new_password')
             )
         );
 

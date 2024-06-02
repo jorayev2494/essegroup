@@ -28,6 +28,7 @@ use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\T
 use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\Types\PasswordType;
 use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\Types\UuidType;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
+use Project\Infrastructure\Services\Authentication\ValueObjects\PasswordValueObject;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 use Project\Shared\Domain\ValueObject\UuidValueObject;
@@ -200,6 +201,18 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
         return [
 
         ];
+    }
+
+    public function getPassword(): PasswordValueObject
+    {
+        return $this->password;
+    }
+
+    public function setPassword(Password $password): static
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     #[ORM\PrePersist]

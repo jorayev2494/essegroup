@@ -63,6 +63,7 @@ use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Student\Authentication\Domain\Code\Code;
 use Project\Domains\Student\Authentication\Domain\Device\Device;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
+use Project\Infrastructure\Services\Authentication\ValueObjects\PasswordValueObject;
 use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
@@ -447,6 +448,18 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         return [
             'company_uuid' => $this->companyUuid,
         ];
+    }
+
+    public function getPassword(): PasswordValueObject
+    {
+        return $this->password;
+    }
+
+    public function setPassword(Password $password): static
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     public function getDevices(): Collection

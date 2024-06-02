@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\Company\Domain\Employee\ValueObjects;
 
-use Project\Shared\Domain\ValueObject\StringValueObject;
+use Project\Infrastructure\Services\Authentication\ValueObjects\PasswordValueObject;
 
-class Password extends StringValueObject
+class Password extends PasswordValueObject
 {
-    public const LENGTH = 8;
 
-    public function hash(): string
-    {
-        return bcrypt($this->value);
-    }
 }

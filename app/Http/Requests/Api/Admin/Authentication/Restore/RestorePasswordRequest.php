@@ -17,7 +17,7 @@ class RestorePasswordRequest extends FormRequest
     {
         return [
             'token' => ['required', 'string', Rule::exists('admin_db.auth_codes', 'value')],
-            'password' => ['required', 'string', 'confirmed', 'min:' . Password::LENGTH],
+            'password' => ['required', 'string', 'min:' . Password::LENGTH, 'confirmed'],
         ];
     }
 }
