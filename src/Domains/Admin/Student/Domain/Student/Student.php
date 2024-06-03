@@ -287,6 +287,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         return $this->parentsName;
     }
 
+    public function getBirthday(): DateTimeImmutable
+    {
+        return $this->birthday;
+    }
+
     public function changeBirthday(DateTimeImmutable $birthday): self
     {
         if ($this->birthday->getTimestamp() !== $birthday->getTimestamp()) {
@@ -294,6 +299,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         }
 
         return $this;
+    }
+
+    public function getGender(): ?Gender
+    {
+        return $this->gender;
     }
 
     public function changeGender(Gender $gender): self
@@ -305,6 +315,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         return $this;
     }
 
+    public function getMaritalType(): ?MaritalType
+    {
+        return $this->maritalType;
+    }
+
     public function changeMaritalType(MaritalType $maritalType): self
     {
         if ($this->maritalType === null || $this->maritalType->isNotEquals($maritalType)) {
@@ -314,6 +329,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         return $this;
     }
 
+    public function getFriendPhone(): FriendPhone
+    {
+        return $this->friendPhone;
+    }
+
     public function changeFriendPhone(FriendPhone $friendPhone): self
     {
         if ($this->friendPhone->isNotEquals($friendPhone)) {
@@ -321,6 +341,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         }
 
         return $this;
+    }
+
+    public function getHomeAddress(): HomeAddress
+    {
+        return $this->homeAddress;
     }
 
     public function changeHomeAddress(HomeAddress $homeAddress): self
@@ -346,6 +371,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         return $this;
     }
 
+    public function getNationality(): ?Country
+    {
+        return  $this->nationality;
+    }
+
     public function changeNationality(Country $nationality): self
     {
         if ($this->nationality->isNotEquals($nationality)) {
@@ -355,6 +385,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         return $this;
     }
 
+    public function getCountryOfResidence(): Country
+    {
+        return $this->countryOfResidence;
+    }
+
     public function changeCountryOfResidence(Country $countryOfResidence): self
     {
         if ($this->countryOfResidence->isNotEquals($countryOfResidence)) {
@@ -362,6 +397,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         }
 
         return $this;
+    }
+
+    public function getEmail(): Email
+    {
+        return $this->email;
     }
 
     public function changeEmail(Email $email): self
@@ -376,6 +416,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
     public function getPassportInfo(): PassportInfo
     {
         return $this->passportInfo;
+    }
+
+    public function getPhone(): Phone
+    {
+        return $this->phone;
     }
 
     public function changePhone(Phone $phone): void
@@ -397,6 +442,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         }
 
         return $this;
+    }
+
+    public function getHighSchoolCountry(): Country
+    {
+        return $this->highSchoolCountry;
     }
 
     public function changeHighSchoolCountry(Country $highSchoolCountry): self

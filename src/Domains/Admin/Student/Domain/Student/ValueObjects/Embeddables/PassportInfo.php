@@ -50,7 +50,7 @@ class PassportInfo implements ArrayableInterface
         return $this;
     }
 
-    public function getDateOfIssue(): DateTimeImmutable
+    public function getDateOfIssue(): ?DateTimeImmutable
     {
         return $this->dateOfIssue;
     }
@@ -64,7 +64,7 @@ class PassportInfo implements ArrayableInterface
         return $this;
     }
 
-    public function getDateOfExpiry(): DateTimeImmutable
+    public function getDateOfExpiry(): ?DateTimeImmutable
     {
         return $this->dateOfExpiry;
     }

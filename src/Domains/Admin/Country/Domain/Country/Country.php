@@ -95,6 +95,11 @@ class Country extends AggregateRoot implements EntityUuid, TranslatableInterface
         return $this->uuid;
     }
 
+    public function getValue(): Value
+    {
+        return $this->value;
+    }
+
     public function setValue(Value $value): self
     {
         $this->value = $value;
