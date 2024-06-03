@@ -26,7 +26,7 @@ abstract class Translate
                 /** @var AbstractTranslation $trans */
                 $trans = $item->getTranslations()->findFirst(
                     static fn (int $idx, AbstractTranslation $el): bool =>
-                        $el->getField() === $column && $el->getLocale() === self::getLocale($locale)
+                        $el->getField() === $column && $el->getLocale() === self::getLocale($locale ??= config('app.locale'))
                 );
 
                 $content = $trans?->getContent();

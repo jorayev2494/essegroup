@@ -25,6 +25,9 @@ class StudentServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\SchoolAttestatTranslation\Contracts\SchoolAttestatTranslationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\SchoolAttestatTranslation\SchoolAttestatTranslationService::class],
         \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\EquivalenceDocument\Contracts\EquivalenceDocumentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\EquivalenceDocument\EquivalenceDocumentService::class],
         \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\AdditionalDocument\Contracts\AdditionalDocumentServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\AdditionalDocument\AdditionalDocumentService::class],
+
+        // Student PDF
+        \Project\Domains\Admin\Student\Domain\Student\Services\Contracts\PDFServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Domain\Student\Services\PDFService::class],
     ];
 
     /** @var array<array-key, string> */
@@ -32,6 +35,7 @@ class StudentServiceProvider extends AdminDomainServiceProvider
         // Student
         \Project\Domains\Admin\Student\Application\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\Student\Application\Queries\Show\QueryHandler::class,
+        \Project\Domains\Admin\Student\Application\Queries\PDFPreview\QueryHandler::class,
     ];
 
     /** @var array<array-key, string> */
@@ -79,12 +83,21 @@ class StudentServiceProvider extends AdminDomainServiceProvider
         __DIR__ . '/../Domain/Student',
     ];
 
+    protected const TRANSLATIONS = [
+        'src/Domains/Admin/Student/Infrastructure/Student/Translations' => 'project.domains.admin.student.infrastructure.student.translations',
+    ];
+
     /** @var array<string, string> */
     protected const ROUTE_PATHS = [
         [
             'middleware' => ['api', 'auth:admin'],
             'prefix' => 'api/admin',
             'path' => __DIR__ . '/../Presentation/Http/API/REST/routes.php',
+        ],
+        [
+            'middleware' => ['web', 'auth:admin'],
+            'prefix' => 'admin/students',
+            'path' => __DIR__ . '/../Presentation/Http/Web/REST/routes.php',
         ],
     ];
 }

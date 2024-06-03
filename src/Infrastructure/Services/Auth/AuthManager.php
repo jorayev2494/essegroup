@@ -70,6 +70,6 @@ class AuthManager
 
     public static function studentUuid(): ?UuidValueObject
     {
-        return self::student()->getUuid();
+        return StudentUuid::fromValue(self::uuid(GuardType::STUDENT)->value);
     }
 }

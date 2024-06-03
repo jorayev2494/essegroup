@@ -30,7 +30,7 @@ class UpdateRequest extends FormRequest
                 'max:50',
                 new ValidatePassportNumberRule(),
                 Rule::unique('admin_db.student_students', 'passport_number')
-                    ->ignore(AuthManager::studentUuid()->value, 'uuid'),
+                    ->ignore($this->route('uuid'), 'uuid'),
             ],
             'passport_date_of_issue' => ['required', 'date'],
             'passport_date_of_expiry' => ['required', 'date'],
@@ -39,7 +39,7 @@ class UpdateRequest extends FormRequest
                 'email',
                 'max:75',
                 Rule::unique('admin_db.student_students', 'email')
-                    ->ignore(AuthManager::studentUuid()->value, 'uuid'),
+                    ->ignore($this->route('uuid'), 'uuid'),
             ],
             'phone' => ['required', 'min:5', 'max:50'],
 
