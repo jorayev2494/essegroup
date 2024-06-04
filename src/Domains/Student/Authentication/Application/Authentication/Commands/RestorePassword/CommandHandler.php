@@ -27,10 +27,10 @@ readonly class CommandHandler implements CommandHandlerInterface
             throw new ModelNotFoundException();
         }
 
-        $employee = $foundCode->getAuthor();
-        $employee->changePassword(Password::fromValue($this->passwordHasher->hash($command->password)));
-        $employee->removeCode();
+        $student = $foundCode->getAuthor();
+        $student->changePassword(Password::fromValue($this->passwordHasher->hash($command->password)));
+        $student->removeCode();
 
-        $this->repository->save($employee);
+        $this->repository->save($student);
     }
 }

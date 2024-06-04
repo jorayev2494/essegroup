@@ -63,6 +63,11 @@ class StoreRequest extends FormRequest
                 'mimetypes:' . implode(',', self::$documentMimeTypes),
             ],
 
+            'communication_language_uuid' => [
+                'nullable',
+                'uuid',
+                Rule::exists('admin_db.language_languages', 'uuid'),
+            ],
             'father_name' => ['nullable', 'string', 'max:255'],
             'mother_name' => ['nullable', 'string', 'max:255'],
             'friend_phone' => ['nullable', 'string', 'max:50'],

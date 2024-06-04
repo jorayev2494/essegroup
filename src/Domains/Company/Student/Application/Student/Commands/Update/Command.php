@@ -34,6 +34,7 @@ readonly class Command implements CommandInterface
         public ?UploadedFile $biometricPhoto,
         public array $additionalDocuments,
         public ?UploadedFile $avatar,
+        public ?string $communicationLanguageUuid,
         public ?string $fatherName,
         public ?string $motherName,
         public ?string $friendPhone,

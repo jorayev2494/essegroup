@@ -15,6 +15,7 @@ use Project\Domains\Admin\Language\Domain\Language\LanguageTranslate;
 use Project\Domains\Admin\Student\Domain\Student\Student;
 use Project\Domains\Admin\University\Domain\Alias\Alias;
 use Project\Domains\Admin\University\Domain\Alias\AliasTranslate;
+use Project\Domains\Admin\University\Domain\Application\Events\ApplicationStatusWasChangedDomainEvent;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Degree\Degree;
@@ -221,6 +222,12 @@ class Application extends AggregateRoot implements
     {
         $this->statuses->add($status);
         $status->setApplication($this);
+        $this->record(
+            new ApplicationStatusWasChangedDomainEvent(
+                $this->uuid->value,
+                $status->getStatusValue()->getUuid()->value
+            )
+        );
     }
 
     public function getStatuses(): ArrayCollection
@@ -231,6 +238,11 @@ class Application extends AggregateRoot implements
     public function getStatus(): Status
     {
         return $this->statuses->last();
+    }
+
+    public function getStudent(): Student
+    {
+        return $this->student;
     }
 
     #[\Override]

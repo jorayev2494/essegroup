@@ -15,10 +15,7 @@ readonly class RestorePasswordLinkController
     function __construct(
         private ResponseFactory $response,
         private CommandBusInterface $commandBus,
-    )
-    {
-
-    }
+    ) { }
 
     public function __invoke(RestorePasswordLinkRequest $request): Response
     {

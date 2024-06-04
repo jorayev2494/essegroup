@@ -15,9 +15,7 @@ readonly class RefreshTokenController
     public function __construct(
         private ResponseFactory $response,
     )
-    {
-
-    }
+    { }
 
     public function __invoke(RefreshTokenRequest $request, CommandHandler $handler): JsonResponse
     {

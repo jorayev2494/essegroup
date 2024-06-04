@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Project\Domains\Admin\Language\Domain\Language\Language;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Application\StatusNoteTranslation;
 use Project\Domains\Admin\University\Domain\Application\StatusValue;
@@ -130,6 +131,11 @@ class Status implements EntityId, ArrayableInterface, TranslatableInterface
      {
          return $this->statusValue->isEqual($statusValue);
      }
+
+    public function isNotEqualsValue(StatusValue $statusValue): bool
+    {
+        return $this->statusValue->isNotEqual($statusValue);
+    }
 
     public function isEqualsNote(?string $note): bool
     {

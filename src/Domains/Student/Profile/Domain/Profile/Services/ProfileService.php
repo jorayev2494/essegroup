@@ -44,6 +44,7 @@ class ProfileService implements ProfileServiceInterface
                 $command->additionalDocuments,
                 $command->avatar,
                 $command->companyUuid,
+                $command->communicationLanguageUuid,
                 $command->fatherName,
                 $command->motherName,
                 $command->friendPhone,

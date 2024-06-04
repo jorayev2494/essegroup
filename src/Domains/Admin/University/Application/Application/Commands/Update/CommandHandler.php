@@ -23,6 +23,7 @@ use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Uuid as DegreeUu
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use Project\Shared\Domain\Bus\Event\EventBusInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
@@ -35,11 +36,9 @@ readonly class CommandHandler implements CommandHandlerInterface
         private CountryRepositoryInterface $countryRepository,
         private ApplicationServiceInterface $service,
         private StatusValueRepositoryInterface $statusValueRepository,
-        private StatusServiceInterface $statusService
-    )
-    {
-
-    }
+        private StatusServiceInterface $statusService,
+        private EventBusInterface $eventBus
+    ) { }
 
     public function __invoke(Command $command): void
     {
@@ -64,5 +63,6 @@ readonly class CommandHandler implements CommandHandlerInterface
         $this->service->updateDepartments($application, $command->departmentUuids);
 
         $this->applicationRepository->save($application);
+        $this->eventBus->publish(...$application->pullDomainEvents());
     }
 }

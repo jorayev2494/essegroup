@@ -42,11 +42,11 @@ class ProjectVersionComparator implements Comparator
 
     public function compare(Version $a, Version $b): int
     {
-        dd($a, $b);
+//        dd($a, $b);
         $prefixA = $this->getNamespacePrefix($a);
         $prefixB = $this->getNamespacePrefix($b);
 
-        dd($prefixA, $prefixB, $a, $b);
+//        dd($prefixA, $prefixB, $a, $b);
 
         return $this->dependencies[$prefixA] <=> $this->dependencies[$prefixB]
             ?: $this->defaultSorter->compare($a, $b);
