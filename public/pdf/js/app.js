@@ -8,7 +8,7 @@ $(function () {
     $(document).on('click', '#invoice_download_btn', function () {
         var contentWidth = $("#invoice_wrapper").width();
         var contentHeight = $("#invoice_wrapper").height();
-        var topLeftMargin = 20;
+        var topLeftMargin = 0; // Margin
         var pdfWidth = contentWidth + (topLeftMargin * 2);
         var pdfHeight = (pdfWidth * 1.5) + (topLeftMargin * 2);
         var canvasImageWidth = contentWidth;

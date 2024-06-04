@@ -23,15 +23,15 @@ readonly class CommandHandler implements CommandHandlerInterface
 
     public function __invoke(Command $command): void
     {
-        $employee = $this->repository->findByEmail(Email::fromValue($command->email));
+        $student = $this->repository->findByEmail(Email::fromValue($command->email));
 
-        if ($employee === null) {
+        if ($student === null) {
             throw new StudentNotFountExceptionDomainException();
         }
 
-        if ($employee->hasCode()) {
-            $employee->removeCode();
-            $this->repository->save($employee);
+        if ($student->hasCode()) {
+            $student->removeCode();
+            $this->repository->save($student);
         }
 
         $code = Code::fromPrimitives(
@@ -39,8 +39,8 @@ readonly class CommandHandler implements CommandHandlerInterface
             new DateTimeImmutable('+ 1 hour')
         );
 
-        $employee->addCode($code);
-        $this->repository->save($employee);
-        $this->eventBus->publish(...$employee->pullDomainEvents());
+        $student->addCode($code);
+        $this->repository->save($student);
+        $this->eventBus->publish(...$student->pullDomainEvents());
     }
 }

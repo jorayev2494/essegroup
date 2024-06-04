@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api\Company\Student;
+namespace App\Http\Requests\Api\Student\Profile;
 
+use App\Rules\ValidatePassportNumberRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Enums\Gender;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Enums\MaritalType;
+use Project\Infrastructure\Services\Auth\AuthManager;
 
 class UpdateRequest extends FormRequest
 {
@@ -22,10 +24,23 @@ class UpdateRequest extends FormRequest
             'last_name' => ['required', 'string', 'max:255'],
             'avatar' => ['nullable', 'file', 'mimetypes:image/jpeg,image/png'],
             'birthday' => ['required', 'date', 'max:255'],
-            'passport_number' => ['required', 'string', 'max:50'],
+            'passport_number' => [
+                'required',
+                'string',
+                'max:50',
+                new ValidatePassportNumberRule(),
+                Rule::unique('admin_db.student_students', 'passport_number')
+                    ->ignore(AuthManager::studentUuid()->value, 'uuid'),
+            ],
             'passport_date_of_issue' => ['required', 'date'],
             'passport_date_of_expiry' => ['required', 'date'],
-            'email' => ['required', 'email', 'max:75'],
+            'email' => [
+                'required',
+                'email',
+                'max:75',
+                Rule::unique('admin_db.student_students', 'email')
+                    ->ignore(AuthManager::studentUuid()->value, 'uuid'),
+            ],
             'phone' => ['required', 'min:5', 'max:50'],
 
             'nationality_uuid' => [
@@ -76,6 +91,11 @@ class UpdateRequest extends FormRequest
                 'mimetypes:' . implode(',', self::$documentMimeTypes),
             ],
 
+            'company_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.company_companies', 'uuid'),
+            ],
             'communication_language_uuid' => [
                 'nullable',
                 'uuid',

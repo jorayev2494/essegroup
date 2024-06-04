@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Company\Domain\Company\Company;
 use Project\Domains\Admin\Country\Domain\Country\Country;
 use Project\Domains\Admin\Country\Domain\Country\CountryTranslate;
+use Project\Domains\Admin\Language\Domain\Language\Language;
 use Project\Domains\Admin\Student\Domain\Student\Events\Auth\RestorePassword\StudentRestorePasswordLinkWasAddedDomainEvent;
 use Project\Domains\Admin\Student\Domain\Student\Events\StudentWasCreatedDomainEvent;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarableInterface;
@@ -174,6 +175,13 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
     #[ORM\JoinColumn(name: 'high_school_country_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
     private Country $highSchoolCountry;
 
+    #[ORM\Column(name: 'communication_language_uuid', type: Types::GUID, nullable: true)]
+    private ?string $communicationLanguageUuid;
+
+    #[ORM\ManyToOne(targetEntity: Language::class, cascade: ['persist'], inversedBy: 'students')]
+    #[ORM\JoinColumn(name: 'communication_language_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    public ?Language $communicationLanguage;
+
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'student')]
     private Collection $applications;
 
@@ -184,7 +192,7 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
     private Collection $devices;
 
     #[ORM\OneToOne(targetEntity: Code::class, mappedBy: 'author', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    public ?Code $code;
+    private ?Code $code;
 
     private function __construct(
         Uuid $uuid,
@@ -221,6 +229,7 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         $this->friendPhone = FriendPhone::fromValue(null);
         $this->homeAddress = HomeAddress::fromValue(null);
         $this->additionalDocuments = new ArrayCollection();
+        $this->communicationLanguage = null;
         $this->avatar = null;
         $this->gender = null;
         $this->maritalType = null;
@@ -482,6 +491,18 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         $this->password = $password;
     }
 
+    public function getCommunicationLanguage(): Language
+    {
+        return $this->communicationLanguage;
+    }
+
+    public function setCommunicationLanguage(?Language $communicationLanguage): self
+    {
+        $this->communicationLanguage = $communicationLanguage;
+
+        return $this;
+    }
+
     public function isEqual(self $other): bool
     {
         return $this->uuid->value === $other->getUuid()->value;
@@ -589,6 +610,8 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
             'friend_phone' => $this->friendPhone->value,
             'home_address' => $this->homeAddress->value,
             'email' => $this->email->value,
+            'communication_language_uuid' => $this->communicationLanguage->getUuid()->value,
+            'communication_language' => $this->communicationLanguage->getUuid()->isNotNull() ? $this->communicationLanguage->toArray() : null,
             'passport' => $this->passport->toArray(),
             'school_attestat' => $this->schoolAttestat->toArray(),
             'equivalence_document' => $this->equivalenceDocument->toArray(),

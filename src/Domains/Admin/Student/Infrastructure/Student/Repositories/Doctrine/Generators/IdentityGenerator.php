@@ -13,13 +13,8 @@ class IdentityGenerator extends AbstractIdGenerator
 
     public function generateId(EntityManagerInterface $em, ?object $entity): int
     {
-        dd($em, $entity);
         $table = $em->getClassMetadata($entity::class)->getTableName();
-        dd(
-            $em,
-            $entity,
-            $table,
-        );
+
         $maxId = $em->getConnection()->createQueryBuilder()
             ->select('MAX(identity)')
             ->from($table)

@@ -13,6 +13,7 @@ use Project\Domains\Admin\Language\Domain\Language\ValueObjects\Value;
 use Project\Domains\Admin\Language\Infrastructure\Language\Repositories\Doctrine\Types\ISOType;
 use Project\Domains\Admin\Language\Infrastructure\Language\Repositories\Doctrine\Types\UuidType;
 use Project\Domains\Admin\Language\Infrastructure\Language\Repositories\Doctrine\Types\ValueType;
+use Project\Domains\Admin\Student\Domain\Student\Student;
 use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Contracts\EntityUuid;
@@ -48,12 +49,16 @@ class Language implements EntityUuid, TranslatableInterface, ArrayableInterface
     #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'language')]
     private Collection $applications;
 
+    #[ORM\OneToMany(targetEntity: Student::class, mappedBy: 'communicationLanguage')]
+    private Collection $students;
+
     private function __construct(Uuid $uuid, ISO $iso, bool $isActive)
     {
         $this->uuid = $uuid;
         $this->iso = $iso;
         $this->value = Value::fromValue(null);
         $this->translations = new ArrayCollection();
+        $this->students = new ArrayCollection();
         $this->isActive = $isActive;
     }
 
@@ -62,9 +67,14 @@ class Language implements EntityUuid, TranslatableInterface, ArrayableInterface
         return new self($uuid, $iso, $isActive);
     }
 
-    public function getUuid(): UuidValueObject
+    public function getUuid(): Uuid
     {
         return $this->uuid;
+    }
+
+    public function getValue(): Value
+    {
+        return $this->value;
     }
 
     public function setValue(Value $value): self
@@ -72,6 +82,11 @@ class Language implements EntityUuid, TranslatableInterface, ArrayableInterface
         $this->value = $value;
 
         return $this;
+    }
+
+    public function getISO(): ISO
+    {
+        return $this->iso;
     }
 
     public function setISO(ISO $iso): self

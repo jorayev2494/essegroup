@@ -196,6 +196,9 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         // Application
 
+        // Application Status
+        \Project\Domains\Admin\University\Application\Application\Subscribers\Application\ApplicationStatusWasChangedDomainEventSubscriber::class,
+
         // Department
 
         // Faculty

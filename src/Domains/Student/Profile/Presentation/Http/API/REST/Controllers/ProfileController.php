@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Student\Profile\Presentation\Http\API\REST\Controllers;
 
-use App\Http\Requests\Api\Admin\Student\Student\UpdateRequest;
+use App\Http\Requests\Api\Student\Profile\UpdateRequest;
 use App\Http\Requests\Api\Student\Profile\ChangePasswordRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Project\Domains\Student\Profile\Application\Profile\Commands\Update\Command as UpdateCommand;
@@ -64,6 +64,7 @@ readonly class ProfileController
 
                 $request->file('avatar'),
                 $request->get('company_uuid'),
+                $request->get('communication_language_uuid'),
                 $request->get('father_name'),
                 $request->get('mother_name'),
                 $request->get('friend_phone'),

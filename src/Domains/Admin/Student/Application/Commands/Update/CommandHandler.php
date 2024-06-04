@@ -8,6 +8,8 @@ use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid as CompanyUuid;
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid as CountryUuid;
+use Project\Domains\Admin\Language\Domain\Language\LanguageRepositoryInterface;
+use Project\Domains\Admin\Language\Domain\Language\ValueObjects\Uuid as LanguageUuid;
 use Project\Domains\Admin\Student\Domain\Student\Exceptions\StudentNotFountExceptionDomainException;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarServiceInterface;
 use Project\Domains\Admin\Student\Domain\Student\StudentRepositoryInterface;
@@ -48,6 +50,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private CompanyRepositoryInterface $companyRepository,
         private CountryRepositoryInterface $countryRepository,
         private PassportServiceInterface $passportService,
+        private LanguageRepositoryInterface $languageRepository,
         private PassportTranslationServiceInterface $passportTranslationService,
         private SchoolAttestatServiceInterface $schoolAttestatService,
         private SchoolAttestatTranslationServiceInterface $schoolAttestatTranslationService,
@@ -71,6 +74,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $nationality = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->nationalityUuid));
         $countryOfResidence = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->countryOfResidenceUuid));
         $highSchoolCountry = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->highSchoolCountryUuid));
+        $communicationLanguage = $this->languageRepository->findByUuid(LanguageUuid::fromValue($command->communicationLanguageUuid));
 
         $student->getFullName()
             ->changeFirstName(FirstName::fromValue($command->firstName))
@@ -79,6 +83,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $student->getParentsName()
             ->changeFatherName(FatherName::fromValue($command->fatherName))
             ->changeMotherName(MotherName::fromValue($command->motherName));
+        $student->setCommunicationLanguage($communicationLanguage);
 
         $student->changeBirthday(new DateTimeImmutable($command->birthday));
 

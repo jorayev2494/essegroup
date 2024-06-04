@@ -66,6 +66,7 @@ readonly class StudentController
                 $request->file('biometric_photo'),
                 array_filter($additionalDocuments),
 
+                $request->get('communication_language_uuid'),
                 $request->get('father_name'),
                 $request->get('mother_name'),
                 $request->get('friend_phone'),
@@ -124,6 +125,7 @@ readonly class StudentController
                 array_filter($additionalDocuments),
 
                 $request->file('avatar'),
+                $request->get('communication_language_uuid'),
                 $request->get('father_name'),
                 $request->get('mother_name'),
                 $request->get('friend_phone'),

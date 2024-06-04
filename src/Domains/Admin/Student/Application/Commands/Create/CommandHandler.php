@@ -8,6 +8,8 @@ use Project\Domains\Admin\Company\Domain\Company\CompanyRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Company\ValueObjects\Uuid as CompanyUuid;
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\Country\ValueObjects\Uuid as CountryUuid;
+use Project\Domains\Admin\Language\Domain\Language\ValueObjects\Uuid as LanguageUuid;
+use Project\Domains\Admin\Language\Domain\Language\LanguageRepositoryInterface;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarServiceInterface;
 use Project\Domains\Admin\Student\Domain\Student\Services\Contracts\StudentServiceInterface;
 use Project\Domains\Admin\Student\Domain\Student\Student;
@@ -52,6 +54,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private StudentRepositoryInterface $studentRepository,
         private CompanyRepositoryInterface $companyRepository,
         private CountryRepositoryInterface $countryRepository,
+        private LanguageRepositoryInterface $languageRepository,
         private StudentServiceInterface $service,
         private PassportServiceInterface $passportService,
         private PassportTranslationServiceInterface $passportTranslationService,
@@ -74,6 +77,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $nationality = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->nationalityUuid));
         $countryOfResidence = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->countryOfResidenceUuid));
         $highSchoolCountry = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->highSchoolCountryUuid));
+        $communicationLanguage = $this->languageRepository->findByUuid(LanguageUuid::fromValue($command->communicationLanguageUuid));
 
         $student = Student::create(
             Uuid::fromValue($command->uuid),
@@ -103,6 +107,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $student->changeFriendPhone(FriendPhone::fromValue($command->friendPhone));
         $student->changeHomeAddress(HomeAddress::fromValue($command->homeAddress));
+        $student->setCommunicationLanguage($communicationLanguage);
 
         $this->avatarService->upload($student, $command->avatar);
         $this->passportService->upload($student, $command->passport);

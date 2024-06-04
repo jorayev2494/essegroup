@@ -103,6 +103,11 @@ class StatusValue implements EntityUuid, TranslatableInterface, ArrayableInterfa
         return $this->uuid;
     }
 
+    public function getValue(): StatusValueValue
+    {
+        return $this->value;
+    }
+
     public function setValue(StatusValueValue $value): self
     {
         $this->value = $value;

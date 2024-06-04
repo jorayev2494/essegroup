@@ -6,7 +6,6 @@ namespace Project\Domains\Admin\University\Domain\Application;
 
 use Doctrine\DBAL\Types\Types;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
-use Project\Domains\Admin\University\Domain\University\ValueObjects\Name;
 use Project\Shared\Domain\Translation\Translate;
 
 class StatusTranslate extends Translate
