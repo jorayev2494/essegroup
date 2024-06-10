@@ -60,6 +60,11 @@ class AuthManager
         return $managerRepository->findByUuid(ManagerUuid::fromValue(self::uuid(GuardType::MANAGER)->value));
     }
 
+    public static function managerUuid(): ?UuidValueObject
+    {
+        return ManagerUuid::fromValue(self::uuid(GuardType::MANAGER)->value);
+    }
+
     public static function student(): ?Student
     {
         /** @var StudentRepositoryInterface $studentRepository */

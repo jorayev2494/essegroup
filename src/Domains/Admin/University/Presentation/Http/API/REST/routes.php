@@ -88,6 +88,7 @@ Route::group(
             static function (Router $router): void {
                 $router->get('/', 'index');
                 $router->get('/list', 'list');
+                $router->get('/widget-list', 'widgetList');
                 $router->post('/', 'store');
                 $router->get('/{uuid}', 'show');
                 $router->put('/{uuid}', 'update');

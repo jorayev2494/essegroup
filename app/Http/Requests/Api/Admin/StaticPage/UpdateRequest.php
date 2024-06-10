@@ -18,6 +18,7 @@ class UpdateRequest extends FormRequest
                 'nullable',
                 'file',
                 'mimetypes:image/*',
+                'dimensions:width=466,height=456',
             ],
         ];
     }

@@ -82,6 +82,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\Show\QueryHandler::class,
         \Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\List\QueryHandler::class,
+        \Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\WidgetList\QueryHandler::class,
 
         // Degree
         \Project\Domains\Admin\University\Application\Degree\Queries\Index\QueryHandler::class,

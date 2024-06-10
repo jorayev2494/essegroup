@@ -36,7 +36,7 @@ return [
     'different'      => ':attribute bilen :other birbirinden tapawutly bolmalydyr.',
     'digits'         => ':attribute :digits san bolmalydyr.',
     'digits_between' => ':attribute :min bilen :max arasynda san bolmalydyr.',
-    'dimensions'     => 'The :attribute has invalid image dimensions.',
+    'dimensions'     => 'The :attribute has invalid image dimensions. <span class="text-danger">:width x :height<span>',
     'distinct'       => 'The :attribute field has a duplicate value.',
     'email'          => ':attribute formaty ýalňyş.',
     'ends_with'      => 'The :attribute must end with one of the following: :values.',

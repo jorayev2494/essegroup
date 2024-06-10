@@ -27,6 +27,7 @@ use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyTranslate;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
+use Project\Domains\Admin\University\Domain\University\ValueObjects\Name;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\PriceType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType;
@@ -165,6 +166,11 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     public function getUuid(): UUid
     {
         return $this->uuid;
+    }
+
+    public function getName(): DepartmentName
+    {
+        return $this->name;
     }
 
     public function getDescription(): Description

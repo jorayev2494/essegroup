@@ -169,11 +169,21 @@ class Application extends AggregateRoot implements
         }
     }
 
+    public function getDegree(): Degree
+    {
+        return $this->degree;
+    }
+
     public function changeDegree(Degree $degree): void
     {
         if ($this->degree->isNotEqual($degree)) {
             $this->degree = $degree;
         }
+    }
+
+    public function getCountry(): Country
+    {
+        return $this->country;
     }
 
     public function changeCountry(Country $country): void
@@ -190,6 +200,11 @@ class Application extends AggregateRoot implements
         }
     }
 
+    public function getUniversity(): University
+    {
+        return $this->university;
+    }
+
     public function changeUniversity(University $university): void
     {
         if ($this->university->isNotEquals($university)) {
@@ -200,6 +215,11 @@ class Application extends AggregateRoot implements
     public function getDepartments(): Collection
     {
         return $this->departments;
+    }
+
+    public function getLanguage(): Language
+    {
+        return $this->language;
     }
 
     public function addDepartment(Department $department): void

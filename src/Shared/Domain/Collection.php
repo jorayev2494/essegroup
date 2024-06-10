@@ -8,7 +8,7 @@ use Project\Shared\Contracts\ArrayableInterface;
 use IteratorAggregate;
 use Countable;
 
-abstract class Collection extends ArrayCollection implements Countable, IteratorAggregate, ArrayableInterface
+abstract class Collection extends ArrayCollection implements Countable, IteratorAggregate //, ArrayableInterface
 {
     public function __construct(array $elements = [])
     {
@@ -54,11 +54,13 @@ abstract class Collection extends ArrayCollection implements Countable, Iterator
         return $this;
     }
 
+    private function mapper(): \Closure
+    {
+        return static fn (array|ArrayableInterface $item): array => is_array($item) ? $item : $item->toArray();
+    }
+
     public function toArray(): array
     {
-        return array_map(
-            static fn (ArrayableInterface $item): array => $item->toArray(),
-            iterator_to_array($this->getIterator())
-        );
+        return array_map($this->mapper(), iterator_to_array($this->getIterator()));
     }
 }

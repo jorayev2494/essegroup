@@ -28,10 +28,10 @@ class ValidateTranslationRule implements ValidationRule
             } else {
                 foreach ($this->params as $prop) {
                     if (! array_key_exists($prop, $value[$locale])) {
-                        $fail("$attribute.$locale.$prop", "The $locale field is required.");
+                        $fail("$attribute.$locale.$prop", "The $locale $prop field is required.");
                     } else {
                         if (is_null($value[$locale][$prop])) {
-                            $fail("$attribute.$locale.$prop", "The $locale field is not be null");
+                            $fail("$attribute.$locale.$prop", "The $locale $prop field is not be null");
                         }
                     }
                 }

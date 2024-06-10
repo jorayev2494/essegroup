@@ -13,6 +13,7 @@ use Project\Domains\Admin\Student\Domain\Student\StudentRepositoryInterface;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Email;
 use Project\Domains\Admin\Student\Domain\Student\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Application\Application;
+use Project\Domains\Admin\University\Domain\Application\ApplicationRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
@@ -29,9 +30,49 @@ class StudentRepository extends BaseAdminEntityRepository implements StudentRepo
     {
         $query = $this->entityRepository->createQueryBuilder('s');
 
+        if ($httpQuery->search->searchBy === 'full_name' && $httpQuery->search->search !== null) {
+            [$firstName] = explode(' ', $httpQuery->search->search);
+
+            $query->andWhere("s.fullName.firstName LIKE :first_name")
+                ->setParameter('first_name', '%' . $firstName . '%');
+
+            $query->orWhere("s.fullName.lastName LIKE :last_name")
+                ->setParameter('last_name', '%' . $firstName . '%');
+
+            if (str_contains(' ', $httpQuery->search->search)) {
+                [, $lastName] = explode(' ', $httpQuery->search->search);
+
+                $query->andWhere("s.fullName.lastName LIKE :last_name")
+                    ->setParameter('last_name', '%' . $lastName . '%');
+            }
+        }
+
         if (count($companyUuids = $httpQuery->filter->companyUuids) > 0) {
             $query->andWhere('s.companyUuid IN (:companyUuids)')
                 ->setParameter('companyUuids', $companyUuids);
+        }
+
+        if (count($httpQuery->filter->universityUuids) > 0) {
+            $query->innerJoin(Application::class, 'aa', Join::WITH, 's.uuid = aa.studentUuid');
+            $query->andWhere('aa.universityUuid IN (:universityUuids)')
+                ->setParameter('universityUuids', $httpQuery->filter->universityUuids);
+        }
+
+        if (count($httpQuery->filter->statusValueUuids) > 0) {
+            $query->innerJoin(Application::class, 'a', Join::WITH, 's.uuid = a.studentUuid');
+
+            $currentStatusUuids = [];
+
+            /** @var ApplicationRepositoryInterface $applicationRepository */
+            $applicationRepository = resolve(ApplicationRepositoryInterface::class);
+
+            $applicationRepository->getApplicationCountWhereCurrentStatusAre($httpQuery->filter->statusValueUuids)
+                ->forEach(static function (Application $app) use(&$currentStatusUuids): void {
+                    $currentStatusUuids[] = $app->getUuid()->value;
+                });
+
+            $query->andWhere('a.uuid IN (:applicationUuids)')
+                ->setParameter('applicationUuids', $currentStatusUuids);
         }
 
         $query->orderBy('s.createdAt', 'DESC');

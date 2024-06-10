@@ -30,6 +30,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
 
         // ApplicationStatusValue
         \Project\Domains\Company\University\Application\ApplicationStatusValue\Queries\List\QueryHandler::class,
+        \Project\Domains\Company\University\Application\ApplicationStatusValue\Queries\WidgetList\QueryHandler::class,
 
         // Department
         \Project\Domains\Company\University\Application\Department\Queries\Index\QueryHandler::class

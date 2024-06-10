@@ -5,12 +5,10 @@ namespace App\Http\Requests\Api\Admin\University\Faculty;
 use App\Rules\ValidateTranslationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Logo;
 
 class FacultyUpdateRequest extends FormRequest
 {
-    private const int LOGO_WIDTH = 400;
-
-    private const int LOGO_HEIGHT = 400;
 
     public function authorize(): bool
     {
@@ -34,7 +32,7 @@ class FacultyUpdateRequest extends FormRequest
                 'nullable',
                 'file',
                 'mimetypes:image/*',
-                // Rule::dimensions()->width(self::LOGO_WIDTH)->height(self::LOGO_HEIGHT),
+                Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
             ],
             'translations' => [
                 'array',

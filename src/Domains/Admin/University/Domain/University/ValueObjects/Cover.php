@@ -15,6 +15,10 @@ use Project\Shared\Domain\File\File;
 class Cover extends File implements CoverInterface
 {
 
+    public const int WIDTH = 1280;
+
+    public const int HEIGHT = 568;
+
     #[ORM\OneToOne(targetEntity: University::class, mappedBy: 'cover')]
     private University $university;
 

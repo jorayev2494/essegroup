@@ -28,6 +28,7 @@ trait CreatedAtAndUpdatedAtTrait
     #[ORM\PreUpdate]
     public function preUpdating(PreUpdateEventArgs $event): void
     {
+        // $this->updatedAt->modify('now');
         $this->updatedAt = new DateTimeImmutable();
     }
 }

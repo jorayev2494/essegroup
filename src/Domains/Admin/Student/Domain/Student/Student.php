@@ -439,6 +439,11 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         }
     }
 
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
     public function getHighSchool(): HighSchool
     {
         return $this->highSchool;

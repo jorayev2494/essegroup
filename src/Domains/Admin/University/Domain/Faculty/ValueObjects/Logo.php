@@ -14,6 +14,11 @@ use Project\Shared\Domain\File\File;
 #[ORM\HasLifecycleCallbacks]
 class Logo extends File implements LogoInterface
 {
+
+    public const int WIDTH = 75;
+
+    public const int HEIGHT = 75;
+
     #[\Override]
     public static function path(): string
     {

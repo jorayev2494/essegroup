@@ -19,6 +19,7 @@ Route::group(
             ['prefix' => 'statuses', 'controller' => ApplicationStatusValueController::class],
             static function (Router $router): void {
                 $router->get('/list', 'list');
+                $router->get('/widget-list', 'widgetList');
             }
         );
     }

@@ -65,6 +65,11 @@ class Degree implements EntityUuid, TranslatableInterface, ArrayableInterface
         return $this->uuid;
     }
 
+    public function getValue(): Value
+    {
+        return $this->value;
+    }
+
     public function setValue(Value $value): self
     {
         $this->value = $value;
