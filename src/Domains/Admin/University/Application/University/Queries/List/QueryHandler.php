@@ -11,13 +11,12 @@ readonly class QueryHandler implements QueryHandlerInterface
 {
     public function __construct(
         private UniversityRepositoryInterface $repository
-    )
-    {
-
-    }
+    ) { }
 
     public function __invoke(Query $query): array
     {
-        return $this->repository->list($query->httpQueryFilter)->translateItems()->toArray();
+        return $this->repository->list($query)
+            ->translateItems()
+            ->toArray();
     }
 }

@@ -143,6 +143,11 @@ class StatusValue implements EntityUuid, TranslatableInterface, ArrayableInterfa
         return $this;
     }
 
+    public function getStatuses(): Collection
+    {
+        return $this->statuses;
+    }
+
     public function setIsFirst(bool $isFirst): self
     {
         $this->isFirst = $isFirst;

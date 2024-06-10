@@ -100,12 +100,17 @@ class Paginator implements Arrayable
         return $this;
     }
 
+    private function itemToArray(): \Closure
+    {
+        return static fn (array|ArrayableInterface $item): array => is_array($item) ? $item : $item->toArray();
+    }
+
     public function toArray(): array
     {
         return [
             'current_page' => $this->page,
             'data' => array_map(
-                static fn (ArrayableInterface $item): array => $item->toArray(),
+                $this->itemToArray(),
                 iterator_to_array($this->items)
             ),
             'next_page' => $this->nextPage,

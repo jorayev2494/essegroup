@@ -37,7 +37,7 @@ return [
     'different'            => ':attribute ile :other mutlaka birbirinden farklı olmalıdır.',
     'digits'               => ':attribute mutlaka :digits basamaklı olmalıdır.',
     'digits_between'       => ':attribute mutlaka en az :min, en fazla :max basamaklı olmalıdır.',
-    'dimensions'           => ':attribute geçersiz resim boyutlarına sahip.',
+    'dimensions'           => ':attribute geçersiz resim boyutlarına sahip. <span class="text-danger">:width x :height<span>',
     'distinct'             => ':attribute alanı yinelenen bir değere sahip.',
     'email'                => ':attribute mutlaka geçerli bir eposta adresi olmalıdır.',
     'ends_with'            => ':attribute sadece şu değerlerden biriyle bitebilir: :values.',

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University;
 
-use Project\Domains\Admin\University\Application\University\Queries\Index\Query;
+use Project\Domains\Admin\University\Application\University\Queries\Index\Query as IndexQuery;
+use Project\Domains\Admin\University\Application\University\Queries\List\Query as ListQuery;
 use Project\Domains\Admin\University\Domain\University\UniversityCollection;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
@@ -34,23 +35,25 @@ class UniversityRepository extends BaseAdminEntityRepository implements Universi
         return (new UniversityCollection($this->entityRepository->findAll()))->translateItems();
     }
 
-    public function paginate(Query $httpQuery): Paginator
+    public function paginate(IndexQuery $httpQuery): Paginator
     {
         $query = $this->entityRepository->createQueryBuilder('u');
 
         return $this->paginator($query->getQuery(), $httpQuery->paginator);
     }
 
-    public function list(QueryFilter $httpQueryFilterDTO): UniversityCollection
+    public function list(ListQuery $httpQuery): UniversityCollection
     {
         $query = $this->entityRepository->createQueryBuilder('u');
 
         FilterQueryBuilder::build(
             new FilterPipelineDTO(
                 $query,
-                $httpQueryFilterDTO
+                $httpQuery->httpQueryFilter
             )
         );
+
+        $query->setMaxResults($httpQuery->limit);
 
         return new UniversityCollection($query->getQuery()->getResult());
     }

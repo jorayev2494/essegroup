@@ -6,6 +6,7 @@ namespace Project\Domains\Company\Student\Application\Student\Queries\Index;
 
 use Project\Domains\Admin\Student\Infrastructure\Student\Filters\QueryFilter;
 use Project\Shared\Domain\Bus\Query\BaseHttpQueryParams;
+use Project\Shared\Infrastructure\Filters\BaseSearch;
 use Project\Shared\Infrastructure\Repository\Doctrine\PaginatorHttpQueryParams;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
@@ -15,10 +16,13 @@ readonly class Query extends BaseHttpQueryParams
 
     public QueryFilter $filter;
 
+    public BaseSearch $search;
+
     protected function fromRequest(SymfonyRequest $request): static
     {
         $this->paginator = PaginatorHttpQueryParams::makeFromRequest($request);
         $this->filter = QueryFilter::makeFromRequest($request);
+        $this->search = BaseSearch::makeFromRequest($request);
 
         return $this;
     }
@@ -33,6 +37,7 @@ readonly class Query extends BaseHttpQueryParams
         return [
             ...$this->paginator->toArray(),
             ...$this->filter->toArray(),
+            ...$this->search->toArray(),
         ];
     }
 }

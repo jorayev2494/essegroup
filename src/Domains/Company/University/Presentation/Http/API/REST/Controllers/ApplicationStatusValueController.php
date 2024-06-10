@@ -6,7 +6,8 @@ namespace Project\Domains\Company\University\Presentation\Http\API\REST\Controll
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Project\Domains\Company\University\Application\ApplicationStatusValue\Queries\List\Query;
+use Project\Domains\Company\University\Application\ApplicationStatusValue\Queries\List\Query as ListQuery;
+use Project\Domains\Company\University\Application\ApplicationStatusValue\Queries\WidgetList\Query as WidgetListQuery;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -21,7 +22,16 @@ readonly class ApplicationStatusValueController
     {
         return $this->response->json(
             $this->queryBus->ask(
-                Query::makeFromRequest($request)
+                ListQuery::makeFromRequest($request)
+            )
+        );
+    }
+
+    public function widgetList(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                WidgetListQuery::makeFromRequest($request)
             )
         );
     }

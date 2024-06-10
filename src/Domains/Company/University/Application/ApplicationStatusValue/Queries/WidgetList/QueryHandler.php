@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Project\Domains\Company\University\Application\ApplicationStatusValue\Queries\List;
+namespace Project\Domains\Company\University\Application\ApplicationStatusValue\Queries\WidgetList;
 
 use Project\Domains\Company\University\Domain\ApplicationStatusValue\Services\Contracts\ApplicationStatusValueServiceInterface;
 use Project\Shared\Domain\Bus\Query\QueryHandlerInterface;
@@ -15,7 +15,6 @@ readonly class QueryHandler implements QueryHandlerInterface
 
     public function __invoke(Query $query): array
     {
-        dd($query);
-        return $this->service->list($query);
+        return $this->service->widgetList($query);
     }
 }

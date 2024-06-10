@@ -14,6 +14,7 @@ use Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\
 use Project\Domains\Admin\University\Application\ApplicationStatusValue\Commands\Update\Command as UpdateCommand;
 use Project\Domains\Admin\University\Application\ApplicationStatusValue\Commands\Delete\Command as DeleteCommand;
 use Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\List\Query as StatusListQuery;
+use Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\WidgetList\Query as StatusWidgetListQuery;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
@@ -43,6 +44,15 @@ readonly class ApplicationStatusValueController
         return $this->response->json(
             $this->queryBus->ask(
                 new StatusListQuery()
+            )
+        );
+    }
+
+    public function widgetList(Request $request): JsonResponse
+    {
+        return $this->response->json(
+            $this->queryBus->ask(
+                StatusWidgetListQuery::makeFromRequest($request)
             )
         );
     }

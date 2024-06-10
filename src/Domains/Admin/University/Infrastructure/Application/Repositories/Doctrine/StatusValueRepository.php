@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine;
 
+use Doctrine\ORM\Query\Expr\Join;
 use Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\Index\Query as IndexQuery;
+use Project\Domains\Admin\University\Application\ApplicationStatusValue\Queries\WidgetList\Query as WidgetListQuery;
+use Project\Domains\Admin\University\Domain\Application\Application;
 use Project\Domains\Admin\University\Domain\Application\StatusValue;
 use Project\Domains\Admin\University\Domain\Application\StatusValueCollection;
 use Project\Domains\Admin\University\Domain\Application\StatusValueRepositoryInterface;
+use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\StatusValueUuid;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
 use Project\Shared\Infrastructure\Repository\Doctrine\Paginator;
@@ -35,6 +39,18 @@ class StatusValueRepository extends BaseAdminEntityRepository implements StatusV
                 ->getQuery()
                 ->getResult()
         );
+    }
+
+    public function loadWidgetsList(): StatusValueCollection
+    {
+        $query = $this->entityRepository->createQueryBuilder('sv')
+            ->innerJoin(Status::class, 's', Join::WITH, 's.statusValueUuid = sv.uuid')
+            ->innerJoin(Application::class, 'a', Join::WITH, 's.applicationUuid = a.uuid')
+            // ->where('s.isFirst = :isFirst')
+            // ->setParameter('isFirst', false)
+        ;
+
+        return new StatusValueCollection($query->getQuery()->getResult());
     }
 
     public function findByUuid(StatusValueUuid $uuid): ?StatusValue
