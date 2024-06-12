@@ -16,20 +16,6 @@ class ApplicationStoreRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation(): void
-    {
-        /** @var CompanyRepositoryInterface $companyRepository */
-        $companyRepository = resolve(CompanyRepositoryInterface::class);
-
-        /** @var Company $company */
-        $company = $companyRepository->findMain();
-        if ($company->getUuid()->isNotNull()) {
-            $this->merge([
-                'company_uuid' => $company->getUuid()->value,
-            ]);
-        }
-    }
-
     public function rules(): array
     {
         return [
@@ -39,7 +25,8 @@ class ApplicationStoreRequest extends FormRequest
                 Rule::exists('admin_db.student_students', 'uuid'),
             ],
             'alias_uuid' => [
-                'required',
+                // 'required',
+                'nullable',
                 'uuid',
                 Rule::exists('admin_db.university_aliases', 'uuid'),
             ],
@@ -54,7 +41,8 @@ class ApplicationStoreRequest extends FormRequest
                 Rule::exists('admin_db.university_degrees', 'uuid'),
             ],
             'country_uuid' => [
-                'required',
+                // 'required',
+                'nullable',
                 'uuid',
                 Rule::exists('admin_db.country_countries', 'uuid'),
             ],

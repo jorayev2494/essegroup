@@ -77,7 +77,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $nationality = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->nationalityUuid));
         $countryOfResidence = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->countryOfResidenceUuid));
         $highSchoolCountry = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->highSchoolCountryUuid));
-        $communicationLanguage = $this->languageRepository->findByUuid(LanguageUuid::fromValue($command->communicationLanguageUuid));
+        $communicationLanguage = $command->communicationLanguageUuid ? $this->languageRepository->findByUuid(LanguageUuid::fromValue($command->communicationLanguageUuid)) : null;
 
         $student = Student::create(
             Uuid::fromValue($command->uuid),

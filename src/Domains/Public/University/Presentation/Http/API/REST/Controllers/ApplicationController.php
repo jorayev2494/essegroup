@@ -18,10 +18,7 @@ readonly class ApplicationController
         private ResponseFactory $response,
         private UuidGeneratorInterface $uuidGenerator,
         private CommandBusInterface $commandBus
-    )
-    {
-
-    }
+    ) { }
 
     public function store(ApplicationStoreRequest $request): JsonResponse
     {
@@ -31,13 +28,13 @@ readonly class ApplicationController
             new CreateCommand(
                 $uuid,
                 $request->get('student_uuid'),
-                $request->get('alias_uuid'),
                 $request->get('language_uuid'),
                 $request->get('degree_uuid'),
-                $request->get('country_uuid'),
                 $request->get('university_uuid'),
                 $request->get('department_uuids'),
-                $request->boolean('is_agreed_to_share_data')
+                $request->boolean('is_agreed_to_share_data'),
+                $request->get('alias_uuid'),
+                $request->get('country_uuid'),
             )
         );
 

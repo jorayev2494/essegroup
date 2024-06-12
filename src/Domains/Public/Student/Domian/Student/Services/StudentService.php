@@ -40,6 +40,7 @@ readonly class StudentService implements StudentServiceInterface
                 $command->biometricPhoto,
                 $command->additionalDocuments,
                 $command->companyUuid,
+                $command->communicationLanguageUuid,
                 $command->fatherName,
                 $command->motherName,
                 $command->friendPhone,

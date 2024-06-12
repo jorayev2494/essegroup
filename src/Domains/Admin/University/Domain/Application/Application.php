@@ -56,7 +56,7 @@ class Application extends AggregateRoot implements
 
     #[ORM\ManyToOne(targetEntity: Alias::class, inversedBy: 'applications')]
     #[ORM\JoinColumn(name: 'alias_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private Alias $alias;
+    private ?Alias $alias;
 
     #[ORM\Column(name: 'language_uuid', nullable: true)]
     private ?string $languageUuid;
@@ -77,7 +77,7 @@ class Application extends AggregateRoot implements
 
     #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'applications')]
     #[ORM\JoinColumn(name: 'country_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
-    private Country $country;
+    private ?Country $country;
 
     #[ORM\Column(name: 'university_uuid', nullable: true)]
     private ?string $universityUuid;
@@ -110,23 +110,22 @@ class Application extends AggregateRoot implements
     private function __construct(
         Uuid $uuid,
         Student $student,
-        Alias $alias,
         Language $language,
         Degree $degree,
-        Country $country,
         University $university,
         bool $isAgreedToShareData,
         string $creatorRole
     ) {
         $this->uuid = $uuid;
         $this->student = $student;
-        $this->alias = $alias;
         $this->language = $language;
         $this->degree = $degree;
-        $this->country = $country;
         $this->university = $university;
         $this->isAgreedToShareData = $isAgreedToShareData;
         $this->creatorRole = $creatorRole;
+        $this->alias = null;
+        $this->country = null;
+
         $this->departments = new ArrayCollection();
         $this->statuses = new StatusCollection();
     }
@@ -134,17 +133,15 @@ class Application extends AggregateRoot implements
     public static function create(
         Uuid $uuid,
         Student $student,
-        Alias $alias,
         Language $language,
         Degree $degree,
-        Country $country,
         University $university,
         Status $status,
         bool $isAgreedToShareData,
         string $creatorRole
     ): self
     {
-        $application = new self($uuid, $student, $alias, $language, $degree, $country, $university, $isAgreedToShareData, $creatorRole);
+        $application = new self($uuid, $student, $language, $degree, $university, $isAgreedToShareData, $creatorRole);
         $application->addStatues($status);
 
         return $application;
@@ -153,6 +150,11 @@ class Application extends AggregateRoot implements
     public function getUuid(): Uuid
     {
         return $this->uuid;
+    }
+
+    public function setAlias(?Alias $alias): void
+    {
+        $this->alias = $alias;
     }
 
     public function changeAlias(Alias $alias): void
@@ -186,18 +188,29 @@ class Application extends AggregateRoot implements
         return $this->country;
     }
 
-    public function changeCountry(Country $country): void
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function changeCountry(Country $country): self
     {
         if ($this->country->isNotEquals($country)) {
             $this->country = $country;
         }
+
+        return $this;
     }
 
-    public function changeStudent(Student $student): void
+    public function changeStudent(Student $student): self
     {
         if ($this->student->isNotEqual($student)) {
             $this->student = $student;
         }
+
+        return $this;
     }
 
     public function getUniversity(): University
@@ -205,11 +218,13 @@ class Application extends AggregateRoot implements
         return $this->university;
     }
 
-    public function changeUniversity(University $university): void
+    public function changeUniversity(University $university): self
     {
         if ($this->university->isNotEquals($university)) {
             $this->university = $university;
         }
+
+        return $this;
     }
 
     public function getDepartments(): Collection
@@ -241,7 +256,7 @@ class Application extends AggregateRoot implements
     public function addStatues(Status $status): void
     {
         $this->statuses->add($status);
-        $status->setApplication($this);
+        $status->setApplication($this);;
         $this->record(
             new ApplicationStatusWasChangedDomainEvent(
                 $this->uuid->value,
@@ -263,6 +278,16 @@ class Application extends AggregateRoot implements
     public function getStudent(): Student
     {
         return $this->student;
+    }
+
+    public function isNull(): bool
+    {
+        return $this->uuid->value === null;
+    }
+
+    public function isNotNull(): bool
+    {
+        return $this->uuid->value !== null;
     }
 
     #[\Override]

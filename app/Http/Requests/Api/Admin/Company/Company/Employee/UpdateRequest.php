@@ -28,10 +28,10 @@ class UpdateRequest extends FormRequest
                 'file',
                 'mimetypes:image/jpeg,image/png',
             ],
-            // 'company_uuid' => [
-            //     'required',
-            //     Rule::exists('admin_db.company_companies', 'uuid'),
-            // ],
+            'company_uuid' => [
+                'required',
+                Rule::exists('admin_db.company_companies', 'uuid'),
+            ],
         ];
     }
 }

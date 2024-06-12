@@ -44,8 +44,8 @@ class StatusValueRepository extends BaseAdminEntityRepository implements StatusV
     public function loadWidgetsList(): StatusValueCollection
     {
         $query = $this->entityRepository->createQueryBuilder('sv')
-            ->innerJoin(Status::class, 's', Join::WITH, 's.statusValueUuid = sv.uuid')
-            ->innerJoin(Application::class, 'a', Join::WITH, 's.applicationUuid = a.uuid')
+            // ->innerJoin(Status::class, 's', Join::WITH, 's.statusValueUuid = sv.uuid')
+            // ->innerJoin(Application::class, 'a', Join::WITH, 's.applicationUuid = a.uuid')
             // ->where('s.isFirst = :isFirst')
             // ->setParameter('isFirst', false)
         ;

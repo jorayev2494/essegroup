@@ -12,13 +12,13 @@ readonly class Command implements CommandInterface
     public function __construct(
         public string $uuid,
         public string $studentUuid,
-        public string $aliasUuid,
         public string $languageUuid,
         public string $degreeUuid,
-        public string $countryUuid,
         public string $universityUuid,
         public array $departmentUuids,
         public bool $isAgreedToShareData,
-        public string $creatorRole
+        public string $creatorRole,
+        public ?string $aliasUuid,
+        public ?string $countryUuid
     ) { }
 }
