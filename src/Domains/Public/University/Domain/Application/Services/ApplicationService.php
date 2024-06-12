@@ -20,14 +20,14 @@ readonly class ApplicationService implements ApplicationServiceInterface
             new CreateCommand(
                 $command->uuid,
                 $command->studentUuid,
-                $command->aliasUuid,
                 $command->languageUuid,
                 $command->degreeUuid,
-                $command->countryUuid,
                 $command->universityUuid,
                 $command->departmentUuids,
                 $command->isAgreedToShareData,
-                'client'
+                'client',
+                $command->aliasUuid,
+                $command->countryUuid
             )
         );
     }

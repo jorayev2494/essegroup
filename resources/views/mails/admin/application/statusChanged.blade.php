@@ -44,10 +44,7 @@ use Project\Domains\Admin\University\Domain\Application\StatusValueTranslate;
         <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
             <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:22px;text-align:left;color:#555;">
                 Application uuid: {{ $application->getUuid()->value }}<br>
-                New status: {{ StatusValueTranslate::execute(
-                                                        $status->getStatusValue(),
-                                                        $application->getStudent()->getCommunicationLanguage()?->getISO()->value
-                                                    )->getValue()->value }}<br>
+                New status: {{ StatusValueTranslate::execute($status->getStatusValue(), $locale)->getValue()->value }}<br>
                 New note: {{ $status->getNote() }}
             </div>
         </td>

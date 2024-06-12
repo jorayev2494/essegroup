@@ -51,6 +51,7 @@ readonly class StudentController
                 array_filter($additionalDocuments),
 
                 $request->get('company_uuid'),
+                $request->get('communication_language_uuid'),
                 $request->get('father_name'),
                 $request->get('mother_name'),
                 $request->get('friend_phone'),

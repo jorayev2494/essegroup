@@ -11,6 +11,7 @@ readonly class Command implements CommandInterface
 {
     public function __construct(
        public string $uuid,
+       public string $companyUuid,
        public string $firstName,
        public string $lastName,
        public string $email,

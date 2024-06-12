@@ -111,6 +111,16 @@ class Language implements EntityUuid, TranslatableInterface, ArrayableInterface
         return $this->uuid->value !== $other->getUuid()->value;
     }
 
+    public function isNull(): bool
+    {
+        return $this->uuid->value === null;
+    }
+
+    public function isNotNull(): bool
+    {
+        return $this->uuid->value !== null;
+    }
+
     public function toArray(): array
     {
         return [

@@ -11,10 +11,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
        private ApplicationServiceInterface $applicationService
-    )
-    {
-
-    }
+    ) { }
 
     public function __invoke(Command $command): void
     {

@@ -44,11 +44,13 @@ readonly class CommandHandler implements CommandHandlerInterface
     public function __invoke(Command $command): void
     {
         $student = $this->studentRepository->findByUuid(StudentUuid::fromValue($command->studentUuid));
-        $alias = $this->aliasRepository->findByUuid(AliasUuid::fromValue($command->aliasUuid));
         $language = $this->languageRepository->findByUuid(LanguageUuid::fromValue($command->languageUuid));
         $degree = $this->degreeRepository->findByUuid(DegreeUuid::fromValue($command->degreeUuid));
-        $country = $this->countryRepository->findByUuid(CountryUuid::fromValue($command->countryUuid));
         $university = $this->universityRepository->findByUuid(UniversityUuid::fromValue($command->universityUuid));
+        $alias = $command->aliasUuid ? $this->aliasRepository->findByUuid(AliasUuid::fromValue($command->aliasUuid))
+                                     : null;
+        $country = $command->countryUuid ? $this->countryRepository->findByUuid(CountryUuid::fromValue($command->countryUuid))
+                                         : null;
         $statusValue = $this->statusValueRepository->findFirst();
 
         $statusValue ?? throw new StatusValueNotFoundDomainException();
@@ -56,15 +58,20 @@ readonly class CommandHandler implements CommandHandlerInterface
         $application = Application::create(
             Uuid::fromValue($command->uuid),
             $student,
-            $alias,
             $language,
             $degree,
-            $country,
             $university,
             Status::create($statusValue),
             $command->isAgreedToShareData,
             $command->creatorRole
         );
+
+        if ($country === null) {
+            $country = $university->getCountry()->isNotNull() === null ? $university->getCountry() : null;
+        }
+
+        $application->setAlias($alias);
+        $application->setCountry($country);
 
         $this->service->addDepartments($application, $command->departmentUuids);
 

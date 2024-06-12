@@ -45,12 +45,16 @@ readonly class ApplicationStatusWasChangedDomainEventSubscriber implements Domai
 
     private function sendMail(Application $application, StatusValue $statusValue): void
     {
+        $locale = $application->getStudent()->getCommunicationLanguage()->isNotNull() ? $application->getStudent()->getCommunicationLanguage()->getISO()->value
+                                                                                      : null;
+
         $template = view('mails.admin.application.statusChanged', [
             'application' => $application,
             'status' => StatusTranslate::execute(
                 $application->getStatus(),
-                $application->getStudent()->getCommunicationLanguage()?->getISO()->value
+                $locale
             ),
+            'locale' => $locale,
         ])->render();
 
         $message = (new Email())

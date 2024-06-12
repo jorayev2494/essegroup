@@ -69,6 +69,7 @@ readonly class EmployeeController
         $this->commandBus->dispatch(
             new UpdateCommand(
                 $uuid,
+                $request->get('company_uuid'),
                 $request->get('first_name'),
                 $request->get('last_name'),
                 $request->get('email'),

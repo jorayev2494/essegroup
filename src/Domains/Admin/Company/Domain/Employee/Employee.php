@@ -254,7 +254,7 @@ class Employee extends AggregateRoot implements AuthenticatableInterface, Avatar
             'email' => $this->email->value,
             'avatar' => $this->avatar?->toArray(),
             'company_uuid' => $this->companyUuid,
-            'company' => $this->company?->toArray(),
+            'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];
