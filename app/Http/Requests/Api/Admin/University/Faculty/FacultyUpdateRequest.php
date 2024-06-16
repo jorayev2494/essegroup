@@ -32,7 +32,7 @@ class FacultyUpdateRequest extends FormRequest
                 'nullable',
                 'file',
                 'mimetypes:image/*',
-                Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
+                // Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
             ],
             'translations' => [
                 'array',
