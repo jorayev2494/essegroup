@@ -31,7 +31,7 @@ class FacultyCreateRequest extends FormRequest
                 'required',
                 'file',
                 'mimetypes:image/*',
-                 Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
+                 // Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
             ],
             'translations' => [
                 'array',

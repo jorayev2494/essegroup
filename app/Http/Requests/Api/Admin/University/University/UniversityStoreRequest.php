@@ -33,13 +33,13 @@ class UniversityStoreRequest extends FormRequest
                 'required',
                 'file',
                 'mimetypes:image/*',
-                Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
+                // Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
             ],
             'cover' => [
                 'required',
                 'file',
                 'mimetypes:image/*',
-                Rule::dimensions()->width(Cover::WIDTH)->height(Cover::HEIGHT),
+                // Rule::dimensions()->width(Cover::WIDTH)->height(Cover::HEIGHT),
             ],
             'youtube_video_id' => ['required', 'string', 'max:15'],
             'translations' => [
