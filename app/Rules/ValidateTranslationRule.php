@@ -11,7 +11,8 @@ class ValidateTranslationRule implements ValidationRule
     private readonly array $locales;
 
     function __construct(
-        private readonly array $params
+        private readonly array $params,
+        private readonly array $rules = [],
     ) {
         $this->locales = config('app.available_client_translation_locales');
     }
@@ -30,6 +31,11 @@ class ValidateTranslationRule implements ValidationRule
                     if (! array_key_exists($prop, $value[$locale])) {
                         $fail("$attribute.$locale.$prop", "The $locale $prop field is required.");
                     } else {
+                        // nullable
+                        if (array_key_exists($prop, $this->rules) && in_array('nullable', $this->rules[$prop])) {
+                            continue;
+                        }
+
                         if (is_null($value[$locale][$prop])) {
                             $fail("$attribute.$locale.$prop", "The $locale $prop field is not be null");
                         }

@@ -261,6 +261,16 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
         return $this->uuid->value !== $other->getUuid()->value;
     }
 
+    public function isNull(): bool
+    {
+        return $this->uuid->isNull();
+    }
+
+    public function isNotNull(): bool
+    {
+        return $this->uuid->isNotNull();
+    }
+
     public function toArray(): array
     {
         return [

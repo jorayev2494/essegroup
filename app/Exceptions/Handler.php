@@ -32,8 +32,106 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(static function (DomainException $ex) {
+            return response()->json([
+                'message' => $ex->getMessage(),
+            ], $ex->getHttpResponseCode());
+        });
+
+        $this->renderable(static function (ValidationException $ex) {
+            return response()->json([
+                'message' => 'Validation exception',
+                'errors' => $ex->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        });
+
+        $this->reportable(static function (BadRequestException $ex) {
+            return response()->json([
+                'message' => $ex->getMessage(),
+                'error' => 'Bad request exception',
+            ], Response::HTTP_BAD_REQUEST);
+        });
+
+        $this->reportable(static function (NotFoundHttpException $ex) {
+            return response()->json([
+                    'message' => 'Not found http exception',
+                    'error' => $ex->getMessage(),
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        });
+
+        $this->renderable(static function (HandlerFailedException $ex) {
+            $domainException = $ex->getPrevious();
+            if ($domainException instanceof \Project\Shared\Domain\DomainException) {
+                return response()->json(
+                    [
+                        'message' => $domainException->getMessage(),
+                    ],
+                    $domainException->getHttpResponseCode()
+                );
+                // return $domainException->response();
+            }
+        });
+
+        $this->reportable(static function (AuthenticationException $ex) {
+            return response()->json(
+                [
+                    'message' => 'Authentication exception',
+                    'error' => str_replace(['.'], [''], $ex->getMessage()), // 'Unauthorized',
+                ],
+                Response::HTTP_UNAUTHORIZED
+            );
+        });
+
+        $this->renderable(static function (ModelNotFoundException $ex) {
+            return response()->json([
+                    'error' => $ex->getMessage() ?? 'Model not found',
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        });
+
+        $this->reportable(static function (\Exception $ex) {
+            return 'awdwad';
+//            dd(
+//                $ex->getMessage()
+//            );
+//            return response()->json([
+//                // 'message' => 'Unauthenticated',
+//                'error' => $ex->getMessage(),
+//                'file' => $ex->getFile(),
+//                'line' => $ex->getLine(),
+//                'previous' => $ex->getPrevious(),
+//                'class' => $ex::class,
+//            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        });
+
+        $this->reportable(static function (\Error $ex) {
+            return 'awdwad';
+//            dd(
+//                $ex->getMessage()
+//            );
+//            return response()->json([
+//                // 'message' => 'Unauthenticated',
+//                'error' => $ex->getMessage(),
+//                'file' => $ex->getFile(),
+//                'line' => $ex->getLine(),
+//                'previous' => $ex->getPrevious(),
+//                'class' => $ex::class,
+//            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        });
+
+        $this->reportable(static function (Throwable $ex) {
+            return 'awdwad';
+            return response()->json([
+                // 'message' => 'Unauthenticated',
+                'error' => $ex->getMessage(),
+                'file' => $ex->getFile(),
+                'line' => $ex->getLine(),
+                'previous' => $ex->getPrevious(),
+                'class' => $ex::class,
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         });
     }
 
@@ -123,8 +221,6 @@ class Handler extends ExceptionHandler
 
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        dd(__METHOD__);
-
         if ($request->expectsJson()) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }

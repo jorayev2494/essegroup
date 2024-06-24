@@ -70,6 +70,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         // Department
         \Project\Domains\Public\University\Application\Department\Queries\Index\QueryHandler::class,
         \Project\Domains\Public\University\Application\Department\Queries\List\QueryHandler::class,
+        \Project\Domains\Public\University\Application\Department\Queries\Show\QueryHandler::class,
 
         // Department Name
         \Project\Domains\Public\University\Application\DepartmentName\Queries\List\QueryHandler::class,

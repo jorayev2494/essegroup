@@ -603,7 +603,7 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
             ...$this->parentsName->toArray(),
             ...$this->passportInfo->toArray(),
             'company_uuid' => $this->company->getUuid()->value,
-            'company' => $this->company->getUuid()->isNotNull() ? $this->company->toArray() : null,
+            'company' => $this->company->isNotNull() ? $this->company->toArray() : null,
             'nationality_uuid' => $this->nationality->getUuid()->value,
             'nationality' => CountryTranslate::execute($this->nationality)?->toArray(),
             'country_of_residence_uuid' => $this->countryOfResidence->getUuid()->value,

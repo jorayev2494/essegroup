@@ -30,4 +30,14 @@ readonly class DepartmentService implements DepartmentServiceInterface
             \Project\Domains\Admin\University\Application\Department\Queries\List\Query::makeFromArray($queryFilter->toArray())
         );
     }
+
+    public function show(string $uuid): array
+    {
+        /** @var QueryBusInterface $queryBus */
+        $queryBus = resolve(QueryBusInterface::class);
+
+        return $queryBus->ask(
+            new \Project\Domains\Admin\University\Application\Department\Queries\Show\Query($uuid)
+        );
+    }
 }
