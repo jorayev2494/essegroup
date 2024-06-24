@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\Company\Application\Employee\Subscribers;
 
 use Project\Domains\Admin\Company\Domain\Employee\Events\EmployeeWasCreatedDomainEvent;
+use Project\Domains\Admin\Company\Infrastructure\Mails\Employee\EmployeeCreatedMailMessage;
+use Project\Infrastructure\Services\Mailer\Contracts\MailerServiceInterface;
 use Project\Shared\Domain\Bus\Event\DomainEventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -12,7 +14,8 @@ use Symfony\Component\Mime\Email;
 readonly class EmployeeWasCreatedDomainEventSubscriber implements DomainEventSubscriberInterface
 {
     public function __construct(
-        private MailerInterface $mailer
+        private MailerInterface $mailer,
+        private MailerServiceInterface $mailerService
     ) { }
 
     public static function subscribedTo(): array
@@ -36,10 +39,18 @@ readonly class EmployeeWasCreatedDomainEventSubscriber implements DomainEventSub
             ->from(getenv('MAIL_FROM_ADDRESS'))
             ->to($event->email)
             ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
             ->html($template);
 
         $this->mailer->send($message);
+
+//        $this->mailerService->send(
+//            new EmployeeCreatedMailMessage(
+//                $event->firstName,
+//                $event->lastName,
+//                $event->email,
+//                $event->password
+//            )
+//        );
     }
 
     private function makeDashboardLink(): string

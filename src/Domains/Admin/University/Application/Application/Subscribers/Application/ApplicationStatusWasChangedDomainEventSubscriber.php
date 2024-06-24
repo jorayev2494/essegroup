@@ -48,7 +48,7 @@ readonly class ApplicationStatusWasChangedDomainEventSubscriber implements Domai
         $locale = $application->getStudent()->getCommunicationLanguage()->isNotNull() ? $application->getStudent()->getCommunicationLanguage()->getISO()->value
                                                                                       : null;
 
-        $template = view('mails.admin.application.statusChanged', [
+        $template = view('mails.admin.application.status-changed', [
             'application' => $application,
             'status' => StatusTranslate::execute(
                 $application->getStatus(),
@@ -61,7 +61,6 @@ readonly class ApplicationStatusWasChangedDomainEventSubscriber implements Domai
             ->from(getenv('MAIL_FROM_ADDRESS'))
             ->to($application->getStudent()->getEmail()->value)
             ->subject('Application status was changed')
-            ->text('Sending emails is fun again!')
             ->html($template);
 
         $this->mailer->send($message);

@@ -5,16 +5,11 @@ namespace App\Http\Requests\Api\Admin\University\University;
 use App\Rules\ValidateTranslationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Project\Domains\Admin\University\Domain\University\ValueObjects\Cover;
+use Project\Domains\Admin\University\Domain\University\ValueObjects\Logo;
 
 class UniversityUpdateRequest extends FormRequest
 {
-    private const int LOGO_WIDTH = 200;
-
-    private const int LOGO_HEIGHT = 200;
-
-    private const int COVER_WIDTH = 1280;
-
-    private const int COVER_HEIGHT = 568;
 
     public function authorize(): bool
     {
@@ -38,13 +33,13 @@ class UniversityUpdateRequest extends FormRequest
                 'nullable',
                 'file',
                 'mimetypes:image/*',
-                // Rule::dimensions()->width(self::LOGO_WIDTH)->height(self::LOGO_HEIGHT),
+                 Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
             ],
             'cover' => [
                 'nullable',
                 'file',
                 'mimetypes:image/*',
-                // Rule::dimensions()->width(self::COVER_WIDTH)->height(self::COVER_HEIGHT),
+                 Rule::dimensions()->width(Cover::WIDTH)->height(Cover::HEIGHT),
             ],
             'youtube_video_id' => ['required', 'string', 'max:15'],
             'translations' => [

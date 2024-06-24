@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Company\Authentication\Application\Authentication\Commands\RefreshToken;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Project\Domains\Company\Authentication\Domain\Device\DeviceRepositoryInterface;
 use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
@@ -16,18 +17,13 @@ readonly class CommandHandler
         private DeviceRepositoryInterface $deviceRepository,
         private AuthenticationServiceInterface $authenticationService,
         private TokenGeneratorInterface $tokenGenerator,
-    )
-    {
-
-    }
+    ) { }
 
     public function __invoke(Command $command): array
     {
         $foundDevice = $this->deviceRepository->findByRefreshToken($command->refreshToken);
 
-        if ($foundDevice === null) {
-            throw new ModelNotFoundException();
-        }
+        $foundDevice ?? throw new AuthenticationException('The refresh token is invalid or expired.');
 
         $accessToken = $this->authenticationService->authenticateByUuid(
             $foundDevice->getAuthor()->getUuid()->value,

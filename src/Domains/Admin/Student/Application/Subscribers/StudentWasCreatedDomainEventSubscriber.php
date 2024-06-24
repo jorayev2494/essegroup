@@ -36,7 +36,6 @@ readonly class StudentWasCreatedDomainEventSubscriber implements DomainEventSubs
             ->from(getenv('MAIL_FROM_ADDRESS'))
             ->to($event->email)
             ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
             ->html($template);
 
         $this->mailer->send($message);

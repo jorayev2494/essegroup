@@ -13,4 +13,6 @@ interface DepartmentServiceInterface
     public function index(IndexQuery $query): array;
 
     public function list(QueryFilter $queryFilter): array;
+
+    public function show(string $uuid): array;
 }

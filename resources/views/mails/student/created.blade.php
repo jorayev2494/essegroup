@@ -4,7 +4,7 @@
     <tr>
         <td align="center" style="font-size:0px;padding:10px 25px;padding-bottom:40px;word-break:break-word;">
             <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:22px;font-weight:bold;line-height:1;text-align:center;color:#555;">
-                Uh-oh! Your {{ getenv('APP_NAME') }} free trial just ended! <strong>Student</strong>
+                {{ __('system.welcome') }} {{ $firstName }}!
             </div>
         </td>
     </tr>
@@ -12,7 +12,7 @@
     <tr>
         <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
             <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:22px;text-align:left;color:#555;">
-                Your free trial of {{ getenv('APP_NAME') }} has ended, we're excited to get you started with your {{ getenv('APP_NAME') }} account. To give you some time to enter in your payment info we'll still collect all your data for the next 30 days.
+                {{ __('mails.auth.register.student.text', ['product_name' => getenv('APP_NAME')])  }}
             </div>
         </td>
     </tr>
@@ -20,7 +20,7 @@
     <tr>
         <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
             <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:22px;text-align:left;color:#555;">
-                In the meanwhile, you'll no longer have access to these benefits:
+                {{ __('mails.auth.register.student.credentials_text')  }}
             </div>
         </td>
     </tr>
@@ -28,10 +28,8 @@
     <tr>
         <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
             <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:22px;text-align:left;color:#555;">
-                First Name: {{ $firstName }}<br>
-                Last Name: {{ $lastName }}<br>
-                Email: {{ $email }}<br>
-                Password: {{ $password }}<br>
+                {{ __('system.email') }}: {{ $email }}<br>
+                {{ __('system.password') }}: {{ $password }}<br>
             </div>
         </td>
     </tr>
@@ -43,7 +41,7 @@
                     <tr>
                         <td align="center" bgcolor="#2F67F6" role="presentation" style="border:none;border-radius:3px;color:#ffffff;cursor:auto;padding:15px 25px;" valign="middle">
                             <p style="background:#2F67F6;color:#ffffff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;">
-                                Go to login
+                                {{ __('mails.auth.register.student.go_to_login_btn')  }}
                             </p>
                         </td>
                     </tr>

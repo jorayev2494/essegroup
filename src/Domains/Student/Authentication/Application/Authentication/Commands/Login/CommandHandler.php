@@ -21,22 +21,22 @@ readonly class CommandHandler
 
     public function __invoke(Command $command): array
     {
-        $employee = $this->repository->findByEmail(Email::fromValue($command->email));
+        $student = $this->repository->findByEmail(Email::fromValue($command->email));
 
         $accessToken = $this->authenticationService->authenticate(
             new CredentialsDTO($command->email, $command->password),
             GuardType::STUDENT,
-            $employee?->getClaims() ?? []
+            $student?->getClaims() ?? []
         );
 
-        $device = $this->deviceService->handle($employee, $command->deviceId);
-        $this->repository->save($employee);
+        $device = $this->deviceService->handle($student, $command->deviceId);
+        $this->repository->save($student);
 
-        $data = $this->authenticationService->authToken($accessToken, $employee, $device);
+        $data = $this->authenticationService->authToken($accessToken, $student, $device);
 
         $data['auth_data'] = array_merge(
             $data['auth_data'],
-            ['company' => $employee->getCompany()->toArray()]
+            ['company' => $student->getCompany()->isNotNull() ? $student->getCompany()->toArray() : null]
         );
 
         return $data;

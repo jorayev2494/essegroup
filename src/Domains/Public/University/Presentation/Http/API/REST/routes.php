@@ -28,6 +28,7 @@ Route::group(
     static function (Router $router): void {
         $router->get('/', 'index');
         $router->get('/list', 'list');
+        $router->get('/show/{uuid}', 'show');
 
         $router->group(
             ['prefix' => 'names', 'controller' => DepartmentNameController::class],

@@ -23,7 +23,7 @@ trait TranslationsTrait
                 continue;
             }
             foreach ($translates as $field => $value) {
-                $this->translations[$locale][] = new CommandTranslateValue($field, $value);
+                $this->translations[$locale][] = new CommandTranslateValue($field, $value ?? '');
             }
         }
     }

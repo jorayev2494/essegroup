@@ -13,6 +13,8 @@ use Project\Infrastructure\Hashers\Contracts\PasswordHasherInterface;
 use Project\Infrastructure\Hashers\PasswordHasher;
 use Project\Infrastructure\Services\Authentication\AuthenticationService;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticationServiceInterface;
+use Project\Infrastructure\Services\Mailer\Contracts\MailerServiceInterface;
+use Project\Infrastructure\Services\Mailer\MailerService;
 use Project\Shared\Domain\File\FileSystemInterface;
 use Project\Shared\Domain\Translation\TranslationColumnService;
 use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
@@ -34,5 +36,6 @@ class InfrastructureServiceProvider extends ServiceProvider
         $this->app->singleton(TranslationColumnServiceInterface::class, TranslationColumnService::class);
         $this->app->bind(MailerInterface::class, static fn () => new Mailer(Transport::fromDsn(env('MAILER_DSN'))));
         $this->app->singleton(CacheManagerInterface::class, \Illuminate\Cache\CacheManager::class);
+        $this->app->singleton(MailerServiceInterface::class, MailerService::class);
     }
 }
