@@ -16,6 +16,7 @@ use Project\Domains\Admin\Country\Domain\Country\CountryTranslate;
 use Project\Domains\Admin\Language\Domain\Language\Language;
 use Project\Domains\Admin\Student\Domain\Student\Events\Auth\RestorePassword\StudentRestorePasswordLinkWasAddedDomainEvent;
 use Project\Domains\Admin\Student\Domain\Student\Events\StudentWasCreatedDomainEvent;
+use Project\Domains\Admin\Student\Domain\Student\Services\Archive\Contracts\ArchivableDocumentsInterface;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarableInterface;
 use Project\Domains\Admin\Student\Domain\Student\Services\Avatar\Contracts\AvatarInterface;
 use Project\Domains\Admin\Student\Domain\Student\Traits\Files\AdditionalDocumentTrait;
@@ -65,7 +66,6 @@ use Project\Domains\Student\Authentication\Domain\Code\Code;
 use Project\Domains\Student\Authentication\Domain\Device\Device;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
 use Project\Infrastructure\Services\Authentication\ValueObjects\PasswordValueObject;
-use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
@@ -84,7 +84,8 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
     EquivalenceDocumentableInterface,
     PassportTranslationableInterface,
     SchoolAttestatTranslationableInterface,
-    BiometricPhotoableInterface
+    BiometricPhotoableInterface,
+    ArchivableDocumentsInterface
 {
     use PassportTrait,
         PassportTranslationTrait,
@@ -589,6 +590,25 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
         if ($this->createdAt->getTimestamp() === $this->updatedAt->getTimestamp()) {
             $this->password = Password::fromValue($this->password->hash());
         }
+    }
+
+    public function getArchiveDocumentList(): array
+    {
+        return [
+            'passport' => $this->passport,
+            'passportTranslation' => $this->passportTranslation,
+            'schoolAttestat' => $this->schoolAttestat,
+            'schoolAttestatTranslation' => $this->schoolAttestatTranslation,
+            'transcript' => $this->transcript,
+            'transcriptTranslation' => $this->transcriptTranslation,
+            'equivalenceDocument' => $this->equivalenceDocument,
+            'biometricPhoto' => $this->biometricPhoto,
+        ];
+    }
+
+    public function getArchiveAdditionalDocumentList(): array
+    {
+        return $this->additionalDocuments->toArray();
     }
 
     public function toArray(): array

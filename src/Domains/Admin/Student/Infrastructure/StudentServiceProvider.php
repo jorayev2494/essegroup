@@ -28,6 +28,9 @@ class StudentServiceProvider extends AdminDomainServiceProvider
 
         // Student PDF
         \Project\Domains\Admin\Student\Domain\Student\Services\Contracts\PDFServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Domain\Student\Services\PDFService::class],
+
+        // Archivator
+        \Project\Domains\Admin\Student\Domain\Student\Services\Archive\Contracts\ArchiveServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\Student\Domain\Student\Services\Archive\ArchiveService::class],
     ];
 
     /** @var array<array-key, string> */
@@ -36,6 +39,7 @@ class StudentServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\Student\Application\Queries\Index\QueryHandler::class,
         \Project\Domains\Admin\Student\Application\Queries\Show\QueryHandler::class,
         \Project\Domains\Admin\Student\Application\Queries\PDFPreview\QueryHandler::class,
+        \Project\Domains\Admin\Student\Application\Queries\ArchiveDocuments\QueryHandler::class,
     ];
 
     /** @var array<array-key, string> */

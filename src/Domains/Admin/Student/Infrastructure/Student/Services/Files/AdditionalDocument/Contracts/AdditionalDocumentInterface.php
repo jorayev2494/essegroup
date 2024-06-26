@@ -11,4 +11,6 @@ interface AdditionalDocumentInterface
     public function setStudent(?Student $student): void;
 
     public function setDescription(string $description): void;
+
+    public function getDescription(): ?string;
 }

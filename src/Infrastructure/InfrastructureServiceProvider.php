@@ -3,6 +3,8 @@
 namespace Project\Infrastructure;
 
 use Illuminate\Support\ServiceProvider;
+use Project\Infrastructure\Archivator\Contracts\ArchivatorInterface;
+use Project\Infrastructure\Archivator\ZipArchivator;
 use Project\Infrastructure\Cache\CacheManager;
 use Project\Infrastructure\Cache\Contracts\CacheManagerInterface;
 use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
@@ -37,5 +39,6 @@ class InfrastructureServiceProvider extends ServiceProvider
         $this->app->bind(MailerInterface::class, static fn () => new Mailer(Transport::fromDsn(env('MAILER_DSN'))));
         $this->app->singleton(CacheManagerInterface::class, \Illuminate\Cache\CacheManager::class);
         $this->app->singleton(MailerServiceInterface::class, MailerService::class);
+        $this->app->singleton(ArchivatorInterface::class, ZipArchivator::class);
     }
 }

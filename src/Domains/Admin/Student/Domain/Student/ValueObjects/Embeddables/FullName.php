@@ -41,6 +41,11 @@ class FullName implements ArrayableInterface
         return $this->lastName;
     }
 
+    public function getFullName(): string
+    {
+        return $this->firstName->value . ' ' . $this->lastName->value;
+    }
+
     public function changeFirstName(FirstName $firstName): self
     {
         if ($this->firstName->isNotEquals($firstName)) {
@@ -72,7 +77,7 @@ class FullName implements ArrayableInterface
     public function toArray(): array
     {
         return [
-            'full_name' => $this->firstName->value . ' ' . $this->lastName->value,
+            'full_name' => $this->getFullName(),
             'first_name' => $this->firstName->value,
             'last_name' => $this->lastName->value,
         ];
