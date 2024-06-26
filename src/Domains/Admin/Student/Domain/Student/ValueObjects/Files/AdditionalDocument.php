@@ -40,6 +40,11 @@ class AdditionalDocument extends File implements AdditionalDocumentInterface
         }
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
     public function toArray(): array
     {
         return array_merge(
