@@ -18,7 +18,7 @@ class AdditionalDocument extends File implements AdditionalDocumentInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/student/student/additional_documents';
+        return '/admin/domain/student/student/additional_documents';
     }
 
     #[ORM\Column(type: Types::STRING)]

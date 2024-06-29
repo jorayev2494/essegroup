@@ -20,6 +20,7 @@ class ProfileService implements ProfileServiceInterface
         $commandBus->dispatch(
             new UpdateCommand(
                 $uuid->value,
+                $command->companyUuid,
                 $command->firstName,
                 $command->lastName,
                 $command->email,

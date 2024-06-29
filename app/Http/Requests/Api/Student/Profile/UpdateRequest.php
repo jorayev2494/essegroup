@@ -22,7 +22,7 @@ class UpdateRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'avatar' => ['nullable', 'file', 'mimetypes:image/jpeg,image/png'],
+            'avatar' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:image/jpeg,image/png'],
             'birthday' => ['required', 'date', 'max:255'],
             'passport_number' => [
                 'required',
@@ -72,14 +72,14 @@ class UpdateRequest extends FormRequest
                 'max:5',
             ],
 
-            'passport' => ['nullable', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'passport_translation' => ['nullable', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'school_attestat' => ['nullable', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'school_attestat_translation' => ['nullable', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'transcript' => ['nullable', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'transcript_translation' => ['nullable', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'equivalence_document' => ['nullable', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'biometric_photo' => ['nullable', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'passport' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'passport_translation' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'school_attestat' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'school_attestat_translation' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'transcript' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'transcript_translation' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'equivalence_document' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'biometric_photo' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
 
             'additional_documents' => ['array', 'max:5'],
             'additional_documents.*.description' => [
@@ -88,6 +88,7 @@ class UpdateRequest extends FormRequest
             ],
             'additional_documents.*.document' => [
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:' . implode(',', self::$documentMimeTypes),
             ],
 

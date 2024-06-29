@@ -10,7 +10,7 @@ use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\Biometri
 
 trait BiometricPhotoTrait
 {
-    #[ORM\ManyToOne(targetEntity: BiometricPhoto::class, cascade: ['persist', 'remove'], inversedBy: 'application')]
+    #[ORM\OneToOne(targetEntity: BiometricPhoto::class, inversedBy: 'student', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'biometric_photo_uuid', referencedColumnName: 'uuid', nullable: false)]
     private BiometricPhoto $biometricPhoto;
 

@@ -10,7 +10,7 @@ use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\SchoolAt
 
 trait SchoolAttestatTrait
 {
-    #[ORM\ManyToOne(targetEntity: SchoolAttestat::class, cascade: ['persist', 'remove'], inversedBy: 'application')]
+    #[ORM\OneToOne(targetEntity: SchoolAttestat::class, inversedBy: 'student', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'school_attestat_uuid', referencedColumnName: 'uuid', nullable: false)]
     private SchoolAttestat $schoolAttestat;
 

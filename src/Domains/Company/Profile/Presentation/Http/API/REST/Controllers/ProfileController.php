@@ -36,6 +36,7 @@ readonly class ProfileController
     {
         $this->commandBus->dispatch(
             new UpdateCommand(
+                $request->get('company_uuid'),
                 $request->get('first_name'),
                 $request->get('last_name'),
                 $request->get('email'),

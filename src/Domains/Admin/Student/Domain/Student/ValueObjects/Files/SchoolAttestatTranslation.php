@@ -17,7 +17,7 @@ class SchoolAttestatTranslation extends File implements SchoolAttestatTranslatio
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/student/student/school_attestat_translations';
+        return '/admin/domain/student/student/school_attestat_translations';
     }
 
     #[ORM\OneToOne(targetEntity: Student::class, mappedBy: 'schoolAttestatTranslation')]

@@ -10,7 +10,7 @@ use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\Transcri
 
 trait TranscriptTrait
 {
-    #[ORM\ManyToOne(targetEntity: Transcript::class, cascade: ['persist', 'remove'], inversedBy: 'application')]
+    #[ORM\OneToOne(targetEntity: Transcript::class, inversedBy: 'student', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'transcript_uuid', referencedColumnName: 'uuid', nullable: false)]
     private Transcript $transcript;
 

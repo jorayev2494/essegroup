@@ -10,7 +10,7 @@ interface ArchivatorInterface
 {
     public function instance(string $name): self;
 
-    public function add(string $data, string $name): self;
+    public function add(string $path, string $name): self;
 
     public function response(): StreamedResponse;
 

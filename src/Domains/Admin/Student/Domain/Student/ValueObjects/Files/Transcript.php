@@ -17,7 +17,7 @@ class Transcript extends File implements TranscriptInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/student/student/transcripts';
+        return '/admin/domain/student/student/transcripts';
     }
 
     #[ORM\OneToOne(targetEntity: Student::class, mappedBy: 'transcript')]

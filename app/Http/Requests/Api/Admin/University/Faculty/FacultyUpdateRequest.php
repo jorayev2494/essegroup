@@ -31,6 +31,7 @@ class FacultyUpdateRequest extends FormRequest
             'logo' => [
                 'nullable',
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:image/*',
                 // Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
             ],

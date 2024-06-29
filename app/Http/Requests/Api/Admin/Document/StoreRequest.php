@@ -15,6 +15,7 @@ class StoreRequest extends FormRequest
             'file' => [
                 'required',
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:application/pdf',
             ],
             'type' => [

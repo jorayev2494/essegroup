@@ -17,7 +17,7 @@ class BiometricPhoto extends File implements BiometricPhotoInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/student/student/biometric_photos';
+        return '/admin/domain/student/student/biometric_photos';
     }
 
     #[ORM\OneToOne(targetEntity: Student::class, mappedBy: 'biometricPhoto')]

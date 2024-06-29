@@ -6,13 +6,15 @@ namespace Project\Domains\Admin\Company\Application\Employee\Commands\Delete;
 
 use Project\Domains\Admin\Company\Domain\Employee\EmployeeRepositoryInterface;
 use Project\Domains\Admin\Company\Domain\Employee\Exceptions\EmployeeNotFoundDomainException;
+use Project\Domains\Admin\Company\Domain\Employee\Services\Avatar\Contracts\AvatarServiceInterface;
 use Project\Domains\Admin\Company\Domain\Employee\ValueObjects\Uuid;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private EmployeeRepositoryInterface $repository
+        private EmployeeRepositoryInterface $repository,
+        private AvatarServiceInterface $avatarService
     ) { }
 
     public function __invoke(Command $command): void
@@ -21,6 +23,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $employee ?? throw new EmployeeNotFoundDomainException();
 
+        $this->avatarService->delete($employee);
         $this->repository->delete($employee);
     }
 }

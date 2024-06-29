@@ -22,7 +22,7 @@ class Logo extends File implements LogoInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/university/faculty/logos';
+        return '/admin/domain/university/faculty/logos';
     }
 
     #[ORM\OneToOne(targetEntity: Faculty::class, mappedBy: 'logo')]

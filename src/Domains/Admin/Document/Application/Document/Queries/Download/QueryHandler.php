@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\Document\Application\Document\Queries\Download;
 
 use Project\Domains\Admin\Document\Domain\Document\DocumentRepositoryInterface;
+use Project\Domains\Admin\Document\Domain\Document\DocumentTranslate;
 use Project\Domains\Admin\Document\Domain\Document\Exceptions\DocumentNotFoundDomainException;
 use Project\Domains\Admin\Document\Domain\Document\Services\File\Contracts\FileServiceInterface;
 use Project\Domains\Admin\Document\Domain\Document\ValueObjects\Uuid;

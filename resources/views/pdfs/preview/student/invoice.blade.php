@@ -89,7 +89,8 @@
                                         <div class="col-sm-3">
                                             <div class="card-body p-0">
                                                 <div class="avatar avatar-xxl">
-                                                    <img class="avatar-img rounded" alt="Client Avatar" src="{{ $student->getAvatar()?->getUrl() ?? 'https://placehold.co/100x100' }}" width="100%">
+                                                    {{-- <img class="avatar-img rounded" alt="Client Avatar" src="{{ $student->getAvatar()?->getUrl() ?? 'https://placehold.co/100x100' }}" width="100%"> --}}
+                                                    <img class="avatar-img rounded" alt="Client Avatar" src="{{ $avatar }}" width="100%">
                                                 </div>
                                             </div>
                                         </div>

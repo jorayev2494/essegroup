@@ -23,7 +23,7 @@ class StoreRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'avatar' => ['required', 'file', 'mimetypes:image/jpeg,image/png'],
+            'avatar' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:image/jpeg,image/png'],
             'birthday' => ['required', 'date', 'max:255'],
             'passport_number' => [
                 'required',
@@ -59,14 +59,14 @@ class StoreRequest extends FormRequest
                 Rule::exists('admin_db.country_countries', 'uuid'),
             ],
 
-            'passport' => ['required', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'passport_translation' => ['required', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'school_attestat' => ['required', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'school_attestat_translation' => ['required', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'transcript' => ['required', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'transcript_translation' => ['required', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'equivalence_document' => ['required', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
-            'biometric_photo' => ['required', 'file', 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'passport' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'passport_translation' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'school_attestat' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'school_attestat_translation' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'transcript' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'transcript_translation' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'equivalence_document' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
+            'biometric_photo' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:' . implode(',', self::$documentMimeTypes)],
             'additional_documents' => ['array', 'max:5'],
             'additional_documents.*.description' => [
                 'string',
@@ -74,6 +74,7 @@ class StoreRequest extends FormRequest
             ],
             'additional_documents.*.document' => [
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:' . implode(',', self::$documentMimeTypes),
             ],
 

@@ -45,7 +45,7 @@ class Company extends AggregateRoot implements EntityUuid, LogoableInterface
     #[ORM\Column(type: UuidType::NAME)]
     private Uuid $uuid;
 
-    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'company', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'company', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'logo_uuid', referencedColumnName: 'uuid')]
     private ?Logo $logo = null;
 

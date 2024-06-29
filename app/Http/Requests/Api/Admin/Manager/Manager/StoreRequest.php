@@ -16,7 +16,7 @@ class StoreRequest extends FormRequest
             'last_name' => [
                 'required',
             ],
-            'avatar' => ['required', 'file', 'mimetypes:image/jpeg,image/png'],
+            'avatar' => ['required', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:image/jpeg,image/png'],
             'email' => [
                 'required',
                 'email',

@@ -17,7 +17,7 @@ class EquivalenceDocument extends File implements EquivalenceDocumentInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/student/student/equivalence_documents';
+        return '/admin/domain/student/student/equivalence_documents';
     }
 
     #[ORM\OneToOne(targetEntity: Student::class, mappedBy: 'equivalenceDocument')]

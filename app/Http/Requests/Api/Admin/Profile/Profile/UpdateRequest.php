@@ -18,7 +18,7 @@ class UpdateRequest extends FormRequest
             'last_name' => [
                 'required',
             ],
-            'avatar' => ['nullable', 'file', 'mimetypes:image/jpeg,image/png'],
+            'avatar' => ['nullable', 'file', 'max:' . config('filesystems.file_max_size'), 'mimetypes:image/jpeg,image/png'],
             'email' => [
                 'required',
                 'email',

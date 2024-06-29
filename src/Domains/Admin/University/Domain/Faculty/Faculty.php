@@ -42,7 +42,7 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
     #[ORM\Column(type: UuidType::NAME)]
     private Uuid $uuid;
 
-    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'faculty', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'faculty', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'logo_uuid', referencedColumnName: 'uuid', unique: true, nullable: false)]
     private ?Logo $logo;
 
