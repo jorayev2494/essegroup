@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Domains\Admin\Student\Domain\Student\Services;
 
+use Illuminate\Support\Facades\Storage;
 use Project\Domains\Admin\Student\Domain\Student\Services\Contracts\PDFServiceInterface;
 use Project\Domains\Admin\Student\Domain\Student\Student;
 
@@ -15,9 +16,12 @@ readonly class PDFService implements PDFServiceInterface
 
     public function preview(Student $student): array
     {
+        $host = substr($_SERVER['HTTP_HOST'], 0, strpos($_SERVER['HTTP_HOST'], ':'));
+        $avatar = str_replace('minio', $host, $student->getAvatar()?->getUrl());
+
         $data = [
             'student' => [
-                'avatar' => $student->getAvatar()?->getUrl() ?? 'https://placehold.co/100x100',
+                'avatar' => Storage::get($student->getAvatar()?->getFullPath()) ?? 'https://placehold.co/100x100',
             ],
             'user_info' => [
                 'name_and_surname' => 'ALEX PETROV',
@@ -41,10 +45,6 @@ readonly class PDFService implements PDFServiceInterface
             ]
         ];
 
-        $data = compact(
-            'student'
-        );
-
-        return ['pdfs.preview.student.invoice', compact('student')];
+        return ['pdfs.preview.student.invoice', compact('student', 'avatar')];
     }
 }

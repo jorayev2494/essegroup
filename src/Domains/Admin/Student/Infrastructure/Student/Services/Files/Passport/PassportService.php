@@ -13,11 +13,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 readonly class PassportService implements PassportServiceInterface
 {
     function __construct(
-        private FileSystemInterface $fileSystem,
-    )
-    {
-
-    }
+        private FileSystemInterface $fileSystem
+    ) { }
 
     public function upload(PassportableInterface $passportable, ?UploadedFile $uploadedFile): void
     {

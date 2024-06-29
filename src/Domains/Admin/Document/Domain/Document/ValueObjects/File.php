@@ -16,7 +16,7 @@ class File extends \Project\Shared\Domain\File\File implements FileInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/document/document/files';
+        return '/admin/domain/document/document/files';
     }
 
     #[ORM\OneToOne(targetEntity: Document::class, mappedBy: 'file')]

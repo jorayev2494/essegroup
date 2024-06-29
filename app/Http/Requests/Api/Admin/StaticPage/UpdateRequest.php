@@ -4,6 +4,8 @@ namespace App\Http\Requests\Api\Admin\StaticPage;
 
 use App\Rules\ValidateTranslationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Project\Domains\Admin\StaticPage\Domain\StaticPage\ValueObjects\Cover;
 
 class UpdateRequest extends FormRequest
 {
@@ -17,8 +19,9 @@ class UpdateRequest extends FormRequest
             'cover' => [
                 'nullable',
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:image/*',
-                'dimensions:width=466,height=456',
+                // Rule::dimensions()->width(Cover::WIDTH)->height(Cover::HEIGHT),
             ],
         ];
     }

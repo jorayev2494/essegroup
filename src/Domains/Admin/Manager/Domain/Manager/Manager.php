@@ -53,7 +53,7 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
     #[ORM\Column(name: 'avatar_uuid', type: Types::GUID, nullable: true)]
     private ?string $avatarUuid;
 
-    #[ORM\OneToOne(targetEntity: Avatar::class, inversedBy: 'manager', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Avatar::class, inversedBy: 'manager', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'avatar_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
     private ?Avatar $avatar;
 

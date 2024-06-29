@@ -21,7 +21,7 @@ final class FileSystem implements FileSystemInterface
     {
         $path = $className::path();
         try {
-            $bucketPath = '/' . env('AWS_BUCKET');
+            $bucketPath = '/' . env('MINIO_BUCKET');
             list($width, $height) = @getimagesize($uploadedFile->getPathname());
             $mimeType = $uploadedFile->getClientMimeType();
             $extension = $uploadedFile->getClientOriginalExtension();
@@ -41,7 +41,7 @@ final class FileSystem implements FileSystemInterface
                 $fullPath,
                 $fileName,
                 $fileOriginalName,
-                $url,
+                $url
             );
         } catch (\Throwable $th) {
             throw new BadRequestException($th->getMessage());

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Project\Infrastructure\Archivator;
 
+use Illuminate\Support\Facades\Storage;
 use Project\Infrastructure\Archivator\Contracts\ArchivatorInterface;
 use STS\ZipStream\ZipStream;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -23,9 +24,9 @@ readonly class ZipArchivator implements ArchivatorInterface
         return $this;
     }
 
-    public function add(string $data, string $name): self
+    public function add(string $path, string $name): self
     {
-        $this->zipStream->add($data, $name);
+        $this->zipStream->add(Storage::get($path), $name);
 
         return $this;
     }

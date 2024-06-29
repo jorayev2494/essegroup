@@ -105,7 +105,7 @@ class Student extends AggregateRoot implements EntityUuid, AuthenticatableInterf
     #[ORM\Column(name: 'avatar_uuid', nullable: true)]
     private string $avatarUuid;
 
-    #[ORM\OneToOne(targetEntity: Avatar::class, inversedBy: 'student', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Avatar::class, inversedBy: 'student', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'avatar_uuid', referencedColumnName: 'uuid')]
     private ?Avatar $avatar;
 

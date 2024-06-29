@@ -15,6 +15,7 @@ class UpdateRequest extends FormRequest
             'file' => [
                 'nullable',
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:application/pdf',
             ],
             'type' => [

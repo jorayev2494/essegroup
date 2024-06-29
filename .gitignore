@@ -5,6 +5,7 @@
 /docker/postgres/data
 /docker/mysql/data
 /docker/redis/data
+/docker/minio/data
 /docker/.env
 
 /node_modules

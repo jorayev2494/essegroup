@@ -34,6 +34,7 @@ class CompanyUpdateRequest extends FormRequest
             'logo' => [
                 'nullable',
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:image/*',
                 // Rule::dimensions()->width(self::LOGO_WIDTH)->height(self::LOGO_HEIGHT),
             ],

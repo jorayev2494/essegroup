@@ -23,6 +23,7 @@ class StoreRequest extends FormRequest
             'avatar' => [
                 'nullable',
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:image/jpeg,image/png',
             ],
             'company_uuid' => [

@@ -17,7 +17,7 @@ class Avatar extends File implements AvatarInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/company/employee/avatars';
+        return '/admin/domain/company/employee/avatars';
     }
 
     #[ORM\OneToOne(targetEntity: Employee::class, mappedBy: 'avatar')]

@@ -7,6 +7,7 @@ use Project\Domains\Company\Employee\Application\Employee\Queries\Index\Query as
 use Project\Domains\Company\Employee\Application\Employee\Commands\Create\Command as CreateCommand;
 use Project\Domains\Company\Employee\Application\Employee\Commands\Update\Command as UpdateCommand;
 use Project\Domains\Company\Employee\Domain\Employee\Services\Contracts\EmployeeServiceInterface;
+use Project\Infrastructure\Services\Auth\AuthManager;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 use Project\Shared\Domain\Bus\Query\QueryBusInterface;
 use Project\Shared\Domain\ValueObject\UuidValueObject;
@@ -65,6 +66,7 @@ readonly class EmployeeService implements EmployeeServiceInterface
         $commandBus->dispatch(
             new \Project\Domains\Admin\Company\Application\Employee\Commands\Update\Command(
                 $command->uuid,
+                AuthManager::companyUuid()->value,
                 $command->firstName,
                 $command->lastName,
                 $command->email,

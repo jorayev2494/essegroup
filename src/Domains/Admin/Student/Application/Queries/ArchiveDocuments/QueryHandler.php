@@ -25,8 +25,8 @@ readonly class QueryHandler implements QueryHandlerInterface
         $foundStudent ?? throw new StudentNotFountExceptionDomainException();
 
         return $this->archiveService->archiveDocuments(
-            $foundStudent->getFullName()->getFullName(),
-            $foundStudent
+            $foundStudent,
+            $foundStudent->getFullName()->getFullName()
         )->response();
     }
 }

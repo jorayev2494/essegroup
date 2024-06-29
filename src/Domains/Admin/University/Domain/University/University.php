@@ -61,11 +61,11 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\Column(name: 'youtube_video_id', type: YouTubeVideoIdType::NAME, nullable: true)]
     private YouTubeVideoId $youTubeVideoId;
 
-    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'university', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Logo::class, inversedBy: 'university', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'logo_uuid', referencedColumnName: 'uuid', unique: true, nullable: true)]
     private ?Logo $logo;
 
-    #[ORM\OneToOne(targetEntity: Cover::class, inversedBy: 'university', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Cover::class, inversedBy: 'university', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'cover_uuid', referencedColumnName: 'uuid', unique: true, nullable: true)]
     private ?Cover $cover;
 

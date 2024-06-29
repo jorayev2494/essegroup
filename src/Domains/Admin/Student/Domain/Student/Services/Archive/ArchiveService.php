@@ -17,37 +17,48 @@ class ArchiveService implements ArchiveServiceInterface
         private ArchivatorInterface $archivator
     ) { }
 
-    public function archiveDocuments(string $archiveName, ArchivableDocumentsInterface $archivableDocuments): ArchivatorInterface
+    public function archiveDocuments(ArchivableDocumentsInterface $archivableDocuments, string $archiveName): ArchivatorInterface
     {
         $archiveName = $this->makeArchiveName($archiveName);
-        $archivator = $this->archivator->instance($archiveName);
+        $this->archivator = $this->archivator->instance($archiveName);
 
+        $this->archiveDocumentList($archivableDocuments->getArchiveDocumentList(), $archiveName);
+        $this->archiveAdditionalDocumentsList($archivableDocuments->getArchiveAdditionalDocumentList(), $archiveName);
+
+        return $this->archivator;
+    }
+
+    private function archiveDocumentList(array $documents, string $archiveName): void
+    {
         /**
          * @var string $fileName
          * @var File $file
          * */
-        foreach (array_filter($archivableDocuments->getArchiveDocumentList()) as $fileName => $file) {
-            $archivator->add(
-                Storage::path($file->getFullPath()),
+        foreach (array_filter($documents) as $fileName => $file) {
+            $this->archivator->add(
+                $file->getFullPath(),
                 sprintf('%s/%s.%s', $archiveName, $fileName, $file->getExtension())
             );
         }
+    }
 
-        /** @var AdditionalDocument $additionalFile */
-        foreach (array_filter($archivableDocuments->getArchiveAdditionalDocumentList()) as $additionalFile) {
-            $archivator->add(
-                Storage::path($additionalFile->getFullPath()),
+    private function archiveAdditionalDocumentsList(array $additionalDocuments, string $archiveName): void
+    {
+        /**
+         * @var AdditionalDocument $additionalFile
+         */
+        foreach (array_filter($additionalDocuments) as $additionalFile) {
+            $this->archivator->add(
+                $additionalFile->getFullPath(),
                 sprintf(
                     '%s/%s/%s.%s',
                     $archiveName,
                     'Additional documents',
                     $additionalFile->getDescription(),
-                    $file->getExtension()
+                    $additionalFile->getExtension()
                 )
             );
         }
-
-        return $archivator;
     }
 
     private function makeArchiveName(string $name): string

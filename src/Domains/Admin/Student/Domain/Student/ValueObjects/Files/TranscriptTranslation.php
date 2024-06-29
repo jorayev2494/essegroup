@@ -17,7 +17,7 @@ class TranscriptTranslation extends File implements TranscriptTranslationInterfa
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/student/student/transcript_translations';
+        return '/admin/domain/student/student/transcript_translations';
     }
 
     #[ORM\OneToOne(targetEntity: Student::class, mappedBy: 'transcriptTranslation')]

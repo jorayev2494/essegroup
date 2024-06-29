@@ -89,7 +89,7 @@ abstract class File implements Arrayable
         $this->fileOriginalName = $fileOriginalName;
         $this->url = $url;
         $this->downloadedCount = $downloadedCount;
-        $this->urlPattern = is_null($urlPattern) ? $this->makeUrlPattern($this) : $urlPattern;
+        $this->urlPattern = (is_null($urlPattern) ? $this->makeUrlPattern($this) : $urlPattern);
     }
 
     abstract public static function path(): string;
@@ -128,14 +128,16 @@ abstract class File implements Arrayable
 
     protected function makeUrlPattern(File $file): string
     {
-        $res = match ($file->mimeType) {
-            MimeTypes::JPG->value => sprintf('%s/%sx%s/%s', $file->getPath(), '{width}', '{height}', $file->fileName),
-            MimeTypes::JPEG->value => sprintf('%s/%sx%s/%s', $file->getPath(), '{width}', '{height}', $file->fileName),
-            MimeTypes::PNG->value => sprintf('%s/%sx%s/%s', $file->getPath(), '{width}', '{height}', $file->fileName),
-            MimeTypes::GIF->value => sprintf('%s/%sx%s/%s', $file->getPath(), '{width}', '{height}', $file->fileName),
+        // $res = match ($file->mimeType) {
+        //     // MimeTypes::JPG->value => sprintf('%s/%sx%s/%s', $file->getPath(), '{width}', '{height}', $file->fileName),
+        //     // MimeTypes::JPEG->value => sprintf('%s/%sx%s/%s', $file->getPath(), '{width}', '{height}', $file->fileName),
+        //     // MimeTypes::PNG->value => sprintf('%s/%sx%s/%s', $file->getPath(), '{width}', '{height}', $file->fileName),
+        //     // MimeTypes::GIF->value => sprintf('%s/%sx%s/%s', $file->getPath(), '{width}', '{height}', $file->fileName),
+        //
+        //     default => sprintf('%s/%s', $file->getPath(), $file->fileName)
+        // };
 
-            default => sprintf('%s/%s', $file->getPath(), $file->fileName)
-        };
+        $res =  sprintf('%s/%s', $file->getPath(), $file->fileName);
 
         return "{endpoint}{$res}";
     }

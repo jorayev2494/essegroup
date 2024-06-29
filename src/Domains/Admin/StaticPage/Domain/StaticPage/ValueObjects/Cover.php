@@ -14,10 +14,15 @@ use Project\Shared\Domain\File\File;
 #[ORM\HasLifecycleCallbacks]
 class Cover extends File implements CoverInterface
 {
+
+    public const int WIDTH = 466;
+
+    public const int HEIGHT = 456;
+
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/static_page/static_page/covers';
+        return '/admin/domain/static_page/static_page/covers';
     }
 
     #[ORM\OneToOne(targetEntity: StaticPage::class, mappedBy: 'cover')]

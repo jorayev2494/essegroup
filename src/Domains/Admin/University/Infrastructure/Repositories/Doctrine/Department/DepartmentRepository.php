@@ -12,6 +12,7 @@ use Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInter
 use Project\Domains\Admin\University\Domain\Department\Name\DepartmentName;
 use Project\Domains\Admin\University\Domain\Department\Name\DepartmentNameTranslation;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
+use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Infrastructure\Department\Filters\QueryFilter;
 use Project\Shared\Infrastructure\Repository\Contracts\BaseAdminEntityRepository;
@@ -145,6 +146,12 @@ class DepartmentRepository extends BaseAdminEntityRepository implements Departme
         if (count($httpQuery->filter->facultyUuids) > 0) {
             $query->andWhere('d.facultyUuid IN (:facultyUuids)')
                 ->setParameter('facultyUuids', $httpQuery->filter->facultyUuids);
+        }
+
+        if (count($httpQuery->filter->facultyNameUuids) > 0) {
+            $query->innerJoin(Faculty::class, 'f', Join::WITH, 'f.uuid = d.facultyUuid')
+                ->andWhere('f.nameUuid IN (:facultyNameUuids)')
+                ->setParameter('facultyNameUuids', $httpQuery->filter->facultyNameUuids);
         }
 
         if (count($httpQuery->filter->uuids) > 0) {

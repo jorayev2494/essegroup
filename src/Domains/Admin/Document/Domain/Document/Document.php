@@ -47,7 +47,7 @@ class Document implements EntityUuid, TranslatableInterface, FileableInterface, 
     #[ORM\Column(name: 'file_uuid', type: Types::GUID)]
     private string $fileUuid;
 
-    #[ORM\OneToOne(targetEntity: File::class, inversedBy: 'document', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: File::class, inversedBy: 'document', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'file_uuid', referencedColumnName: 'uuid')]
     private File $file;
 

@@ -10,7 +10,7 @@ use Project\Domains\Admin\Student\Infrastructure\Student\Services\Files\Equivale
 
 trait EquivalenceDocumentTrait
 {
-    #[ORM\ManyToOne(targetEntity: EquivalenceDocument::class, cascade: ['persist', 'remove'], inversedBy: 'application')]
+    #[ORM\OneToOne(targetEntity: EquivalenceDocument::class, inversedBy: 'student', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'equivalence_document_uuid', referencedColumnName: 'uuid', nullable: false)]
     private EquivalenceDocument $equivalenceDocument;
 

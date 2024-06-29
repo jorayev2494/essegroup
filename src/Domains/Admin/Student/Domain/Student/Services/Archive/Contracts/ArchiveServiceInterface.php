@@ -6,5 +6,5 @@ use Project\Infrastructure\Archivator\Contracts\ArchivatorInterface;
 
 interface ArchiveServiceInterface
 {
-    public function archiveDocuments(string $archiveName, ArchivableDocumentsInterface $archivableDocuments): ArchivatorInterface;
+    public function archiveDocuments(ArchivableDocumentsInterface $archivableDocuments, string $archiveName): ArchivatorInterface;
 }

@@ -32,12 +32,14 @@ class UniversityStoreRequest extends FormRequest
             'logo' => [
                 'required',
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:image/*',
                 // Rule::dimensions()->width(Logo::WIDTH)->height(Logo::HEIGHT),
             ],
             'cover' => [
                 'required',
                 'file',
+                'max:' . config('filesystems.file_max_size'),
                 'mimetypes:image/*',
                 // Rule::dimensions()->width(Cover::WIDTH)->height(Cover::HEIGHT),
             ],

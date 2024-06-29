@@ -17,7 +17,7 @@ class SchoolAttestat extends File implements SchoolAttestatInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/student/student/school_attestats';
+        return '/admin/domain/student/student/school_attestats';
     }
 
     #[ORM\OneToOne(targetEntity: Student::class, mappedBy: 'schoolAttestat')]

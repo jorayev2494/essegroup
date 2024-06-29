@@ -51,7 +51,7 @@ class Employee extends AggregateRoot implements AuthenticatableInterface, Avatar
     #[ORM\Column(name: 'avatar_uuid', type: Types::GUID, nullable: true)]
     private ?string $avatarUuid;
 
-    #[ORM\OneToOne(targetEntity: Avatar::class, inversedBy: 'employee', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Avatar::class, inversedBy: 'employee', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(name: 'avatar_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
     private ?Avatar $avatar;
 

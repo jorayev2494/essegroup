@@ -17,10 +17,9 @@ readonly class QueryFilter extends BaseQueryFilter
         public array $universityUuids,
         public array $departmentNameUuids,
         public array $facultyUuids,
+        public array $facultyNameUuids,
         public array $uuids
-    ) {
-
-    }
+    ) { }
 
     public static function makeFromRequest(Request $request): static
     {
@@ -37,6 +36,7 @@ readonly class QueryFilter extends BaseQueryFilter
             $data['university_uuids'] ?? [],
             $data['department_name_uuids'] ?? [],
             $data['faculty_uuids'] ?? [],
+            $data['faculty_name_uuids'] ?? [],
             $data['uuids'] ?? [],
         );
     }
@@ -52,6 +52,7 @@ readonly class QueryFilter extends BaseQueryFilter
             'university_uuids' => $this->universityUuids,
             'department_name_uuids' => $this->departmentNameUuids,
             'faculty_uuids' => $this->facultyUuids,
+            'faculty_name_uuids' => $this->facultyNameUuids,
             'uuids' => $this->uuids,
         ];
     }

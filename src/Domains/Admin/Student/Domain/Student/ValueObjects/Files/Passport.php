@@ -17,7 +17,7 @@ class Passport extends File implements PassportInterface
     #[\Override]
     public static function path(): string
     {
-        return 'admin/domain/student/student/passports';
+        return '/admin/domain/student/student/passports';
     }
 
     #[ORM\OneToOne(targetEntity: Student::class, mappedBy: 'passport')]
