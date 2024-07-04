@@ -63,6 +63,11 @@ class DepartmentUpdateRequest extends FormRequest
                 'required',
                 'boolean',
             ],
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                'lt:price',
+            ],
 //            'is_active' => [
 //                'required',
 //            ],

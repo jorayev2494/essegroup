@@ -2,7 +2,12 @@
 
 namespace Project\Infrastructure\Cache\Contracts;
 
-interface CacheManagerInterface extends \Psr\SimpleCache\CacheInterface
-{
+use \Closure;
+use \DateTimeImmutable;
 
+interface CacheManagerInterface
+{
+    public function remember(string $key, DateTimeImmutable $ttl, Closure $callback): mixed;
+
+    public function forgot(string $key): bool;
 }

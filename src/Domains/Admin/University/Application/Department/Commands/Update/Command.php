@@ -24,6 +24,7 @@ class Command implements CommandInterface
         public readonly string $priceCurrencyUuid,
         public readonly bool $isFilled,
         public readonly bool $isActive,
+        public readonly ?string $discountPrice
     )
     {
         $this->setTranslations($translations);

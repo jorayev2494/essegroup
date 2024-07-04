@@ -63,6 +63,11 @@ class DepartmentStoreRequest extends FormRequest
                 'required',
                 'boolean',
             ],
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                'lt:price',
+            ],
         ];
     }
 }

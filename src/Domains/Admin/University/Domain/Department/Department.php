@@ -21,6 +21,7 @@ use Project\Domains\Admin\University\Domain\Department\Events\DepartmentWasDelet
 use Project\Domains\Admin\University\Domain\Department\Name\DepartmentName;
 use Project\Domains\Admin\University\Domain\Department\Name\DepartmentNameTranslate;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Description;
+use Project\Domains\Admin\University\Domain\Department\ValueObjects\DiscountPrice;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Price;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Faculty\Faculty;
@@ -29,6 +30,7 @@ use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Name;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType;
+use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DiscountPriceType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\PriceType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
@@ -107,6 +109,9 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
     #[ORM\Column(name: 'price', type: PriceType::NAME, length: 10, nullable: true)]
     private Price $price;
 
+    #[ORM\Column(name: 'discount_price', type: DiscountPriceType::NAME, length: 10, nullable: true)]
+    private DiscountPrice $discountPrice;
+
     #[ORM\Column(name: 'price_currency_uuid', nullable: true)]
     private ?string $priceCurrencyUuid;
 
@@ -140,6 +145,7 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         $this->language = $language;
         $this->price = $price;
         $this->priceCurrency = $priceCurrency;
+        $this->discountPrice = DiscountPrice::fromValue(null);
         $this->description = Description::fromValue(null);
         $this->translations = new ArrayCollection();
         $this->applications = new ArrayCollection();
@@ -319,6 +325,15 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         return $this;
     }
 
+    public function changeDiscountPrice(DiscountPrice $discountPrice): self
+    {
+        if ($this->discountPrice->isNotEquals($discountPrice)) {
+            $this->discountPrice = $discountPrice;
+        }
+
+        return $this;
+    }
+
     public function changePriceCurrency(Currency $priceCurrency): self
     {
         if ($priceCurrency->isNotEquals($priceCurrency)) {
@@ -366,6 +381,7 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
             'language_uuid' => $this->languageUuid,
             'language' => LanguageTranslate::execute($this->language)?->toArray(),
             'price' => $this->price->value,
+            'discount_price' => $this->discountPrice->value,
             'price_currency_uuid' => $this->priceCurrencyUuid,
             'price_currency' => $this->priceCurrency->getUuid()->isNotNull() ? $this->priceCurrency->toArray() : null,
             'is_filled' => $this->isFilled,

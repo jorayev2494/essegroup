@@ -21,4 +21,9 @@ return [
             'text' => 'Anketanyň statusy üýtgedildi',
         ],
     ],
+    'company' => [
+        'student' => [
+            'created_text' => 'Kompaniýaňyza täze talyp goşuldy.',
+        ],
+    ],
 ];

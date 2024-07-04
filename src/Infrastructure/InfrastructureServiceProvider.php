@@ -37,7 +37,7 @@ class InfrastructureServiceProvider extends ServiceProvider
         $this->app->singleton(PasswordHasherInterface::class, PasswordHasher::class);
         $this->app->singleton(TranslationColumnServiceInterface::class, TranslationColumnService::class);
         $this->app->bind(MailerInterface::class, static fn () => new Mailer(Transport::fromDsn(env('MAILER_DSN'))));
-        $this->app->singleton(CacheManagerInterface::class, \Illuminate\Cache\CacheManager::class);
+        $this->app->singleton(CacheManagerInterface::class, CacheManager::class);
         $this->app->singleton(MailerServiceInterface::class, MailerService::class);
         $this->app->singleton(ArchivatorInterface::class, ZipArchivator::class);
     }

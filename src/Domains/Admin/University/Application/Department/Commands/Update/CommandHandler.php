@@ -15,6 +15,7 @@ use Project\Domains\Admin\University\Domain\Degree\DegreeRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Department\DepartmentRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Department\Name\DepartmentNameRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Department\Name\ValueObjects\Uuid as DepartmentNameUuid;
+use Project\Domains\Admin\University\Domain\Department\ValueObjects\DiscountPrice;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Price;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyRepositoryInterface;
@@ -60,6 +61,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $department->changeLanguage($language);
         $department->changeDegree($degree);
         $department->changePrice(Price::fromValue($command->price));
+        $department->changeDiscountPrice(DiscountPrice::fromValue($command->discountPrice));
         $department->changePriceCurrency($currency);
         $department->changeIsFilled($command->isFilled);
         $department->setIsActive($command->isActive);

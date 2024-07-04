@@ -3,6 +3,8 @@
 return [
     'hi' => 'Salam',
     'welcome' => 'Hoş geldiňiz',
+    'first_name' => 'Ady',
+    'last_name' => 'Familiýasy',
     'email' => 'E-poçta',
     'password' => 'Parol',
     'application' => 'Arza',

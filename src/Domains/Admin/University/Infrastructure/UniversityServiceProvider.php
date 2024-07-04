@@ -115,6 +115,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         // Department
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType::class,
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\PriceType::class,
+        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DiscountPriceType::class,
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType::class,
 
         // Department Name
