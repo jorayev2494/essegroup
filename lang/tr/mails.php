@@ -20,4 +20,9 @@ return [
             'text' => 'Başvurunuzun durumu değişti',
         ],
     ],
+    'company' => [
+        'student' => [
+            'created_text' => 'Şirketinize yeni bir öğrenci eklendi.',
+        ],
+    ],
 ];

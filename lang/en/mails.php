@@ -20,4 +20,9 @@ return [
             'text' => 'Your application status was changed',
         ],
     ],
+    'company' => [
+        'student' => [
+            'created_text' => 'A new student has been added to your company.',
+        ],
+    ],
 ];

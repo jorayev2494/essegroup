@@ -67,7 +67,8 @@ readonly class DepartmentController
                 $request->get('price'),
                 $request->get('price_currency_uuid'),
                 $request->boolean('is_filled'),
-                $request->boolean('is_active', true)
+                $request->boolean('is_active', true),
+                $request->get('discount_price')
             )
         );
 
@@ -98,7 +99,8 @@ readonly class DepartmentController
                 $request->get('price'),
                 $request->get('price_currency_uuid'),
                 $request->boolean('is_filled'),
-                $request->boolean('is_active', true)
+                $request->boolean('is_active', true),
+                $request->get('discount_price')
             )
         );
 

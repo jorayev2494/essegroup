@@ -3,6 +3,8 @@
 return [
     'hi' => 'Hi',
     'welcome' => 'Welcome',
+    'first_name' => 'First name',
+    'last_name' => 'Last name',
     'email' => 'Email',
     'password' => 'Password',
     'application' => 'Application',

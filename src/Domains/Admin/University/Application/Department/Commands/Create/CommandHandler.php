@@ -9,6 +9,7 @@ use Project\Domains\Admin\Language\Domain\Language\LanguageRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Degree\DegreeRepositoryInterface;
 use Project\Domains\Admin\University\Domain\Degree\ValueObjects\Uuid as DegreeUuid;
+use Project\Domains\Admin\University\Domain\Department\ValueObjects\DiscountPrice;
 use Project\Domains\Admin\University\Domain\Department\ValueObjects\Price;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid as UniversityUuid;
 use Project\Domains\Admin\University\Domain\Faculty\ValueObjects\Uuid as FacultyUuid;
@@ -66,6 +67,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         );
 
         $department->changeIsFilled($command->isFilled);
+        $department->changeDiscountPrice(DiscountPrice::fromValue($command->discountPrice));
 
         $this->translationService->addTranslations($department, $command->translations);
 

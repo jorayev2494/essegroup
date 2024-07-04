@@ -59,6 +59,7 @@ class CompanyServiceProvider extends AdminDomainServiceProvider
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         \Project\Domains\Admin\Company\Application\Employee\Subscribers\EmployeeWasCreatedDomainEventSubscriber::class,
         \Project\Domains\Admin\Company\Application\Employee\Subscribers\Auth\RestorePassword\EmployeeRestorePasswordLinkWasAddedDomainEventSubscriber::class,
+        \Project\Domains\Admin\Company\Application\Company\Subsribers\Student\StudentWasCreatedDomainEventSubscriber::class,
     ];
 
     /** @var array<string, string> */

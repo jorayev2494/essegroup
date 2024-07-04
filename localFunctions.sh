@@ -112,3 +112,15 @@ function logs()
 {
     docker compose logs "${@:1}"
 }
+
+function create-context()
+{
+    MODULE_NAME=${@:1}
+    CONTEXT_NAME=${@:2}
+
+    echo $MODULE_NAME;
+    MODULE_NAMEN=$MODULE_NAME | grep -o '*()'
+    echo $MODULE_NAMEN $CONTEXT_NAME;
+
+    # mkdir -p "$PWD/src/Domains/$MODULE_NAME/$CONTEXT_NAME/{Application/$CONTEXT_NAME/Queries,Application/$CONTEXT_NAME/Commands,Domian/$CONTEXT_NAME/Services/Contracts,Infrastructure/$CONTEXT_NAME/Repositories/Doctrine,Presentation/Http/API/REST/Controllers}"
+}
