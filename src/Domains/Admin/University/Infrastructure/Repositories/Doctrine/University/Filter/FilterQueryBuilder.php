@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter;
 
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterByAlias;
@@ -8,6 +10,7 @@ use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Univer
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterByCountry;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterByDegree;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterByDepartment;
+use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterByDepartmentName;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterByFaculty;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterByLanguage;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\OnlyTheCountryList;
@@ -25,6 +28,7 @@ class FilterQueryBuilder extends BaseFilterQueryBuilder
                 FilterByCity::class,
                 // FilterByCompany::class,
                 FilterByDepartment::class,
+                FilterByDepartmentName::class,
                 FilterByDegree::class,
                 OnlyTheCountryList::class,
                 FilterByLanguage::class,

@@ -41,9 +41,9 @@ readonly class QueryHandler implements QueryHandlerInterface
             ],
             'country' => CountryTranslate::execute($application->getCountry())?->toArray(),
             'university' => [
-                'uuid' => $application->getUniversity()->getUuid()->value,
-                'name' => UniversityTranslate::execute($application->getUniversity())->getName()->value,
-                'logo' => $application->getUniversity()->getLogo()->toArray(),
+                'uuid' => $application->getUniversity()->isNotNull() ? $application->getUniversity()->getUuid()->value : null,
+                'name' => UniversityTranslate::execute($application->getUniversity())?->getName()->value,
+                'logo' => $application->getUniversity()->isNotNull() ? $application->getUniversity()->getLogo()->toArray() : null,
             ],
             'departments' => array_map(
                 $this->departmentMapper(),
@@ -57,7 +57,7 @@ readonly class QueryHandler implements QueryHandlerInterface
     {
         return static fn (Department $department): array => [
             'uuid' => $department->getUuid()->value,
-            'name' => DepartmentTranslate::execute($department)->getName()?->toArray(),
+            'name' => DepartmentTranslate::execute($department)?->getName()?->toArray(),
         ];
     }
 }
