@@ -363,6 +363,16 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
         return $this;
     }
 
+    public function isNull(): bool
+    {
+        return $this->uuid->isNull();
+    }
+
+    public function isNotNull(): bool
+    {
+        return $this->uuid->isNotNull();
+    }
+
     /**
      * @inheritDoc
      */

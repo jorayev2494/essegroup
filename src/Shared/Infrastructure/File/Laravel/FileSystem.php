@@ -57,7 +57,11 @@ final class FileSystem implements FileSystemInterface
     {
         $name = ! is_null($name) ? sprintf('%s.%s', $name, $file->getExtension()) : $file->getFileName();
 
-        return Storage::download($file->getFullPath(), $name, $headers);
+        $headers = [
+            'Content-Type' => $file->getMimeType(),
+        ];
+
+        return Storage::download($file->getFullPath(), $name, headers: $headers);
     }
 
     public function delete(?File $file): bool

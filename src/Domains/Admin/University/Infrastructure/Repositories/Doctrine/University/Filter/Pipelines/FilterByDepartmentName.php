@@ -6,7 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 use Project\Domains\Admin\University\Infrastructure\University\Filters\QueryFilter;
 use Project\Shared\Infrastructure\Repository\Doctrine\Filter\Contracts\BaseFilterPipe;
 
-class FilterByDepartment extends BaseFilterPipe
+class FilterByDepartmentName extends BaseFilterPipe
 {
     /**
      * @param QueryBuilder $queryBuilder
@@ -15,10 +15,11 @@ class FilterByDepartment extends BaseFilterPipe
      */
     public function execute(QueryBuilder $queryBuilder, object $queryFilter): void
     {
-        $queryBuilder->innerJoin('u.faculties', 'uff', 'uff.universityUuid = u.uuid')
-            ->innerJoin('uff.departments', 'uffd', 'uffd.facultyUuid = uff.uuid')
-            ->andWhere('uffd.uuid IN (:departmentUuids)')
-            ->setParameter('departmentUuids', $queryFilter->departmentUuids)
+        $queryBuilder->innerJoin('u.faculties', 'ufff', 'ufff.universityUuid = u.uuid')
+            ->innerJoin('ufff.departments', 'ufffd', 'ufffd.facultyUuid = ufff.uuid')
+            ->innerJoin('ufffd.name', 'ufffn')
+            ->andWhere('ufffn.uuid IN (:departmentNameUuids)')
+            ->setParameter('departmentNameUuids', $queryFilter->departmentNameUuids)
         ;
     }
 
@@ -28,6 +29,6 @@ class FilterByDepartment extends BaseFilterPipe
      */
     public function canExecute(object $queryFilter): bool
     {
-        return count($queryFilter->departmentUuids) > 0;
+        return count($queryFilter->departmentNameUuids) > 0;
     }
 }

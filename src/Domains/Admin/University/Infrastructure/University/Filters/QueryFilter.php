@@ -15,6 +15,7 @@ readonly class QueryFilter extends BaseQueryFilter
         public array $cityUuids,
         public array $facultyUuids,
         public array $departmentUuids,
+        public array $departmentNameUuids,
         public array $degreeUuids,
         public array $languageUuids,
         public bool $onlyInCountryList
@@ -35,6 +36,7 @@ readonly class QueryFilter extends BaseQueryFilter
             $data['city_uuids'] ?? [],
             $data['faculty_uuids'] ?? [],
             $data['department_uuids'] ?? [],
+            $data['department_name_uuids'] ?? [],
             $data['degree_uuids'] ?? [],
             $data['language_uuids'] ?? [],
             $data['only_in_country_list'] ?? false,
@@ -49,6 +51,7 @@ readonly class QueryFilter extends BaseQueryFilter
             'city_uuids' => $this->cityUuids,
             'faculty_uuids' => $this->facultyUuids,
             'department_uuids' => $this->departmentUuids,
+            'department_name_uuids' => $this->departmentNameUuids,
             'degree_uuids' => $this->degreeUuids,
             'language_uuids' => $this->languageUuids,
             'only_in_country_list' => $this->onlyInCountryList,
