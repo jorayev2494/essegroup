@@ -7,7 +7,7 @@ namespace Project\Infrastructure\Services\Authentication;
 use App\Models\Admin;
 use App\Models\Auth\Authenticatable;
 use Project\Infrastructure\Services\Authentication\Enums\GuardType;
-use App\Models\Client;
+use App\Models\Student;
 use Illuminate\Support\Facades\Auth as FrameworkAuth;
 
 class Auth
@@ -22,7 +22,7 @@ class Auth
         return FrameworkAuth::admin();
     }
 
-    public static function client(): ?Client
+    public static function client(): ?Student
     {
         return FrameworkAuth::client();
     }

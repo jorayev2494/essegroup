@@ -39,10 +39,15 @@ abstract class DomainServiceProvider extends ServiceProvider implements AppServi
         // __DIR__ . '/../Domain',
     ];
 
+    /** @var array<array-key, string> */
+    protected const TRANSLATIONS = [
+        // 'src/Domains/Admin/Student/Infrastructure/Student/Translations' => 'project.domains.admin.student.infrastructure.student.translations',
+    ];
+
     /** @var array<string, string> */
     protected const ROUTE_PATHS = [
         // [
-        //     'middleware' => 'api',
+        //     'middleware' => ['api', 'auth:admin'],
         //     'prefix' => 'api/admin',
         //     'path' => __DIR__ . '/../Presentation/Http/API/REST/routes.php',
         // ],
@@ -69,6 +74,7 @@ abstract class DomainServiceProvider extends ServiceProvider implements AppServi
         $this->registerQueryHandlers();
         $this->registerCommandHandlers();
         $this->registerDomainEventSubscribers();
+        $this->registerTranslations();
         $this->registerRoutes();
     }
 
@@ -97,7 +103,6 @@ abstract class DomainServiceProvider extends ServiceProvider implements AppServi
     {
         foreach (static::SERVICES as $abstractClassName => $data) {
             [$registerType, $service] = $data;
-            // dd($registerType, $abstractClassName, $service);
             $this->app->$registerType($abstractClassName, $service);
         }
     }
@@ -120,6 +125,13 @@ abstract class DomainServiceProvider extends ServiceProvider implements AppServi
     {
         foreach (static::DOMAIN_EVENT_SUBSCRIBERS as $className) {
             $this->app->tag($className, 'domain_event_subscriber');
+        }
+    }
+
+    public function registerTranslations(): void
+    {
+        foreach (static::TRANSLATIONS as $path => $namespace) {
+            $this->loadTranslationsFrom(base_path($path), $namespace);
         }
     }
 }

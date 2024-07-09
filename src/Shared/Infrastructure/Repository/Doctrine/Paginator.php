@@ -8,7 +8,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as OrmPaginator;
 use Illuminate\Contracts\Support\Arrayable;
-use Project\Shared\Application\Query\BaseQuery;
+use Project\Shared\Contracts\ArrayableInterface;
 
 /**
  * @see https://gist.github.com/Naskalin/6306172b8081813ea213099a4d16019a
@@ -37,26 +37,27 @@ class Paginator implements Arrayable
      * @param int $limit
      * @return Paginator
      */
-    public function __construct($query, BaseQuery $dataDTO, bool $fetchJoinCollection = true)
+    public function __construct($query, PaginatorHttpQueryParams $httpQueryParams, bool $fetchJoinCollection = true)
     {
         $paginator = new OrmPaginator($query, $fetchJoinCollection);
 
         $paginator
             ->getQuery()
-            ->setFirstResult($dataDTO->perPage * ($dataDTO->page - 1))
-            ->setMaxResults($dataDTO->perPage);
+            ->setFirstResult($httpQueryParams->perPage * ($httpQueryParams->page - 1))
+            ->setMaxResults($httpQueryParams->perPage);
 
-        $this->makeControl($paginator, $dataDTO);
+        $this->makeControl($paginator, $httpQueryParams);
     }
 
-    private function makeControl(OrmPaginator $paginator, BaseQuery $dataDTO): void
+    private function makeControl(OrmPaginator $paginator, PaginatorHttpQueryParams $httpQueryParams): void
     {
-        $this->page = $dataDTO->page;
-        $this->perPage = $dataDTO->perPage;
-        $this->items = array_map(static fn (Arrayable $item): array => $item->toArray(), iterator_to_array($paginator->getIterator()));
+        $this->page = $httpQueryParams->page;
+        $this->perPage = $httpQueryParams->perPage;
+        // $this->items = array_map(static fn (ArrayableInterface $item): array => $item->toArray(), iterator_to_array(($paginator->getIterator())));
+        $this->items = $paginator->getIterator();
         $this->lastPage = ($lastPage = (int) ceil($paginator->count() / $paginator->getQuery()->getMaxResults())) > 1 ? $lastPage : null;
-        $this->nextPage = ($nexPage = $dataDTO->page + 1) <= $this->lastPage ? $nexPage : null;
-        $this->to = $dataDTO->perPage * $dataDTO->page;
+        $this->nextPage = ($nexPage = $httpQueryParams->page + 1) <= $this->lastPage ? $nexPage : null;
+        $this->to = $httpQueryParams->perPage * $httpQueryParams->page;
         $this->total = $paginator->count();
     }
 
@@ -85,11 +86,33 @@ class Paginator implements Arrayable
         return $this->items;
     }
 
+    public function map(\Closure $closure): self
+    {
+        $this->items = array_map($closure, iterator_to_array($this->items));
+
+        return $this;
+    }
+
+    public function translateItems(string $translateClassName): self
+    {
+        $this->map(static fn (object $item): object => $translateClassName::execute($item));
+
+        return $this;
+    }
+
+    private function itemToArray(): \Closure
+    {
+        return static fn (array|ArrayableInterface $item): array => is_array($item) ? $item : $item->toArray();
+    }
+
     public function toArray(): array
     {
         return [
             'current_page' => $this->page,
-            'data' => $this->items,
+            'data' => array_map(
+                $this->itemToArray(),
+                iterator_to_array($this->items)
+            ),
             'next_page' => $this->nextPage,
             'next_page_url' => $this->makePageUrl($this->nextPage),
             'last_page' => $this->lastPage,

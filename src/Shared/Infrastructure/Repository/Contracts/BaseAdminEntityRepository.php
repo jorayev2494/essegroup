@@ -9,7 +9,6 @@ abstract class BaseAdminEntityRepository extends BaseEntityRepository
 {
     public function __construct(AdminEntityManagerInterface $entityManager)
     {
-        // dd($entityManager);
         parent::__construct($entityManager);
     }
 }

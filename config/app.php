@@ -31,6 +31,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'available_client_translation_locales' => array_filter(explode(',', env('AVAILABLE_CLIENT_TRANSLATION_LOCALES', 'en,ru'))),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
@@ -169,12 +171,53 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\ValidationServiceProvider::class,
 
         Project\Infrastructure\InfrastructureServiceProvider::class,
 
         // Domain Service Providers
         // Admin
         Project\Domains\Admin\Authentication\Infrastructure\AuthenticationServiceProvider::class,
+        Project\Domains\Admin\Company\Infrastructure\CompanyServiceProvider::class,
+        Project\Domains\Admin\University\Infrastructure\UniversityServiceProvider::class,
+        Project\Domains\Admin\Country\Infrastructure\CountryServiceProvider::class,
+        Project\Domains\Admin\Language\Infrastructure\LanguageServiceProvider::class,
+        Project\Domains\Admin\Student\Infrastructure\StudentServiceProvider::class,
+        Project\Domains\Admin\Announcement\Infrastructure\AnnouncementServiceProvider::class,
+        Project\Domains\Admin\Manager\Infrastructure\ManagerServiceProvider::class,
+        Project\Domains\Admin\Profile\Infrastructure\ProfileServiceProvider::class,
+        Project\Domains\Admin\Currency\Infrastructure\CurrencyServiceProvider::class,
+        Project\Domains\Admin\Contest\Infrastructure\ContestServiceProvider::class,
+        Project\Domains\Admin\StaticPage\Infrastructure\StaticPageServiceProvider::class,
+        Project\Domains\Admin\Document\Infrastructure\DocumentServiceProvider::class,
+        Project\Domains\Admin\YouTube\Infrastructure\YouTubeServiceProvider::class,
+
+        // Company
+        Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,
+        Project\Domains\Company\Employee\Infrastructure\EmployeeServiceProvider::class,
+        Project\Domains\Company\Profile\Infrastructure\ProfileServiceProvider::class,
+        Project\Domains\Company\Student\Infrastructure\StudentServiceProvider::class,
+        Project\Domains\Company\University\Infrastructure\UniversityServiceProvider::class,
+        Project\Domains\Company\Language\Infrastructure\LanguageServiceProvider::class,
+        Project\Domains\Company\Announcement\Infrastructure\AnnouncementServiceProvider::class,
+
+        // Student
+        Project\Domains\Student\Authentication\Infrastructure\AuthenticationServiceProvider::class,
+        Project\Domains\Student\Profile\Infrastructure\ProfileServiceProvider::class,
+        Project\Domains\Student\Announcement\Infrastructure\AnnouncementServiceProvider::class,
+        Project\Domains\Student\University\Infrastructure\UniversityServiceProvider::class,
+        Project\Domains\Student\Language\Infrastructure\LanguageServiceProvider::class,
+        Project\Domains\Student\Contest\Infrastructure\ContestServiceProvider::class,
+
+        // Public
+        Project\Domains\Public\University\Infrastructure\UniversityServiceProvider::class,
+        Project\Domains\Public\Language\Infrastructure\LanguageServiceProvider::class,
+        Project\Domains\Public\Student\Infrastructure\StudentServiceProvider::class,
+        Project\Domains\Public\StaticPage\Infrastructure\StaticPageServiceProvider::class,
+        Project\Domains\Public\Company\Infrastructure\CompanyServiceProvider::class,
+        Project\Domains\Public\Document\Infrastructure\DocumentServiceProvider::class,
+        Project\Domains\Public\Manager\Infrastructure\ManagerServiceProvider::class,
+        Project\Domains\Public\YouTube\Infrastructure\YouTubeServiceProvider::class,
 
         App\Providers\DoctrineServiceProvider::class,
     ])->toArray(),

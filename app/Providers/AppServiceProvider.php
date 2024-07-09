@@ -29,8 +29,6 @@ class AppServiceProvider extends ServiceProvider
             static fn (\Illuminate\Contracts\Foundation\Application $app): MessengerEventBus => new MessengerEventBus($app->tagged('domain_event_subscriber'))
         );
 
-        // $this->app->bind(EventBusInterface::class, RabbitMQEventBus::class);
-
         $this->app->bind(
             QueryBusInterface::class,
             static fn (\Illuminate\Contracts\Foundation\Application $app): MessengerQueryBus => new MessengerQueryBus($app->tagged('query_handler'))

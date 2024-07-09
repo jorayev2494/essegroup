@@ -1,25 +1,20 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Project\Shared\Infrastructure\Repository\Doctrine;
 
 use Doctrine\Migrations\Version\AlphabeticalComparator;
 use Doctrine\Migrations\Version\Comparator;
 use Doctrine\Migrations\Version\Version;
 use MJS\TopSort\Implementations\ArraySort;
+use Exception;
 
-/**
- * @see https://www.goetas.com/blog/multi-namespace-migrations-with-doctrinemigrations-30/
- */
 class ProjectVersionComparator implements Comparator
 {
-    private AlphabeticalComparator $defaultSorter;
     private array $dependencies;
+    private AlphabeticalComparator $defaultSorter;
 
-    public function __construct()
+    function __construct()
     {
-        dd(__METHOD__);
         $this->defaultSorter = new AlphabeticalComparator();
         $this->dependencies = $this->buildDependencies();
     }
@@ -28,27 +23,30 @@ class ProjectVersionComparator implements Comparator
     {
         $sorter = new ArraySort();
 
-        $sorter->add('Project\Core');
-        $sorter->add('Project\Domains\Admin\Country', ['Project\Core']);
-        // $sorter->add('Project\ModuleB', ['Project\Core']);
-        // $sorter->add('Project\ModuleC', ['Project\ModuleB']);
+        $sorter->add('App\Core');
+        $sorter->add('App\ModuleA', ['App\Core']);
+        $sorter->add('App\ModuleB', ['App\Core']);
+        $sorter->add('App\ModuleC', ['App\ModuleB']);
 
         return array_flip($sorter->sort());
     }
 
     private function getNamespacePrefix(Version $version): string
     {
-        if (preg_match('~^App\[^\]+~', (string) $version, $mch)) {
+        if (preg_match('~^Project\[^\]+~', (string)$version, $mch)) {
             return $mch[0];
         }
 
-        throw new \Exception('Can not find the namespace prefix for the provide migration version.');
+        throw new Exception('Can not find the namespace prefix for the provide migration version.');
     }
 
     public function compare(Version $a, Version $b): int
     {
+//        dd($a, $b);
         $prefixA = $this->getNamespacePrefix($a);
         $prefixB = $this->getNamespacePrefix($b);
+
+//        dd($prefixA, $prefixB, $a, $b);
 
         return $this->dependencies[$prefixA] <=> $this->dependencies[$prefixB]
             ?: $this->defaultSorter->compare($a, $b);

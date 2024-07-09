@@ -7,8 +7,8 @@ namespace Project\Domains\Admin\Authentication\Presentation\Http\API\REST\Contro
 use App\Http\Requests\Api\Admin\Authentication\LoginRequest;
 use App\Http\Requests\Api\Admin\Authentication\RefreshTokenRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Project\Domains\Admin\Authentication\Application\Commands\Login\Command;
-use Project\Domains\Admin\Authentication\Application\Commands\Login\CommandHandler;
+use Project\Domains\Admin\Authentication\Application\Authentication\Commands\Login\Command;
+use Project\Domains\Admin\Authentication\Application\Authentication\Commands\Login\CommandHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 

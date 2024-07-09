@@ -6,24 +6,24 @@ namespace Project\Shared\Domain\Bus\Event;
 
 use Project\Shared\Domain\ValueObject\UuidValueObject;
 
-abstract class DomainEvent implements Event
+abstract readonly class DomainEvent implements Event
 {
-    private readonly string $eventId;
+    private string $eventId;
 
-    private readonly string $occurredOn;
+    private string $occurredOn;
 
-    public function __construct(private readonly string $aggregateId, string $eventId = null, string $occurredOn = null)
+    public function __construct(private string $aggregateId, string $eventId = null, string $occurredOn = null)
     {
         $this->eventId = $eventId ?: UuidValueObject::generate()->value;
         $this->occurredOn = $occurredOn ?: (new \DateTimeImmutable())->format('Y-m-d H:i:s.u T');
-//         $this->occurredOn = $occurredOn ?: (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
+        // $this->occurredOn = $occurredOn ?: (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
     }
 
     abstract public static function fromPrimitives(
         string $id,
         array $body,
         string $eventId,
-        string $occurredOn,
+        string $occurredOn
     ): self;
 
     abstract public static function eventName(): string;

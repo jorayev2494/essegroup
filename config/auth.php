@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'client',
-        'passwords' => 'clients',
+        'guard' => 'student',
+        'passwords' => 'students',
     ],
 
     /*
@@ -36,18 +36,19 @@ return [
     */
 
     'guards' => [
-        // 'web' => [
-        //     'driver' => 'session',
-        //     'provider' => 'users',
-        // ],
         'admin' => [
             'driver' => 'jwt',
             'provider' => 'admins',
             'hash' => false,
         ],
-        'client' => [
+        'company' => [
             'driver' => 'jwt',
-            'provider' => 'clients',
+            'provider' => 'companies',
+            'hash' => false,
+        ],
+        'student' => [
+            'driver' => 'jwt',
+            'provider' => 'students',
             'hash' => false,
         ],
     ],
@@ -70,23 +71,18 @@ return [
     */
 
     'providers' => [
-        // 'users' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\User::class,
-        // ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-        'clients' => [
+        'companies' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Client::class,
+            'model' => App\Models\Employee::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'students' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Student::class,
+        ],
     ],
 
     /*
@@ -109,20 +105,20 @@ return [
     */
 
     'passwords' => [
-        // 'users' => [
-        //     'provider' => 'users',
-        //     'table' => 'password_reset_tokens',
-        //     'expire' => 60,
-        //     'throttle' => 60,
-        // ],
         'admins' => [
             'provider' => 'admins',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
-        'clients' => [
-            'provider' => 'clients',
+        'companies' => [
+            'provider' => 'companies',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'students' => [
+            'provider' => 'students',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

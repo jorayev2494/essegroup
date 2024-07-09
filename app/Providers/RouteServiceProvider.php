@@ -27,6 +27,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->registerRoutePatterns();
         $this->routes(function (): void {
             $this->registerWebRoutes();
+            $this->registerWebPDFRoutes();
         });
 //        $this->routes(function () {
 //            Route::middleware('api')
@@ -45,6 +46,15 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/web.php'));
     }
 
+    private function registerWebPDFRoutes(): void
+    {
+        if ($this->app->environment(['local'])) {
+            $this->app->make('route.registrar')
+                ->middleware('web')
+                ->group(base_path('routes/pdf.php'));
+        }
+    }
+
     private function registerRoutePatterns(): void
     {
         foreach (self::ROUTE_PATTERNS as $key => $pattern) {
@@ -56,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for(
             'api',
-            static fn (Request $request): Limit => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip())
+            static fn (Request $request): Limit => Limit::perMinute(60 * 3)->by($request->user()?->id ?: $request->ip())
         );
     }
 }

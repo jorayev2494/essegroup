@@ -24,4 +24,9 @@ abstract class BaseEntityRepository extends EntityRepository
     }
 
     abstract protected function getEntity(): string;
+
+    protected function paginator($query, PaginatorHttpQueryParams $httpQueryParams, bool $fetchJoinCollection = true): Paginator
+    {
+        return new Paginator($query, $httpQueryParams);
+    }
 }

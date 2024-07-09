@@ -5,11 +5,13 @@ namespace App\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
+use Project\Shared\Domain\DomainException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -30,8 +32,106 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(static function (DomainException $ex) {
+            return response()->json([
+                'message' => $ex->getMessage(),
+            ], $ex->getHttpResponseCode());
+        });
+
+        $this->renderable(static function (ValidationException $ex) {
+            return response()->json([
+                'message' => 'Validation exception',
+                'errors' => $ex->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        });
+
+        $this->reportable(static function (BadRequestException $ex) {
+            return response()->json([
+                'message' => $ex->getMessage(),
+                'error' => 'Bad request exception',
+            ], Response::HTTP_BAD_REQUEST);
+        });
+
+        $this->reportable(static function (NotFoundHttpException $ex) {
+            return response()->json([
+                    'message' => 'Not found http exception',
+                    'error' => $ex->getMessage(),
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        });
+
+        $this->renderable(static function (HandlerFailedException $ex) {
+            $domainException = $ex->getPrevious();
+            if ($domainException instanceof \Project\Shared\Domain\DomainException) {
+                return response()->json(
+                    [
+                        'message' => $domainException->getMessage(),
+                    ],
+                    $domainException->getHttpResponseCode()
+                );
+                // return $domainException->response();
+            }
+        });
+
+        $this->reportable(static function (AuthenticationException $ex) {
+            return response()->json(
+                [
+                    'message' => 'Authentication exception',
+                    'error' => str_replace(['.'], [''], $ex->getMessage()), // 'Unauthorized',
+                ],
+                Response::HTTP_UNAUTHORIZED
+            );
+        });
+
+        $this->renderable(static function (ModelNotFoundException $ex) {
+            return response()->json([
+                    'error' => $ex->getMessage() ?? 'Model not found',
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        });
+
+        $this->reportable(static function (\Exception $ex) {
+            return 'awdwad';
+//            dd(
+//                $ex->getMessage()
+//            );
+//            return response()->json([
+//                // 'message' => 'Unauthenticated',
+//                'error' => $ex->getMessage(),
+//                'file' => $ex->getFile(),
+//                'line' => $ex->getLine(),
+//                'previous' => $ex->getPrevious(),
+//                'class' => $ex::class,
+//            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        });
+
+        $this->reportable(static function (\Error $ex) {
+            return 'awdwad';
+//            dd(
+//                $ex->getMessage()
+//            );
+//            return response()->json([
+//                // 'message' => 'Unauthenticated',
+//                'error' => $ex->getMessage(),
+//                'file' => $ex->getFile(),
+//                'line' => $ex->getLine(),
+//                'previous' => $ex->getPrevious(),
+//                'class' => $ex::class,
+//            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        });
+
+        $this->reportable(static function (Throwable $ex) {
+            return 'awdwad';
+            return response()->json([
+                // 'message' => 'Unauthenticated',
+                'error' => $ex->getMessage(),
+                'file' => $ex->getFile(),
+                'line' => $ex->getLine(),
+                'previous' => $ex->getPrevious(),
+                'class' => $ex::class,
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         });
     }
 
@@ -44,11 +144,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $ex): JsonResponse
     {
-        if ($ex instanceof \DomainException) {
+        if ($ex instanceof DomainException) {
             return response()->json([
                 'message' => $ex->getMessage(),
-                // 'errors' => $ex->errors(),
-            ], Response::HTTP_FORBIDDEN);
+            ], $ex->getHttpResponseCode());
         }
 
         if ($ex instanceof ValidationException) {
@@ -56,13 +155,6 @@ class Handler extends ExceptionHandler
                 'message' => 'Validation exception',
                 'errors' => $ex->errors(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        if ($ex instanceof ModelNotFoundException) {
-            return response()->json([
-                'message' => 'Model not found',
-                'error' => class_basename($ex->getModel()).' not found',
-            ], Response::HTTP_NOT_FOUND);
         }
 
         if ($ex instanceof BadRequestException) {
@@ -92,16 +184,51 @@ class Handler extends ExceptionHandler
             );
         }
 
-        // dd($ex->getTrace());
-        // dd($ex->getPrevious());
+        if ($ex instanceof HandlerFailedException) {
+            $domainException = $ex->getPrevious();
+            if ($domainException instanceof \Project\Shared\Domain\DomainException) {
+                return response()->json(
+                    [
+                        'message' => $domainException->getMessage(),
+                    ],
+                    $domainException->getHttpResponseCode()
+                );
+                // return $domainException->response();
+            }
+        }
+
+        if ($ex instanceof ModelNotFoundException) {
+            return response()->json(
+                [
+                    'message' => 'Model not found',
+                    // 'error' => $ex->getMessage(),
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
 
         return response()->json([
             // 'message' => 'Unauthenticated',
             'error' => $ex->getMessage(),
             'file' => $ex->getFile(),
             'line' => $ex->getLine(),
+            'previous' => $ex->getPrevious(),
+            'class' => $ex::class,
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
 
         return parent::render($request, $ex); // TODO: Change the autogenerated stub
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        if ($request->is('admin') || $request->is('admin/*')) {
+            return redirect()->guest('/admin');
+        }
+
+        return redirect()->guest(route('login'));
     }
 }

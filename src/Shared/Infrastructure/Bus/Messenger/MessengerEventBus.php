@@ -32,7 +32,7 @@ final class MessengerEventBus implements EventBusInterface
         foreach ($events as $event) {
             try {
                 $this->bus->dispatch($event);
-            } catch (NoHandlerForMessageException) {
+            } catch (NoHandlerForMessageException $ex) {
                 // TODO optionally throw exception or not
             }
         }

@@ -12,7 +12,7 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 /** @var EntityManagerInterface $entityManager */
 $entityManager = $app->make(\Project\Shared\Infrastructure\Repository\Contracts\BoundedContexts\AdminEntityManagerInterface::class);
 
-dd($entityManager);
+//dd($entityManager);
 
 ConsoleRunner::run(
     new SingleManagerProvider($entityManager)

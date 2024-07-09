@@ -6,8 +6,8 @@ namespace Project\Domains\Admin\Authentication\Presentation\Http\API\REST\Contro
 
 use App\Http\Requests\Api\Admin\Authentication\RefreshTokenRequest;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Project\Domains\Admin\Authentication\Application\Commands\RefreshToken\CommandHandler;
-use Project\Domains\Admin\Authentication\Application\Commands\RefreshToken\Command;
+use Project\Domains\Admin\Authentication\Application\Authentication\Commands\RefreshToken\CommandHandler;
+use Project\Domains\Admin\Authentication\Application\Authentication\Commands\RefreshToken\Command;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 readonly class RefreshTokenController
