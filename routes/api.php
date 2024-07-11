@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+Route::get('/health', static fn () => ['status' => 'ok', 'message' => 'Working...']);
+
 Route::any('*', static fn (): array => [
     'error' => true,
     'message' => 'Route not found',

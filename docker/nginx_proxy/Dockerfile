@@ -1,25 +1,13 @@
-FROM nginx:latest
+FROM nginx:latest AS base
 
-# COPY ./dockerfiles/nginx_proxy/nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /var/project
 
-# region Config for image_filter module
-RUN apt-get update
-RUN apt-get install -y nano
-RUN apt-get install -y wget
-RUN apt-get install -y gnupg2
+ADD ./project-nginx.conf /etc/nginx/conf.d/default.conf
+# ADD ./ws-nginx.conf /etc/nginx/conf.d/ws-nginx.conf
 
-RUN echo 'deb http://nginx.org/packages/ubuntu/ xenial nginx' >> /etc/apt/sources.list
-RUN wget https://nginx.org/keys/nginx_signing.key
-RUN apt-key add nginx_signing.key
-RUN apt-get update
-RUN apt-get install nginx-module-image-filter
-# endregion Config for image_filter module
-
-# Nginx Adding  image_filter module 
-ADD ./nginx.conf /etc/nginx/nginx.conf
-ADD ./proxy_config/nginx.conf /etc/nginx/conf.d/default.conf
-ADD ./configs/modules/image/image_filter_servers.conf /etc/nginx/conf.d/modules/image/image_filter_servers.conf
-# End Nginx Adding  image_filter module 
+RUN nproc
+RUN lscpu
+RUN ulimit -n
 
 # RUN nginx -V
 # RUN nginx -t
@@ -27,4 +15,10 @@ ADD ./configs/modules/image/image_filter_servers.conf /etc/nginx/conf.d/modules/
 # RUN nginx -s reload
 # RUN service nginx restart
 
-WORKDIR /var/project
+FROM base as develop
+
+ADD ./project-nginx.conf /etc/nginx/conf.d/default.conf
+
+FROM base as production
+
+ADD ./project-nginx-production.conf /etc/nginx/conf.d/default.conf
