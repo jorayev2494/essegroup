@@ -16,6 +16,7 @@ use Project\Domains\Admin\Student\Domain\Student\Student;
 use Project\Domains\Admin\University\Domain\Alias\Alias;
 use Project\Domains\Admin\University\Domain\Alias\AliasTranslate;
 use Project\Domains\Admin\University\Domain\Application\Events\ApplicationStatusWasChangedDomainEvent;
+use Project\Domains\Admin\University\Domain\Application\Events\ApplicationWasCreatedDomainEvent;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Status;
 use Project\Domains\Admin\University\Domain\Application\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\Degree\Degree;
@@ -142,6 +143,7 @@ class Application extends AggregateRoot implements
     ): self
     {
         $application = new self($uuid, $student, $language, $degree, $university, $isAgreedToShareData, $creatorRole);
+        $application->record(new ApplicationWasCreatedDomainEvent($application->getUuid()->value));
         $application->addStatues($status);
 
         return $application;

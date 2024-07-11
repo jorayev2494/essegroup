@@ -1,15 +1,24 @@
 #!/bin/bash
 
-DOCKER_PATH=/docker
+set -a
+source ./docker/.env
+set +a
+
+# source ./colors.sh;
+
+# DOCKER_PATH=/docker
 # SERVER_COMPOSE_FILE_PATH=./docker/docker-compose.yml
 # SERVER_COMPOSE_FILE_PATH=./docker/docker-compose.test.yml
+
+echo $COMPOSE_FILE
 
 ENV_DIRS=(/ /nginx /php /php_cli /mysql /redis /mailhog)
 
 # https://docs.docker.com/compose/environment-variables/envvars/#compose_env_files
 export COMPOSE_PROJECT_NAME=essegroup
-export COMPOSE_FILE=./docker/docker-compose.yml
-export COMPOSE_ENV_FILES=$PWD$DOCKER_PATH/.env,$PWD$DOCKER_PATH/nginx/.env,$PWD$DOCKER_PATH/php/.env,$PWD$DOCKER_PATH/php_cli/.env,$PWD$DOCKER_PATH/mysql/.env,$PWD$DOCKER_PATH/redis/.env,$PWD$DOCKER_PATH/mailhog/.env
+# export COMPOSE_FILE=./docker/docker-compose.yml
+# export COMPOSE_FILE=$COMPOSE_FILE
+# export COMPOSE_ENV_FILES=$COMPOSE_ENV_FILES
 
 function makeCopyFromEnvFile()
 {
@@ -123,4 +132,9 @@ function create-context()
     echo $MODULE_NAMEN $CONTEXT_NAME;
 
     # mkdir -p "$PWD/src/Domains/$MODULE_NAME/$CONTEXT_NAME/{Application/$CONTEXT_NAME/Queries,Application/$CONTEXT_NAME/Commands,Domian/$CONTEXT_NAME/Services/Contracts,Infrastructure/$CONTEXT_NAME/Repositories/Doctrine,Presentation/Http/API/REST/Controllers}"
+}
+
+function nginx-restart()
+{
+    docker compose exec nginx bash -c "nginx -t && nginx -s reload && service nginx restart"
 }

@@ -47,16 +47,12 @@ RUN apt-get update && apt-get install -y librabbitmq-dev libssh-dev \
 #      /var/project/storage \
 #      /var/project/bootstrap/cache
 
-RUN echo "From Base" >> target.txt
-
 # RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY ./php.ini $PHP_INI_DIR/php.ini
 # Use the default production configuration
 
 
 FROM base as develop
-
-RUN echo "From Develop" >> target.txt
 
 # Xdebug
 RUN pecl install xdebug
