@@ -19,6 +19,6 @@ services:
         #            "
         networks:
             - essegroup
-networks:
-    essegroup:
-        external: true
+#networks:
+#    essegroup:
+#        external: true

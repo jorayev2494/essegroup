@@ -66,7 +66,7 @@ function start()
 
 function start-production-dependents()
 {
-#    export COMPOSE_PATH_SEPARATOR=:
+    export COMPOSE_PATH_SEPARATOR=:
     export COMPOSE_FILE=./docker/docker-compose.production.yml:./docker/docker-compose.production.dependencies.yml
     docker compose up -d --force-recreate --remove-orphans
     status
