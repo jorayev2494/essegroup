@@ -1,5 +1,5 @@
 # https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
-# Test Jenkins update v2
+# Test Jenkins update v3
 RED="\e[31m"
 GREEN="\e[32m"
 BLUE="\e[34m"
