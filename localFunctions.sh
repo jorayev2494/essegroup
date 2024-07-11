@@ -11,7 +11,7 @@ if [ -f ./docker/.env ]; then
     set +a
 fi
 
-ENV_DIRS=(/ /nginx /php /php_cli /mysql /redis /mailhog)
+ENV_DIRS=(/ /nginx /nginx_proxy /php /php_cli /mysql /redis /mailhog /minio)
 
 # https://docs.docker.com/compose/environment-variables/envvars/#compose_env_files
 export COMPOSE_PROJECT_NAME=essegroup
