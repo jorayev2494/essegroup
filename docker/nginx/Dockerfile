@@ -1,4 +1,6 @@
-FROM nginx:latest
+FROM nginx:latest AS base
+
+WORKDIR /var/project
 
 ADD ./project-nginx.conf /etc/nginx/conf.d/default.conf
 # ADD ./ws-nginx.conf /etc/nginx/conf.d/ws-nginx.conf
@@ -13,4 +15,10 @@ RUN ulimit -n
 # RUN nginx -s reload
 # RUN service nginx restart
 
-WORKDIR /var/project
+FROM base as develop
+
+ADD ./project-nginx.conf /etc/nginx/conf.d/default.conf
+
+FROM base as production
+
+ADD ./project-nginx-production.conf /etc/nginx/conf.d/default.conf

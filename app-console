@@ -25,7 +25,7 @@ ${YELLOW} Available commands: ${ENDCOLOR}${GREEN}
     docker-env [local, develop] ${BLUE}.......................................................${GREEN} Copy docker env
 
     logs ${BLUE}..............................................................................${GREEN} Print logs of containers
-    restart-message-broker ${BLUE}............................................................${GREEN} Restart message broker
+    nginx-restart ${BLUE}.....................................................................${GREEN} Nginx restart
     bash ${BLUE}..............................................................................${GREEN} Containter interactive terminal bash
     cc ${BLUE}................................................................................${GREEN} Clear cache
     database [admin, client] [[seed], fresh, diff, migrate] ${BLUE}...........................${GREEN} Database
@@ -69,9 +69,9 @@ case "$1" in
     logs)
         logs "${@:2}"
     ;;
-#    restart-message-broker)
-#        restart-message-broker
-#    ;;
+    nginx-restart)
+        nginx-restart
+    ;;
     bash)
         bash
     ;;
