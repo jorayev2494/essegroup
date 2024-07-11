@@ -1,8 +1,10 @@
 #!/bin/bash
 
-set -a
-source ./docker/.env
-set +a
+if [ -f ./docker/.env ]; then
+  set -a
+  source ./docker/.env
+  set +a
+fi
 
 # source ./colors.sh;
 
