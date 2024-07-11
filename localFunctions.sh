@@ -1,18 +1,15 @@
 #!/bin/bash
 
+source ./colors.sh;
+export DOCKER_PATH=/docker
+export SERVER_COMPOSE_FILE_PATH=./docker/docker-compose.yml
+#SERVER_COMPOSE_FILE_PATH=./docker/docker-compose.test.yml
+
 if [ -f ./docker/.env ]; then
-  set -a
-  source ./docker/.env
-  set +a
+    set -a
+    source ./docker/.env
+    set +a
 fi
-
-# source ./colors.sh;
-
-# DOCKER_PATH=/docker
-# SERVER_COMPOSE_FILE_PATH=./docker/docker-compose.yml
-# SERVER_COMPOSE_FILE_PATH=./docker/docker-compose.test.yml
-
-echo $COMPOSE_FILE
 
 ENV_DIRS=(/ /nginx /php /php_cli /mysql /redis /mailhog)
 
