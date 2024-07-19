@@ -11,14 +11,5 @@ services:
             - ./mysql/.env
         volumes:
             - ./mysql/data:/var/lib/mysql
-        #        entrypoint:
-        #            sh -c "
-        #                echo 'CREATE DATABASE IF NOT EXISTS admindatabase; GRANT ALL PRIVILEGES ON firstSchema.* TO '\''esseelitegroup'\''@'\''%'\''; ' > /docker-entrypoint-initdb.d/init.sql;
-        #                echo 'CREATE DATABASE IF NOT EXISTS companydatabase; GRANT ALL PRIVILEGES ON secondSchema.* TO '\''esseelitegroup'\''@'\''%'\''; ' >> /docker-entrypoint-initdb.d/init.sql;
-        #                /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
-        #            "
         networks:
             - essegroup
-#networks:
-#    essegroup:
-#        external: true

@@ -35,10 +35,10 @@ RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 RUN docker-php-ext-install pdo_mysql
 
 #region Amqp
-RUN apt-get update && apt-get install -y librabbitmq-dev libssh-dev \
-    && docker-php-ext-install opcache bcmath sockets \
-    && pecl install amqp \
-    && docker-php-ext-enable amqp
+#RUN apt-get update && apt-get install -y librabbitmq-dev libssh-dev \
+#    && docker-php-ext-install opcache bcmath sockets \
+#    && pecl install amqp \
+#    && docker-php-ext-enable amqp
 #endregion
 
 #COPY ../../../ /var/project
@@ -47,18 +47,21 @@ RUN apt-get update && apt-get install -y librabbitmq-dev libssh-dev \
 #      /var/project/storage \
 #      /var/project/bootstrap/cache
 
-# RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
-COPY ./php.ini $PHP_INI_DIR/php.ini
-# Use the default production configuration
-
-
-FROM base as develop
+############################################################################################
+FROM base as local
 
 # Xdebug
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
+COPY ./local-php.ini $PHP_INI_DIR/php.ini
 
+############################################################################################
+FROM base as develop
+
+COPY ./development-php.ini $PHP_INI_DIR/php.ini
+
+############################################################################################
 FROM base as production
 
-RUN echo "From Production" >> target.txt
+COPY ./production-php.ini $PHP_INI_DIR/php.ini

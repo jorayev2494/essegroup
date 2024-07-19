@@ -14,13 +14,10 @@ use Project\Infrastructure\Services\Authentication\Enums\GuardType;
 readonly class CommandHandler
 {
     public function __construct(
-        private ManagerRepositoryInterface     $repository,
+        private ManagerRepositoryInterface $repository,
         private AuthenticationServiceInterface $authenticationService,
-        private DeviceService                  $deviceService,
-    )
-    {
-
-    }
+        private DeviceService $deviceService
+    ) { }
 
     public function __invoke(Command $command): array
     {

@@ -35,13 +35,6 @@ services:
         networks:
             - essegroup
 
-#    ngx_proxy_imgs:
-#        <<: *ngx-proxy-server
-#        ports:
-#            - 9999:8888
-#        networks:
-#            - essegroup
-
     # PHP Service
     php-fpm:
         build:
@@ -76,15 +69,8 @@ services:
             -   ./mysql/.env
         volumes:
             - ./mysql/data:/var/lib/mysql
-#        entrypoint:
-#            sh -c "
-#                echo 'CREATE DATABASE IF NOT EXISTS admindatabase; GRANT ALL PRIVILEGES ON firstSchema.* TO '\''esseelitegroup'\''@'\''%'\''; ' > /docker-entrypoint-initdb.d/init.sql;
-#                echo 'CREATE DATABASE IF NOT EXISTS companydatabase; GRANT ALL PRIVILEGES ON secondSchema.* TO '\''esseelitegroup'\''@'\''%'\''; ' >> /docker-entrypoint-initdb.d/init.sql;
-#                /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
-#            "
         networks:
             - essegroup
-
 
     # Mailhog Service
     mailhog:
@@ -114,6 +100,7 @@ services:
         networks:
             - essegroup
 
+    # Redis Minio
     # https://github.com/amincheloh/cookbook/blob/master/docs/how-to-use-minio-as-laravel-file-storage.md
     minio:
          hostname: minio
@@ -132,22 +119,23 @@ services:
          volumes:
              - ./minio/data:/data
          ports:
-             - 9000:9000
-             - 9001:9001
+             - ${MINIO_PORT}:9000
+             - ${MINIO_WEB_INTERFACE_PORT}:9001
          networks:
              - essegroup
 
-    adminer:
-        image: adminer
-        restart: unless-stopped
-        container_name: ${COMPOSE_PROJECT_NAME?Not project name}-adminer
-        ports:
-            - 8000:8080
-        environment:
-            - ADMINER_DEFAULT_SERVER=mysql
-            - ADMINER_DESIGN='nette'
-        networks:
-            - essegroup
+    # Redis Adminer
+    # adminer:
+    #     image: adminer
+    #     restart: unless-stopped
+    #     container_name: ${COMPOSE_PROJECT_NAME?Not project name}-adminer
+    #     ports:
+    #         - 8000:8080
+    #     environment:
+    #         - ADMINER_DEFAULT_SERVER=mysql
+    #         - ADMINER_DESIGN='nette'
+    #     networks:
+    #         - essegroup
 
 networks:
     essegroup:

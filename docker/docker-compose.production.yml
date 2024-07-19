@@ -80,6 +80,7 @@ services:
         networks:
             - essegroup
 
+    # Redis Minio
     # https://github.com/amincheloh/cookbook/blob/master/docs/how-to-use-minio-as-laravel-file-storage.md
     minio:
         hostname: minio
@@ -101,21 +102,23 @@ services:
         networks:
             - essegroup
 
+    # Redis Admin Front End
     admin-front-end:
         image: idocker2494/esseelitegroup-admin:latest
         container_name: ${COMPOSE_PROJECT_NAME?Not project name}-admin-front-end
         restart: unless-stopped
-        ports:
-            - 8080:80
+        # ports:
+        #     - ${ADMIN_FRONT_END_PORT?Not Admin Front End port}:80
         networks:
             - essegroup
 
+    # Redis Client Front End
     client-front-end:
         image: idocker2494/esseelitegroup-client:latest
         container_name: ${COMPOSE_PROJECT_NAME?Not project name}-client-front-end
         restart: unless-stopped
-        ports:
-            - 8090:80
+        # ports:
+        #     - ${CLIENT_FRONT_END_PORT?Not Admin Front End port}:80
         networks:
             - essegroup
 
