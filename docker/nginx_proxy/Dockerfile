@@ -25,4 +25,7 @@ ADD ./project-nginx.conf /etc/nginx/conf.d/default.conf
 ############################################################################################
 FROM base as production
 
+# Install packages
+RUN apk --update --no-cache add openssl
+
 ADD ./project-nginx-production.conf /etc/nginx/conf.d/default.conf
