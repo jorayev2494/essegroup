@@ -40,6 +40,7 @@ ${YELLOW} Available commands: ${ENDCOLOR}${GREEN}
 "
 }
 
+echo -e "${GREEN}Start time: ${BLUE}$(date +"%d-%m-%Y %H-%M-%S")${ENDCOLOR}";
 case "$1" in
     ps | status)
         status
@@ -74,7 +75,7 @@ case "$1" in
         nginx-restart
     ;;
     bash)
-        bash
+        bash "${@:2}"
     ;;
     migrations)
         migrations "${@:2}"
@@ -100,6 +101,8 @@ case "$1" in
     *)
         printCommandsInfo
 
-        exit 1
+#        echo -e "${BLUE}$(date +"%d-%m-%Y %H-%M-%S")${ENDCOLOR}";
+#        exit 1
     ;;
 esac
+echo -e "${GREEN}End time: ${BLUE}$(date +"%d-%m-%Y %H-%M-%S")${ENDCOLOR}";

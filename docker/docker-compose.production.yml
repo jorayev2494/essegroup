@@ -13,7 +13,7 @@ services:
     # Nginx Service
     nginx-proxy:
         build:
-            context: nginx_proxy
+            context: ./nginx_proxy
             dockerfile: Dockerfile
             target: ${NGINX_PROXY_BUILD_TARGET:-${BUILD_TARGET?Build mode php-fpm}}
         container_name: ${COMPOSE_PROJECT_NAME?Not project name}-nginx-proxy
@@ -21,7 +21,7 @@ services:
         tty: true
         volumes:
             - ../:/var/project
-            - ./certs:/etc/nginx/certs
+            - ./nginx_proxy/certs:/etc/nginx/certs:ro
         ports:
             - ${NGINX_PROXY_PORT?Not nginx proxy port}:80
             - "443:443"
