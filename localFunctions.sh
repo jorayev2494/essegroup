@@ -111,7 +111,10 @@ function migrations()
 
 function bash()
 {
-    docker compose run --rm php-cli bash
+    CONTAINER="${1:-php-cli}";
+    echo $CONTAINER;
+
+    docker compose run --rm $CONTAINER bash
 }
 
 function artisan()
