@@ -23,6 +23,11 @@ class UpdateRequest extends FormRequest
                 Rule::unique('admin_db.auth_members', 'email')
                     ->ignore($this->route('uuid'),'uuid'),
             ],
+            'role_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.manager_roles', 'uuid'),
+            ],
         ];
     }
 }

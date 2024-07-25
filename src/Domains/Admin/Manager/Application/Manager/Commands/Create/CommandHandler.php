@@ -13,6 +13,9 @@ use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\FullName;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\LastName;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Password;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Uuid;
+use Project\Domains\Admin\Manager\Domain\Role\Exceptions\RoleNotFoundDomainException;
+use Project\Domains\Admin\Manager\Domain\Role\ValueObjects\Uuid as RoleUuid;
+use Project\Domains\Admin\Manager\Domain\Role\RoleRepositoryInterface;
 use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
 use Project\Shared\Domain\Bus\Event\EventBusInterface;
@@ -23,11 +26,16 @@ readonly class CommandHandler implements CommandHandlerInterface
         private ManagerRepositoryInterface $repository,
         private TokenGeneratorInterface $tokenGenerator,
         private AvatarServiceInterface $avatarService,
+        private RoleRepositoryInterface $roleRepository,
         private EventBusInterface $eventBus
     ) { }
 
     public function __invoke(Command $command): void
     {
+        $role = $this->roleRepository->findByUuid(RoleUuid::fromValue($command->roleUuid));
+
+        $role ?? throw new RoleNotFoundDomainException();
+
         $manager = Manager::create(
             Uuid::fromValue($command->uuid),
             FullName::make(
@@ -35,7 +43,8 @@ readonly class CommandHandler implements CommandHandlerInterface
                 LastName::fromValue($command->lastName)
             ),
             Email::fromValue($command->email),
-            Password::fromValue($this->tokenGenerator->generate(Password::LENGTH))
+            Password::fromValue($this->tokenGenerator->generate(Password::LENGTH)),
+            $role
         );
 
         $this->avatarService->upload($manager, $command->avatar);

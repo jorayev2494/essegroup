@@ -13,5 +13,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ApplicationStatusValueSeeder::class);
         $this->call(StaticPageSeeder::class);
         // $this->call(CompanySeeder::class);
+        $this->call(ManagerRoleSeeder::class);
+        $this->call(ManagerRolePermissionSeeder::class);
     }
 }

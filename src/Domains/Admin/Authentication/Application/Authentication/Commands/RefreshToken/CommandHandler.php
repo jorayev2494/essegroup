@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\Authentication\Application\Authentication\Commands\RefreshToken;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Project\Domains\Admin\Authentication\Application\Authentication\Commands\Login\Output\Output;
 use Project\Domains\Admin\Authentication\Domain\Device\DeviceRepositoryInterface;
 use Project\Infrastructure\Generators\Contracts\TokenGeneratorInterface;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticationServiceInterface;
@@ -16,10 +17,7 @@ readonly class CommandHandler
         private DeviceRepositoryInterface $deviceRepository,
         private AuthenticationServiceInterface $authenticationService,
         private TokenGeneratorInterface $tokenGenerator,
-    )
-    {
-
-    }
+    ) { }
 
     public function __invoke(Command $command): array
     {
@@ -32,7 +30,12 @@ readonly class CommandHandler
         $accessToken = $this->authenticationService->authenticateByUuid(
             $foundDevice->getAuthor()->getUuid()->value,
             GuardType::MANAGER,
-            $foundDevice->getAuthor()->getClaims()
+            array_merge(
+                $foundDevice->getAuthor()->getClaims(),
+                [
+                    'role' => Output::make($foundDevice->getAuthor()->getRole())->toResponse()
+                ]
+            )
         );
         $foundDevice->setRefreshToken($this->tokenGenerator->generate());
 
