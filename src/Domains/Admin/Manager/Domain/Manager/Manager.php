@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Project\Domains\Admin\Announcement\Domain\Announcement\Announcement;
 use Project\Domains\Admin\Authentication\Domain\Code\Code;
 use Project\Domains\Admin\Authentication\Domain\Device\Device;
+use Project\Domains\Admin\Manager\Application\Role\Queries\Show\Output\RoleOutput;
 use Project\Domains\Admin\Manager\Domain\Manager\Events\Auth\RestorePassword\ManagerRestorePasswordLinkWasAddedDomainEvent;
 use Project\Domains\Admin\Manager\Domain\Manager\Events\ManagerWasCreatedDomainEvent;
 use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarableInterface;
@@ -24,6 +25,7 @@ use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\FullName;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\LastName;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Password;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Uuid;
+use Project\Domains\Admin\Manager\Domain\Role\Role;
 use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\Types\EmailType;
 use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\Types\PasswordType;
 use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\Types\UuidType;
@@ -32,6 +34,8 @@ use Project\Infrastructure\Services\Authentication\ValueObjects\PasswordValueObj
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 use Project\Shared\Domain\ValueObject\UuidValueObject;
+use Project\Shared\Infrastructure\Repository\Doctrine\Enums\CascadeType;
+use Project\Shared\Infrastructure\Repository\Doctrine\Enums\FetchType;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'auth_members')]
@@ -60,6 +64,13 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
     #[ORM\Column(type: PasswordType::NAME)]
     private Password $password;
 
+    #[ORM\Column(name: 'role_uuid', type: Types::GUID, nullable: true)]
+    private ?string $roleUuid;
+
+    #[ORM\ManyToOne(targetEntity: Role::class, cascade: [CascadeType::PERSIST->value], fetch: FetchType::LAZY->value, inversedBy: 'managers')]
+    #[ORM\JoinColumn(name: 'role_uuid', referencedColumnName: 'uuid', onDelete: 'SET NULL')]
+    private Role $role;
+
     #[ORM\OneToMany(targetEntity: Device::class, mappedBy: 'author', cascade: ['persist', 'remove'])]
     private Collection $devices;
 
@@ -69,20 +80,21 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
     #[ORM\OneToMany(targetEntity: Announcement::class, mappedBy: 'author', cascade: ['persist', 'remove'])]
     private Collection $announcements;
 
-    private function __construct(Uuid $uuid, FullName $fullName, Email $email, Password $password)
+    private function __construct(Uuid $uuid, FullName $fullName, Email $email, Password $password, Role $role)
     {
         $this->uuid = $uuid;
         $this->fullName = $fullName;
         $this->email = $email;
         $this->password = $password;
+        $this->role = $role;
         $this->avatar = null;
         $this->devices = new ArrayCollection();
         $this->announcements = new ArrayCollection();
     }
 
-    public static function create(Uuid $uuid, FullName $fullName, Email $email, Password $password): self
+    public static function create(Uuid $uuid, FullName $fullName, Email $email, Password $password, Role $role): self
     {
-        $manager = new self($uuid, $fullName, $email, $password);
+        $manager = new self($uuid, $fullName, $email, $password, $role);
         $manager->record(
             new ManagerWasCreatedDomainEvent(
                 $uuid->value,
@@ -96,7 +108,7 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
         return $manager;
     }
 
-    public static function fromPrimitives(string $uuid, string $firstName, string $lastName, string $email, string $password): self
+    public static function fromPrimitives(string $uuid, string $firstName, string $lastName, string $email, string $password, Role $role): self
     {
         return new self(
             Uuid::fromValue($uuid),
@@ -105,7 +117,8 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
                 LastName::fromValue($lastName)
             ),
             Email::fromValue($email),
-            Password::fromValue($password)
+            Password::fromValue($password),
+            $role
         );
     }
 
@@ -199,7 +212,7 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
     public function getClaims(): array
     {
         return [
-
+            'role' => $this->role->isNotNull() ? RoleOutput::make($this->role)->toArray() : null,
         ];
     }
 
@@ -211,6 +224,20 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
     public function setPassword(Password $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function changeRole(Role $role): self
+    {
+        if ($this->role->isNotEquals($role)) {
+            $this->role = $role;
+        }
 
         return $this;
     }
@@ -233,6 +260,8 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
             ...$this->fullName->toArray(),
             'avatar' => $this->avatar?->toArray(),
             'email' => $this->email->value,
+            'role_uuid' => $this->roleUuid,
+            'role' => $this->role->isNotNull() ? RoleOutput::make($this->role)->toArray() : null,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];

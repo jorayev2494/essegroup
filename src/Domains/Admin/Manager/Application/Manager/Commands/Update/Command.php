@@ -14,6 +14,7 @@ readonly class Command implements CommandInterface
         public string $firstName,
         public string $lastName,
         public ?UploadedFile $avatar,
-        public string $email
+        public string $email,
+        public string $roleUuid
     ) { }
 }

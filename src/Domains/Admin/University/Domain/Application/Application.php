@@ -243,14 +243,12 @@ class Application extends AggregateRoot implements
     {
         if (! $this->departments->contains($department)) {
             $this->departments->add($department);
-            // $department->addApplication($this);
         }
     }
 
     public function removeDepartment(Department $department): void
     {
         if ($this->departments->contains($department)) {
-            // $department->removeApplication($this);
             $this->departments->removeElement($department);
         }
     }
