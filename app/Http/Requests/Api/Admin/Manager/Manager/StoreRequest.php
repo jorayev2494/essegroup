@@ -22,6 +22,11 @@ class StoreRequest extends FormRequest
                 'email',
                 Rule::unique('admin_db.auth_members', 'email'),
             ],
+            'role_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('admin_db.manager_roles', 'uuid'),
+            ],
         ];
     }
 }

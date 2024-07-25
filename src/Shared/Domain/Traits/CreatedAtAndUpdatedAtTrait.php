@@ -18,6 +18,16 @@ trait CreatedAtAndUpdatedAtTrait
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
     #[ORM\PrePersist]
     public function prePersisting(PrePersistEventArgs $event): void
     {

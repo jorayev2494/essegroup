@@ -37,7 +37,7 @@ class Paginator implements Arrayable
      * @param int $limit
      * @return Paginator
      */
-    public function __construct($query, PaginatorHttpQueryParams $httpQueryParams, bool $fetchJoinCollection = true)
+    public function __construct($query, PaginatorHttpQueryParams $httpQueryParams, bool $fetchJoinCollection = true, bool $outputWalkers = true)
     {
         $paginator = new OrmPaginator($query, $fetchJoinCollection);
 
@@ -46,7 +46,7 @@ class Paginator implements Arrayable
             ->setFirstResult($httpQueryParams->perPage * ($httpQueryParams->page - 1))
             ->setMaxResults($httpQueryParams->perPage);
 
-        $this->makeControl($paginator, $httpQueryParams);
+        $this->makeControl($paginator->setUseOutputWalkers($outputWalkers), $httpQueryParams);
     }
 
     private function makeControl(OrmPaginator $paginator, PaginatorHttpQueryParams $httpQueryParams): void

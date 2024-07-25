@@ -47,7 +47,8 @@ readonly class ManagerController
                 $request->get('first_name'),
                 $request->get('last_name'),
                 $request->file('avatar'),
-                $request->get('email')
+                $request->get('email'),
+                $request->get('role_uuid')
             )
         );
 
@@ -71,7 +72,8 @@ readonly class ManagerController
                 $request->get('first_name'),
                 $request->get('last_name'),
                 $request->file('avatar'),
-                $request->get('email')
+                $request->get('email'),
+                $request->get('role_uuid')
             )
         );
 
