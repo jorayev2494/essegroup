@@ -27,6 +27,7 @@ readonly class RoleOutput
             'uuid' => $this->role->getUuid()->value,
             'name' => $this->role->getName()->value,
             'translations' => $this->role->translationsToArray(),
+            'is_admin' => $this->role->isAdmin(),
             'is_active' => $this->role->getIsActive(),
             'created_at' => $this->role->getCreatedAt()->getTimestamp(),
             'updated_at' => $this->role->getUpdatedAt()->getTimestamp(),

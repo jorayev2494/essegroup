@@ -104,8 +104,8 @@ services:
     # https://github.com/amincheloh/cookbook/blob/master/docs/how-to-use-minio-as-laravel-file-storage.md
     minio:
          hostname: minio
-         # image: minio/minio
-         image: minio/minio:RELEASE.2024-01-18T22-51-28Z-cpuv1
+         image: minio/minio
+         # image: minio/minio:RELEASE.2024-01-18T22-51-28Z-cpuv1
          command: server /data --console-address :9001
          container_name: ${COMPOSE_PROJECT_NAME?Not project name}-minio
          environment:

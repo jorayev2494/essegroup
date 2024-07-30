@@ -11,7 +11,7 @@ class UpdatePermissionsRequest extends FormRequest
     {
         return [
             'permission_ids' => [
-                'required',
+                // 'required',
                 'array',
             ],
             'permission_ids.*' => [
