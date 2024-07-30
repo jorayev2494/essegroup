@@ -16,10 +16,7 @@ readonly class LoginController
 {
     public function __construct(
         private ResponseFactory $response,
-    )
-    {
-
-    }
+    ) { }
 
     public function __invoke(LoginRequest $request, CommandHandler $handler): Response
     {

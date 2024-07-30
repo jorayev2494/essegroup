@@ -29,6 +29,7 @@ readonly class PermissionOutput implements ArrayableInterface
             'label' => $this->permission->getLabel()->value,
             'resource' => $this->permission->getResource()->value,
             'action' => $this->permission->getAction()->value,
+            'is_active' => $this->permission->getIsActive(),
             'created_at' => $this->permission->getCreatedAt()->getTimestamp(),
             'updated_at' => $this->permission->getUpdatedAt()->getTimestamp(),
         ];

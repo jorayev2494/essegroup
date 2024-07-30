@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -204,6 +205,15 @@ class Handler extends ExceptionHandler
                     // 'error' => $ex->getMessage(),
                 ],
                 Response::HTTP_NOT_FOUND
+            );
+        }
+
+        if ($ex instanceof AuthorizationException) {
+            return response()->json(
+                [
+                    'message' => trans('error.admin.unauthorized_action', ['companyName' => getenv('APP_NAME')]),
+                ],
+                Response::HTTP_FORBIDDEN
             );
         }
 
