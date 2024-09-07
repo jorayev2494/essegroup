@@ -114,6 +114,7 @@ services:
             - 8899:8000
         volumes:
             - ./centrifugo/configs:/centrifugo
+            - ./nginx_proxy/certs:/centrifugo/certs:ro
         command: centrifugo -c config.json
         ulimits:
             nofile:
