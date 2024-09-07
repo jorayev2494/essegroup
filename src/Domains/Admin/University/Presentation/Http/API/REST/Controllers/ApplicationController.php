@@ -62,14 +62,14 @@ readonly class ApplicationController
             new CreateCommand(
                 $uuid,
                 $request->get('student_uuid'),
-                $request->get('alias_uuid'),
                 $request->get('language_uuid'),
                 $request->get('degree_uuid'),
-                $request->get('country_uuid'),
                 $request->get('university_uuid'),
                 $request->get('department_uuids'),
                 true,
-                'admin'
+                'admin',
+                $request->get('alias_uuid'),
+                $request->get('country_uuid'),
             )
         );
 

@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as OrmPaginator;
 use Illuminate\Contracts\Support\Arrayable;
 use Project\Shared\Contracts\ArrayableInterface;
+use ArrayIterator;
 
 /**
  * @see https://gist.github.com/Naskalin/6306172b8081813ea213099a4d16019a
@@ -29,7 +30,7 @@ class Paginator implements Arrayable
 
     private ?int $lastPage;
 
-    private iterable $items;
+    private ArrayIterator $items;
 
     /**
      * @param QueryBuilder|Query $query
@@ -39,6 +40,7 @@ class Paginator implements Arrayable
      */
     public function __construct($query, PaginatorHttpQueryParams $httpQueryParams, bool $fetchJoinCollection = true, bool $outputWalkers = true)
     {
+        $this->items = new ArrayIterator();
         $paginator = new OrmPaginator($query, $fetchJoinCollection);
 
         $paginator
@@ -54,7 +56,7 @@ class Paginator implements Arrayable
         $this->page = $httpQueryParams->page;
         $this->perPage = $httpQueryParams->perPage;
         // $this->items = array_map(static fn (ArrayableInterface $item): array => $item->toArray(), iterator_to_array(($paginator->getIterator())));
-        $this->items = $paginator->getIterator();
+        $this->items = new ArrayIterator(iterator_to_array($paginator->getIterator()));
         $this->lastPage = ($lastPage = (int) ceil($paginator->count() / $paginator->getQuery()->getMaxResults())) > 1 ? $lastPage : null;
         $this->nextPage = ($nexPage = $httpQueryParams->page + 1) <= $this->lastPage ? $nexPage : null;
         $this->to = $httpQueryParams->perPage * $httpQueryParams->page;
@@ -81,14 +83,23 @@ class Paginator implements Arrayable
         return $this->lastPage;
     }
 
-    public function getItems(): iterable
+    public function getItems(): ArrayIterator
     {
         return $this->items;
     }
 
     public function map(\Closure $closure): self
     {
-        $this->items = array_map($closure, iterator_to_array($this->items));
+        $this->items = new ArrayIterator(array_map($closure, iterator_to_array($this->items)));
+
+        return $this;
+    }
+
+    public function forEach(\Closure $closure): self
+    {
+        foreach ($this->items as $key => $item) {
+            $closure($item, $key);
+        }
 
         return $this;
     }

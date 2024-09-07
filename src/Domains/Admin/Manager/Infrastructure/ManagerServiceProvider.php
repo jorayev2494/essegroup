@@ -11,8 +11,10 @@ use Project\Domains\Admin\Manager\Domain\Permission\PermissionRepositoryInterfac
 use Project\Domains\Admin\Manager\Domain\Role\RoleRepositoryInterface;
 use Project\Domains\Admin\Manager\Domain\Role\Services\Contracts\RolePermissionServiceInterface;
 use Project\Domains\Admin\Manager\Domain\Role\Services\RolePermissionService;
+use Project\Domains\Admin\Manager\Infrastructure\Manager\Api\Notification\ManagerApi;
 use Project\Domains\Admin\Manager\Infrastructure\Permission\Repositories\Doctrine\PermissionRepository;
 use Project\Domains\Admin\Manager\Infrastructure\Role\Repositories\Doctrine\RoleRepository;
+use Project\Domains\Admin\Notification\Infrastructure\Notification\Adapter\Manager\Contracts\ManagerApiInterface;
 
 class ManagerServiceProvider extends AdminDomainServiceProvider
 {
@@ -22,6 +24,9 @@ class ManagerServiceProvider extends AdminDomainServiceProvider
         RoleRepositoryInterface::class => [self::SERVICE_BIND, RoleRepository::class],
         RolePermissionServiceInterface::class => [self::SERVICE_BIND, RolePermissionService::class],
         PermissionRepositoryInterface::class => [self::SERVICE_BIND, PermissionRepository::class],
+
+        // APIs
+        ManagerApiInterface::class => [self::SERVICE_SINGLETON, ManagerApi::class],
     ];
 
     /** @var array<array-key, string> */

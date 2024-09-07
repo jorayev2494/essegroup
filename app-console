@@ -27,6 +27,7 @@ ${YELLOW} Available commands: ${ENDCOLOR}${GREEN}
     logs ${BLUE}..............................................................................${GREEN} Print logs of containers
     nginx-restart ${BLUE}.....................................................................${GREEN} Nginx restart
     bash ${BLUE}..............................................................................${GREEN} Containter interactive terminal bash
+    sh ${BLUE}................................................................................${GREEN} Containter interactive terminal sh
     cc ${BLUE}................................................................................${GREEN} Clear cache
     database [admin, client] [[seed], fresh, diff, migrate] ${BLUE}...........................${GREEN} Database
                                                                                         Options:
@@ -76,6 +77,9 @@ case "$1" in
     ;;
     bash)
         bash "${@:2}"
+    ;;
+    sh)
+        sh "${@:2}"
     ;;
     migrations)
         migrations "${@:2}"

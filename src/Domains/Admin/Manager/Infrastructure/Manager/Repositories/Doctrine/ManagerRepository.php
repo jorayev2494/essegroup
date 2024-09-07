@@ -25,11 +25,31 @@ class ManagerRepository extends BaseAdminEntityRepository implements ManagerRepo
         return $this->entityRepository->find($uuid);
     }
 
+    public function findMyByUuids(array $uuids): ManagerCollection
+    {
+        return new ManagerCollection(
+            $this->entityRepository->createQueryBuilder('m')
+                ->where('m.uuid IN (:uuids)')
+                ->setParameter('uuids', $uuids)
+                ->getQuery()
+                ->getResult()
+        );
+    }
+
     public function paginate(Query $httpQuery): Paginator
     {
         $query = $this->entityRepository->createQueryBuilder('m');
 
         return $this->paginator($query, $httpQuery->paginator);
+    }
+
+    public function getActiveManagers(): ManagerCollection
+    {
+        return new ManagerCollection(
+            $this->entityRepository->createQueryBuilder('m')
+                ->getQuery()
+                ->getResult()
+        );
     }
 
     public function list(): ManagerCollection

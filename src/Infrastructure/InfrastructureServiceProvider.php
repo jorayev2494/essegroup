@@ -17,6 +17,10 @@ use Project\Infrastructure\Services\Authentication\AuthenticationService;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticationServiceInterface;
 use Project\Infrastructure\Services\Mailer\Contracts\MailerServiceInterface;
 use Project\Infrastructure\Services\Mailer\MailerService;
+use Project\Infrastructure\Services\Notification\Contracts\NotificationServiceInterface;
+use Project\Infrastructure\Services\Notification\NotificationService;
+use Project\Infrastructure\Services\WS\Contracts\WSServiceInterface;
+use Project\Infrastructure\Services\WS\WSService;
 use Project\Shared\Domain\File\FileSystemInterface;
 use Project\Shared\Domain\Translation\TranslationColumnService;
 use Project\Shared\Domain\Translation\TranslationColumnServiceInterface;
@@ -31,6 +35,16 @@ class InfrastructureServiceProvider extends ServiceProvider
     {
         // $this->app->singleton(AuthManagerInterface::class, AuthManager::class);
         $this->app->singleton(AuthenticationServiceInterface::class, AuthenticationService::class);
+        $this->app->singleton(
+            WSServiceInterface::class,
+            static fn (): WSServiceInterface => new WSService(
+                new \phpcent\Client(
+                    env('CENTRIFUGAL_URL'),
+                    env('CENTRIFUGAL_API_KEY'),
+                    env('CENTRIFUGAL_SECRET_KEY')
+                )
+            )
+        );
         $this->app->singleton(FileSystemInterface::class, FileSystem::class);
         $this->app->singleton(UuidGeneratorInterface::class, UuidGenerator::class);
         $this->app->singleton(TokenGeneratorInterface::class, TokenGenerator::class);
@@ -40,5 +54,6 @@ class InfrastructureServiceProvider extends ServiceProvider
         $this->app->singleton(CacheManagerInterface::class, CacheManager::class);
         $this->app->singleton(MailerServiceInterface::class, MailerService::class);
         $this->app->singleton(ArchivatorInterface::class, ZipArchivator::class);
+        $this->app->singleton(NotificationServiceInterface::class, NotificationService::class);
     }
 }

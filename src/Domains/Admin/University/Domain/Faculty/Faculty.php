@@ -20,6 +20,7 @@ use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Facult
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoInterface;
+use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\ActivableTrait;
@@ -32,7 +33,7 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'faculty_faculties')]
 #[ORM\HasLifecycleCallbacks]
-class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface, LogoableInterface
+class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface, LogoableInterface, ArrayableInterface
 {
     use ActivableTrait,
         CreatedAtAndUpdatedAtTrait,
@@ -210,7 +211,6 @@ class Faculty extends AggregateRoot implements EntityUuid, TranslatableInterface
         $this->record(new FacultyWasDeletedDomainEvent($this->uuid->value));
     }
 
-    #[\Override]
     public function toArray(): array
     {
         return [
