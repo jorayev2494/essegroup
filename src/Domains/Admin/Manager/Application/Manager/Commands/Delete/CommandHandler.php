@@ -9,12 +9,14 @@ use Project\Domains\Admin\Manager\Domain\Manager\ManagerRepositoryInterface;
 use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarServiceInterface;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Uuid;
 use Project\Shared\Domain\Bus\Command\CommandHandlerInterface;
+use Project\Shared\Domain\Bus\Event\EventBusInterface;
 
 readonly class CommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         private ManagerRepositoryInterface $repository,
-        private AvatarServiceInterface $avatarService
+        private AvatarServiceInterface $avatarService,
+        private EventBusInterface $eventBus
     ) { }
 
     public function __invoke(Command $command): void
@@ -23,8 +25,10 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $manager ?? throw new ManagerNotFoundDomainException();
 
+        $manager->delete();
         $this->avatarService->delete($manager);
 
         $this->repository->delete($manager);
+        $this->eventBus->publish(...$manager->pullDomainEvents());
     }
 }

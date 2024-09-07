@@ -124,6 +124,23 @@ services:
          networks:
              - essegroup
 
+    centrifugo:
+        image: centrifugo/centrifugo:v5
+        restart: unless-stopped
+        container_name: ${COMPOSE_PROJECT_NAME?Not project name}-centrifugo
+        ports:
+            - 8000:8000
+            - 8899:8000
+        volumes:
+            - ./centrifugo/configs:/centrifugo
+        command: centrifugo -c config.json
+        ulimits:
+            nofile:
+                soft: 65535
+                hard: 65535
+        networks:
+            - essegroup
+
     # Redis Adminer
     # adminer:
     #     image: adminer

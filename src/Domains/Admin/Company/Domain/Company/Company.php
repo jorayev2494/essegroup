@@ -37,7 +37,7 @@ use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'company_companies')]
 #[ORM\HasLifecycleCallbacks]
-class Company extends AggregateRoot implements EntityUuid, LogoableInterface
+class Company extends AggregateRoot implements EntityUuid, LogoableInterface, ArrayableInterface
 {
     use CreatedAtAndUpdatedAtTrait;
 

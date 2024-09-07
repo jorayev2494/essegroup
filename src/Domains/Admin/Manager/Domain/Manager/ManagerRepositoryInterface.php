@@ -13,7 +13,11 @@ interface ManagerRepositoryInterface
 {
     public function findByUuid(Uuid $uuid): ?Manager;
 
+    public function findMyByUuids(array $uuids): ManagerCollection;
+
     public function paginate(Query $httpQuery): Paginator;
+
+    public function getActiveManagers(): ManagerCollection;
 
     public function list(): ManagerCollection;
 

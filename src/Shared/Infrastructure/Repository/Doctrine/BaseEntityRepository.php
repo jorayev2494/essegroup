@@ -18,9 +18,7 @@ abstract class BaseEntityRepository extends EntityRepository
 
     private function initRepository(EntityManagerInterface $entityManager): void
     {
-        if ($entityName = $this->getEntity()) {
-            $this->entityRepository = $entityManager->getRepository($entityName);
-        }
+        $this->entityRepository = $entityManager->getRepository($this->getEntity());
     }
 
     abstract protected function getEntity(): string;
@@ -28,5 +26,10 @@ abstract class BaseEntityRepository extends EntityRepository
     protected function paginator($query, PaginatorHttpQueryParams $httpQueryParams, bool $fetchJoinCollection = true, bool $outputWalkers = true): Paginator
     {
         return new Paginator($query, $httpQueryParams, $fetchJoinCollection, $outputWalkers);
+    }
+
+    public function flush(): void
+    {
+        $this->entityRepository->getEntityManager()->flush();
     }
 }

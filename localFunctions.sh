@@ -117,6 +117,13 @@ function bash()
     docker compose run --rm $CONTAINER bash
 }
 
+function sh()
+{
+    CONTAINER="${1:-php-cli}";
+
+    docker compose run --rm $CONTAINER sh
+}
+
 function artisan()
 {
     docker compose run --rm php-cli bash -c "php artisan ${@:1}"

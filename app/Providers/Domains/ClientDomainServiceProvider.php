@@ -25,4 +25,14 @@ class ClientDomainServiceProvider extends DomainServiceProvider
     {
         $this->app->addClientEntityPaths(static::ENTITY_PATHS);
     }
+
+    protected function registerConfigs(): void
+    {
+        $this->registerConfigsByPrefix('client');
+    }
+
+    protected function registerNotifications(): void
+    {
+        $this->app->addNotifications(static::NOTIFICATIONS);
+    }
 }

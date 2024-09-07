@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Project\Domains\Admin\University\Infrastructure;
 
 use App\Providers\Domains\AdminDomainServiceProvider;
+use Project\Domains\Admin\Notification\Domain\Notification\Contracts\NotificationData;
 use Project\Domains\Admin\University\Domain\Degree\DegreeRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
 use Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\DegreeRepository;
@@ -197,6 +198,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
     /** @var array<array-key, string> */
     protected const DOMAIN_EVENT_SUBSCRIBERS = [
         // Application
+        \Project\Domains\Admin\University\Application\Application\Subscribers\Application\ApplicationWasCreatedDomainEventSubscriber::class,
 
         // Application Status
         \Project\Domains\Admin\University\Application\Application\Subscribers\Application\ApplicationStatusWasChangedDomainEventSubscriber::class,
@@ -225,6 +227,11 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         __DIR__ . '/../Domain/Application',
         __DIR__ . '/../Domain/Degree',
         __DIR__ . '/../Domain/Alias',
+    ];
+
+    /** @var array<array-key, NotificationData> */
+    protected const NOTIFICATIONS = [
+        \Project\Domains\Admin\University\Infrastructure\Application\Notifications\NotificationData\ApplicationWasCreatedDomainEventNotificationData::class,
     ];
 
     /** @var array<string, string> */

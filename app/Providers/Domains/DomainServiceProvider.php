@@ -7,6 +7,7 @@ namespace App\Providers\Domains;
 use App\Providers\Contracts\AppServiceProviderInterface;
 use Doctrine\DBAL\Types\Type;
 use Illuminate\Support\ServiceProvider;
+use Project\Domains\Admin\Notification\Domain\Notification\Contracts\NotificationData;
 
 abstract class DomainServiceProvider extends ServiceProvider implements AppServiceProviderInterface
 {
@@ -45,6 +46,16 @@ abstract class DomainServiceProvider extends ServiceProvider implements AppServi
     ];
 
     /** @var array<string, string> */
+    protected const CONFIG_PATHS = [
+        // 'key' => 'path',
+    ];
+
+    /** @var array<array-key, NotificationData> */
+    protected const NOTIFICATIONS = [
+        // \Project\Domains\Admin\Notification\Infrastructure\Test\DefaultNotificationData::class,
+    ];
+
+    /** @var array<string, string> */
     protected const ROUTE_PATHS = [
         // [
         //     'middleware' => ['api', 'auth:admin'],
@@ -75,12 +86,18 @@ abstract class DomainServiceProvider extends ServiceProvider implements AppServi
         $this->registerCommandHandlers();
         $this->registerDomainEventSubscribers();
         $this->registerTranslations();
+        $this->registerConfigs();
+        $this->registerNotifications();
         $this->registerRoutes();
     }
 
     abstract protected function registerMigrationPaths(): void;
 
     abstract protected function registerEntityPaths(): void;
+
+    abstract protected function registerConfigs(): void;
+
+    abstract protected function registerNotifications(): void;
 
     private function registerRoutes(): void
     {
@@ -132,6 +149,24 @@ abstract class DomainServiceProvider extends ServiceProvider implements AppServi
     {
         foreach (static::TRANSLATIONS as $path => $namespace) {
             $this->loadTranslationsFrom(base_path($path), $namespace);
+        }
+    }
+
+    protected function registerConfigsByPrefix(string $prefix): void
+    {
+        foreach (static::CONFIG_PATHS as $key => $path) {
+            if (str_contains($path, '.php')) {
+                $this->mergeConfigFrom($path, sprintf('%s.%s', $prefix, $key));
+            } else {
+                foreach (scandir($path) as $file) {
+                    if (str_contains($file, '.php')) {
+                        $filePath = sprintf('%s/%s', $path, $file);
+                        ['filename' => $filename, 'extension' => $extension] = pathinfo($filePath);
+
+                        $this->mergeConfigFrom($filePath, sprintf('%s.%s.%s', $prefix, $key, $filename));
+                    }
+                }
+            }
         }
     }
 }

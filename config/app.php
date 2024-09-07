@@ -172,11 +172,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ValidationServiceProvider::class,
+        App\Providers\NotificationServiceProvider::class,
 
         Project\Infrastructure\InfrastructureServiceProvider::class,
 
         // Domain Service Providers
-        // Admin
+        // Manager & Admin
         Project\Domains\Admin\Authentication\Infrastructure\AuthenticationServiceProvider::class,
         Project\Domains\Admin\Company\Infrastructure\CompanyServiceProvider::class,
         Project\Domains\Admin\University\Infrastructure\UniversityServiceProvider::class,
@@ -191,6 +192,8 @@ return [
         Project\Domains\Admin\StaticPage\Infrastructure\StaticPageServiceProvider::class,
         Project\Domains\Admin\Document\Infrastructure\DocumentServiceProvider::class,
         Project\Domains\Admin\YouTube\Infrastructure\YouTubeServiceProvider::class,
+        Project\Domains\Admin\Token\Infrastructure\TokenServiceProvider::class,
+        Project\Domains\Admin\Notification\Infrastructure\CompanyNotificationServiceProvider::class,
 
         // Company
         Project\Domains\Company\Authentication\Infrastructure\AuthenticationServiceProvider::class,

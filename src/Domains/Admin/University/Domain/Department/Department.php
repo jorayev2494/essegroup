@@ -28,11 +28,11 @@ use Project\Domains\Admin\University\Domain\Faculty\Faculty;
 use Project\Domains\Admin\University\Domain\Faculty\FacultyTranslate;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityTranslate;
-use Project\Domains\Admin\University\Domain\University\ValueObjects\Name;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DescriptionType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\DiscountPriceType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\PriceType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Department\Types\UuidType;
+use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\ActivableTrait;
@@ -45,7 +45,7 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'university_departments')]
 #[ORM\HasLifecycleCallbacks]
-class Department extends AggregateRoot implements EntityUuid, TranslatableInterface
+class Department extends AggregateRoot implements EntityUuid, TranslatableInterface, ArrayableInterface
 {
     use ActivableTrait,
         TranslatableTrait,
@@ -362,7 +362,6 @@ class Department extends AggregateRoot implements EntityUuid, TranslatableInterf
         $this->record(new DepartmentWasDeletedDomainEvent($this->uuid->value));
     }
 
-    #[\Override]
     public function toArray(): array
     {
         return [
