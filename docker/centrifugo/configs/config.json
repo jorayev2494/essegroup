@@ -12,5 +12,9 @@
     "http://127.0.0.1:8080"
   ],
 
+  "tls": true,
+  "tls_key": "/centrifugo/certs/ssl.key",
+  "tls_cert": "/centrifugo/certs/ssl.crt",
+
   "allow_subscribe_for_client": true
 }
