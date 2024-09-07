@@ -29,6 +29,13 @@ class FullName implements ArrayableInterface
         return new self($firstName, $lastName);
     }
 
+    public function getFullName(): ?string
+    {
+        $fullName = sprintf('%s %s', $this->firstName->value, $this->lastName->value);
+
+        return ! empty($fullName) ? $fullName : null;
+    }
+
     public function getFirstName(): FirstName
     {
         return $this->firstName;
@@ -60,7 +67,7 @@ class FullName implements ArrayableInterface
     public function toArray(): array
     {
         return [
-            'full_name' => $this->firstName->value . ' ' . $this->lastName->value,
+            'full_name' => $this->getFullName(),
             'first_name' => $this->firstName->value,
             'last_name' => $this->lastName->value,
         ];

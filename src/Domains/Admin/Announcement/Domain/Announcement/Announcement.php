@@ -18,6 +18,7 @@ use Project\Domains\Admin\Announcement\Infrastructure\Announcement\Repositories\
 use Project\Domains\Admin\Announcement\Infrastructure\Announcement\Repositories\Doctrine\Types\TitleType;
 use Project\Domains\Admin\Announcement\Infrastructure\Announcement\Repositories\Doctrine\Types\UuidType;
 use Project\Domains\Admin\Manager\Domain\Manager\Manager;
+use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\ActivableTrait;
@@ -29,7 +30,7 @@ use Project\Shared\Domain\ValueObject\UuidValueObject;
 #[ORM\Entity]
 #[ORM\Table(name: 'announcement_announcements')]
 #[ORM\HasLifecycleCallbacks]
-class Announcement extends AggregateRoot implements EntityUuid, TranslatableInterface
+class Announcement extends AggregateRoot implements EntityUuid, TranslatableInterface, ArrayableInterface
 {
     use TranslatableTrait,
         ActivableTrait,

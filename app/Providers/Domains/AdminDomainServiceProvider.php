@@ -25,4 +25,14 @@ class AdminDomainServiceProvider extends DomainServiceProvider
     {
         $this->app->addAdminEntityPaths(static::ENTITY_PATHS);
     }
+
+    protected function registerConfigs(): void
+    {
+        $this->registerConfigsByPrefix('admin');
+    }
+
+    protected function registerNotifications(): void
+    {
+        $this->app->addNotifications(static::NOTIFICATIONS);
+    }
 }

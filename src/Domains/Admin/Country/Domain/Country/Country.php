@@ -19,8 +19,8 @@ use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\T
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\ValueType;
 use Project\Domains\Admin\Country\Infrastructure\Country\Repositories\Doctrine\Types\UuidType;
 use Project\Domains\Admin\University\Domain\Application\Application;
-use Project\Domains\Admin\University\Domain\Department\Department;
 use Project\Domains\Admin\University\Domain\University\University;
+use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Contracts\NullableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
@@ -32,7 +32,7 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'country_countries')]
 #[ORM\HasLifecycleCallbacks]
-class Country extends AggregateRoot implements EntityUuid, TranslatableInterface, NullableInterface
+class Country extends AggregateRoot implements EntityUuid, TranslatableInterface, NullableInterface, ArrayableInterface
 {
     use TranslatableTrait,
         ActivableTrait,

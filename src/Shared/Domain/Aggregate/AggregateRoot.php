@@ -8,7 +8,7 @@ use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Contracts\NullableInterface;
 use Project\Shared\Domain\Bus\Event\DomainEvent;
 
-abstract class AggregateRoot implements ArrayableInterface //, NullableInterface
+abstract class AggregateRoot // implements ArrayableInterface //, NullableInterface
 {
     private array $domainEvents = [];
 

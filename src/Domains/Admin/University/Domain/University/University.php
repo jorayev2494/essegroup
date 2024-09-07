@@ -38,6 +38,7 @@ use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contrac
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contracts\CoverInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoableInterface;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Logo\Contracts\LogoInterface;
+use Project\Shared\Contracts\ArrayableInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Contracts\EntityUuid;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
@@ -49,7 +50,7 @@ use Project\Shared\Domain\Translation\TranslatableTrait;
 #[ORM\Entity]
 #[ORM\Table(name: 'university_universities')]
 #[ORM\HasLifecycleCallbacks]
-class University extends AggregateRoot implements EntityUuid, TranslatableInterface, LogoableInterface, CoverableInterface
+class University extends AggregateRoot implements EntityUuid, TranslatableInterface, LogoableInterface, CoverableInterface, ArrayableInterface
 {
     use CreatedAtAndUpdatedAtTrait,
         TranslatableTrait;
@@ -373,10 +374,6 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
         return $this->uuid->isNotNull();
     }
 
-    /**
-     * @inheritDoc
-     */
-    #[\Override]
     public function toArray(): array
     {
         return [

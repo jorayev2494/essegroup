@@ -16,6 +16,7 @@ use Project\Domains\Admin\Authentication\Domain\Device\Device;
 use Project\Domains\Admin\Manager\Application\Role\Queries\Show\Output\RoleOutput;
 use Project\Domains\Admin\Manager\Domain\Manager\Events\Auth\RestorePassword\ManagerRestorePasswordLinkWasAddedDomainEvent;
 use Project\Domains\Admin\Manager\Domain\Manager\Events\ManagerWasCreatedDomainEvent;
+use Project\Domains\Admin\Manager\Domain\Manager\Events\ManagerWasDeletedDomainEvent;
 use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarableInterface;
 use Project\Domains\Admin\Manager\Domain\Manager\Services\Avatar\Contracts\AvatarInterface;
 use Project\Domains\Admin\Manager\Domain\Manager\ValueObjects\Avatar;
@@ -31,6 +32,7 @@ use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\T
 use Project\Domains\Admin\Manager\Infrastructure\Manager\Repositories\Doctrine\Types\UuidType;
 use Project\Infrastructure\Services\Authentication\Contracts\AuthenticatableInterface;
 use Project\Infrastructure\Services\Authentication\ValueObjects\PasswordValueObject;
+use Project\Infrastructure\Services\Notification\Contracts\NotificationRecipientInterface;
 use Project\Shared\Domain\Aggregate\AggregateRoot;
 use Project\Shared\Domain\Traits\CreatedAtAndUpdatedAtTrait;
 use Project\Shared\Domain\ValueObject\UuidValueObject;
@@ -40,7 +42,7 @@ use Project\Shared\Infrastructure\Repository\Doctrine\Enums\FetchType;
 #[ORM\Entity]
 #[ORM\Table(name: 'auth_members')]
 #[ORM\HasLifecycleCallbacks]
-class Manager extends AggregateRoot implements AuthenticatableInterface, AvatarableInterface
+class Manager extends AggregateRoot implements AuthenticatableInterface, NotificationRecipientInterface, AvatarableInterface
 {
     use CreatedAtAndUpdatedAtTrait;
 
@@ -180,7 +182,7 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
         return $this->uuid;
     }
 
-    public function getAvatar(): ?AvatarInterface
+    public function getAvatar(): ?Avatar
     {
         return $this->avatar;
     }
@@ -240,6 +242,11 @@ class Manager extends AggregateRoot implements AuthenticatableInterface, Avatara
         }
 
         return $this;
+    }
+
+    public function delete(): void
+    {
+        $this->record(new ManagerWasDeletedDomainEvent($this->uuid->value));
     }
 
     #[ORM\PrePersist]

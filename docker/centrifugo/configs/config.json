@@ -1,0 +1,16 @@
+{
+  "token_hmac_secret_key": "secret-key",
+  "api_key": "api-key",
+  "secret": "secret-key",
+  "port": 8000,
+  "admin_password": "password",
+  "admin_secret": "secret",
+  "admin": true,
+
+  "allowed_origins": [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080"
+  ],
+
+  "allow_subscribe_for_client": true
+}
