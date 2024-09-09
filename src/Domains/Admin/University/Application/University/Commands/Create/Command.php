@@ -20,7 +20,8 @@ class Command implements CommandInterface
         public readonly ?UploadedFile $cover,
         public readonly string $youtubeVideoId,
         array $translations,
-        public bool $isOnTheCountryList
+        public bool $isOnTheCountryList,
+        public bool $isForForeign
     )
     {
         $this->setTranslations($translations);

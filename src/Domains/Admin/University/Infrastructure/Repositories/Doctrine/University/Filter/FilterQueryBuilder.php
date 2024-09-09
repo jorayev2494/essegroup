@@ -14,6 +14,7 @@ use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Univer
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterByFaculty;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterByLanguage;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\OnlyTheCountryList;
+use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Filter\Pipelines\FilterIsForForeign;
 use Project\Shared\Infrastructure\Repository\Doctrine\Filter\BaseFilterQueryBuilder;
 use Project\Shared\Infrastructure\Repository\Doctrine\Filter\FilterPipelineSendDTO;
 
@@ -33,6 +34,7 @@ class FilterQueryBuilder extends BaseFilterQueryBuilder
                 OnlyTheCountryList::class,
                 FilterByLanguage::class,
                 FilterByAlias::class,
+                FilterIsForForeign::class,
             ])
             ->thenReturn();
     }
