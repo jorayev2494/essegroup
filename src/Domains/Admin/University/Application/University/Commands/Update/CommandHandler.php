@@ -26,10 +26,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private TranslationColumnServiceInterface $translationColumnService,
         private LogoServiceInterface $logoService,
         private CoverServiceInterface $coverService
-    )
-    {
-
-    }
+    ) { }
 
     public function __invoke(Command $command): void
     {
@@ -43,6 +40,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $university->changeCity($city);
         $university->changeYouTubeVideoId(YouTubeVideoId::fromValue($command->youtubeVideoId));
         $university->changeIsOnTheCountryList($command->isOnTheCountryList);
+        $university->setIsForForeign($command->isForForeign);
 
         $this->translationColumnService->addTranslations($university, $command->translations);
 

@@ -18,10 +18,9 @@ readonly class QueryFilter extends BaseQueryFilter
         public array $departmentNameUuids,
         public array $degreeUuids,
         public array $languageUuids,
-        public bool $onlyInCountryList
-    ) {
-
-    }
+        public bool $onlyInCountryList,
+        public bool $isForForeign
+    ) { }
 
     public static function makeFromRequest(Request $request): static
     {
@@ -39,7 +38,8 @@ readonly class QueryFilter extends BaseQueryFilter
             $data['department_name_uuids'] ?? [],
             $data['degree_uuids'] ?? [],
             $data['language_uuids'] ?? [],
-            $data['only_in_country_list'] ?? false,
+            (bool) ($data['only_in_country_list'] ?? false),
+            (bool) ($data['is_for_foreign'] ?? false),
         );
     }
 
@@ -55,6 +55,7 @@ readonly class QueryFilter extends BaseQueryFilter
             'degree_uuids' => $this->degreeUuids,
             'language_uuids' => $this->languageUuids,
             'only_in_country_list' => $this->onlyInCountryList,
+            'is_for_foreign' => $this->isForForeign,
         ];
     }
 }

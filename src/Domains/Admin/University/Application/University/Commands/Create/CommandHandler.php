@@ -28,10 +28,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         private LogoServiceInterface $logoService,
         private CoverServiceInterface $coverService,
         private EventBusInterface $eventBus
-    )
-    {
-
-    }
+    ) { }
 
     public function __invoke(Command $command): void
     {
@@ -47,6 +44,7 @@ readonly class CommandHandler implements CommandHandlerInterface
 
         $this->translationColumnService->addTranslations($university, $command->translations);
         $university->setIsOnTheCountryList($command->isOnTheCountryList);
+        $university->setIsForForeign($command->isForForeign);
 
         $this->logoService->update($university, $command->logo);
         $this->coverService->update($university, $command->cover);

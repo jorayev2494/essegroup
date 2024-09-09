@@ -27,6 +27,7 @@ use Project\Domains\Admin\University\Domain\University\ValueObjects\Description;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Label;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Logo;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Name;
+use Project\Domains\Admin\University\Domain\University\ValueObjects\IsForForeign;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\YouTubeVideoId;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\DescriptionType;
@@ -110,6 +111,9 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
 
     #[ORM\Column(name: 'is_on_the_country_list', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $isOnTheCountryList;
+
+    #[ORM\Column(name: 'is_for_foreign', type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $isForForeign;
 
     private function __construct(Uuid $uuid, Country $country, City $city, YouTubeVideoId $youTubeVideoId)
     {
@@ -364,6 +368,18 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
         return $this;
     }
 
+    public function getIsForForeign(): bool
+    {
+        return $this->isForForeign;
+    }
+
+    public function setIsForForeign(bool $isForForeign): self
+    {
+        $this->isForForeign = $isForForeign;
+
+        return $this;
+    }
+
     public function isNull(): bool
     {
         return $this->uuid->isNull();
@@ -389,6 +405,7 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
             'city' => CityTranslate::execute($this->city)?->toArray(),
             'description' => $this->description->value,
             'is_on_the_country_list' => $this->isOnTheCountryList,
+            'is_for_foreign' => $this->isForForeign,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];
