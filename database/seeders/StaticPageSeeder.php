@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Project\Domains\Admin\StaticPage\Applicaiton\StaticPage\Commands\Create\Command as CreateCommand;
 use Project\Domains\Admin\StaticPage\Domain\StaticPage\StaticPageRepositoryInterface;
+use Project\Domains\Admin\StaticPage\Domain\StaticPage\ValueObjects\Slug;
 use Project\Infrastructure\Generators\Contracts\UuidGeneratorInterface;
 use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 
@@ -42,7 +43,7 @@ class StaticPageSeeder extends Seeder
 
         foreach ($this->staticPages as ['slug' => $slug, 'title' => $title, 'content' => $content]) {
 
-            if ($this->staticPageRepository->findBySlug($slug) !== null) {
+            if ($this->staticPageRepository->findBySlug(Slug::fromValue($slug)) !== null) {
                 continue;
             }
 
