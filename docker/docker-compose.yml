@@ -133,7 +133,7 @@ services:
             - 8899:8000
         volumes:
             - ./centrifugo/configs:/centrifugo
-        command: centrifugo -c config.json
+        command: centrifugo -c config-dev.json
         ulimits:
             nofile:
                 soft: 65535

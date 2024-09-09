@@ -27,10 +27,7 @@ readonly class UniversityController
         private UuidGeneratorInterface $uuidGenerator,
         private CommandBusInterface $commandBus,
         private QueryBusInterface $queryBus,
-    )
-    {
-
-    }
+    ) { }
 
     public function index(Request $request): JsonResponse
     {
@@ -72,7 +69,8 @@ readonly class UniversityController
                 $request->file('cover'),
                 $request->get('youtube_video_id'),
                 $request->get('translations'),
-                $request->boolean('is_on_the_country_list')
+                $request->boolean('is_on_the_country_list'),
+                $request->boolean('is_for_foreign')
             )
         );
 
@@ -99,7 +97,8 @@ readonly class UniversityController
                 $request->file('cover'),
                 $request->get('youtube_video_id'),
                 $request->get('translations'),
-                $request->boolean('is_on_the_country_list')
+                $request->boolean('is_on_the_country_list'),
+                $request->boolean('is_for_foreign')
             )
         );
 
