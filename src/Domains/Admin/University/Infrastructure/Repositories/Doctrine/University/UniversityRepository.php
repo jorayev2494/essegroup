@@ -55,6 +55,11 @@ class UniversityRepository extends BaseAdminEntityRepository implements Universi
 
         $query->setMaxResults($httpQuery->limit);
 
+        if ($httpQuery->httpQueryFilter->topPosition) {
+            $query->orderBy('u.topPosition', 'ASC');
+            $query->addOrderBy('u.createdAt', 'ASC');
+        }
+
         return new UniversityCollection($query->getQuery()->getResult());
     }
 

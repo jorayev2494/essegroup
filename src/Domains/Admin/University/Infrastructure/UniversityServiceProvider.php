@@ -104,6 +104,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\NameType::class,
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\LabelType::class,
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\DescriptionType::class,
+        \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\TopPositionType::class,
 
         // Faculty
         \Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\Faculty\Types\UuidType::class,

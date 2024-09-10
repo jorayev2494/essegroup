@@ -11,10 +11,7 @@ readonly class QueryHandler implements QueryHandlerInterface
 {
     public function __construct(
         private UniversityServiceInterface $service
-    )
-    {
-
-    }
+    ) { }
 
     public function __invoke(Query $query): array
     {

@@ -8,6 +8,7 @@ use Project\Domains\Admin\Country\Domain\City\CityRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\University;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
+use Project\Domains\Admin\University\Domain\University\ValueObjects\TopPosition;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\YouTubeVideoId;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contracts\CoverServiceInterface;
@@ -45,6 +46,7 @@ readonly class CommandHandler implements CommandHandlerInterface
         $this->translationColumnService->addTranslations($university, $command->translations);
         $university->setIsOnTheCountryList($command->isOnTheCountryList);
         $university->setIsForForeign($command->isForForeign);
+        $university->setTopPosition(TopPosition::fromValue($command->topPosition));
 
         $this->logoService->update($university, $command->logo);
         $this->coverService->update($university, $command->cover);

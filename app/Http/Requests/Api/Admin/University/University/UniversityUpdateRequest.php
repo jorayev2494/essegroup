@@ -10,12 +10,6 @@ use Project\Domains\Admin\University\Domain\University\ValueObjects\Logo;
 
 class UniversityUpdateRequest extends FormRequest
 {
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
@@ -49,6 +43,7 @@ class UniversityUpdateRequest extends FormRequest
                 new ValidateTranslationRule(['name', 'label', 'description']),
             ],
             'is_on_the_country_list' => ['required', 'boolean'],
+            'top_position' => ['nullable', 'numeric', 'min:1'],
         ];
     }
 }
