@@ -9,6 +9,7 @@ use Project\Domains\Admin\Country\Domain\City\CityRepositoryInterface;
 use Project\Domains\Admin\Country\Domain\City\ValueObjects\Uuid as CityUuid;
 use Project\Domains\Admin\Country\Domain\Country\CountryRepositoryInterface;
 use Project\Domains\Admin\University\Domain\University\UniversityRepositoryInterface;
+use Project\Domains\Admin\University\Domain\University\ValueObjects\TopPosition;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\YouTubeVideoId;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contracts\CoverServiceInterface;
@@ -40,7 +41,8 @@ readonly class CommandHandler implements CommandHandlerInterface
         $university->changeCity($city);
         $university->changeYouTubeVideoId(YouTubeVideoId::fromValue($command->youtubeVideoId));
         $university->changeIsOnTheCountryList($command->isOnTheCountryList);
-        $university->setIsForForeign($command->isForForeign);
+        $university->changeIsForForeign($command->isForForeign);
+        $university->changeTopPosition(TopPosition::fromValue($command->topPosition));
 
         $this->translationColumnService->addTranslations($university, $command->translations);
 
