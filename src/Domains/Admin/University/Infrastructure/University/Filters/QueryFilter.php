@@ -19,7 +19,8 @@ readonly class QueryFilter extends BaseQueryFilter
         public array $degreeUuids,
         public array $languageUuids,
         public bool $onlyInCountryList,
-        public bool $isForForeign
+        public bool $isForForeign,
+        public ?bool $topPosition
     ) { }
 
     public static function makeFromRequest(Request $request): static
@@ -40,6 +41,7 @@ readonly class QueryFilter extends BaseQueryFilter
             $data['language_uuids'] ?? [],
             (bool) ($data['only_in_country_list'] ?? false),
             (bool) ($data['is_for_foreign'] ?? false),
+            array_key_exists('top_position', $data) ? $data['top_position'] : null,
         );
     }
 
@@ -56,6 +58,7 @@ readonly class QueryFilter extends BaseQueryFilter
             'language_uuids' => $this->languageUuids,
             'only_in_country_list' => $this->onlyInCountryList,
             'is_for_foreign' => $this->isForForeign,
+            'top_position' => $this->topPosition,
         ];
     }
 }

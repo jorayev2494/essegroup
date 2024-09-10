@@ -16,7 +16,7 @@ readonly class Query extends BaseHttpQueryParams
 
     protected function fromRequest(SymfonyRequest $request): static
     {
-        $this->limit = $request->query->getInt('limit', ) ?: null;
+        $this->limit = $request->query->getInt('limit') ?: null;
         $this->filters = QueryFilter::makeFromRequest($request);
 
         return $this;

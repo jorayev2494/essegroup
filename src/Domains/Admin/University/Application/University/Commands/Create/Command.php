@@ -21,7 +21,8 @@ class Command implements CommandInterface
         public readonly string $youtubeVideoId,
         array $translations,
         public bool $isOnTheCountryList,
-        public bool $isForForeign
+        public bool $isForForeign,
+        public ?int $topPosition
     )
     {
         $this->setTranslations($translations);

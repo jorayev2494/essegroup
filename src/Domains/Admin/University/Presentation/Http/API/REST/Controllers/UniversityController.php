@@ -70,7 +70,8 @@ readonly class UniversityController
                 $request->get('youtube_video_id'),
                 $request->get('translations'),
                 $request->boolean('is_on_the_country_list'),
-                $request->boolean('is_for_foreign')
+                $request->boolean('is_for_foreign'),
+                $request->integer('top_position') ?: null
             )
         );
 
@@ -98,7 +99,8 @@ readonly class UniversityController
                 $request->get('youtube_video_id'),
                 $request->get('translations'),
                 $request->boolean('is_on_the_country_list'),
-                $request->boolean('is_for_foreign')
+                $request->boolean('is_for_foreign'),
+                $request->integer('top_position') ?: null
             )
         );
 

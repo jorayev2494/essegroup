@@ -28,11 +28,13 @@ use Project\Domains\Admin\University\Domain\University\ValueObjects\Label;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Logo;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Name;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\IsForForeign;
+use Project\Domains\Admin\University\Domain\University\ValueObjects\TopPosition;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\Uuid;
 use Project\Domains\Admin\University\Domain\University\ValueObjects\YouTubeVideoId;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\DescriptionType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\LabelType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\NameType;
+use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\TopPositionType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\UuidType;
 use Project\Domains\Admin\University\Infrastructure\Repositories\Doctrine\University\Types\YouTubeVideoIdType;
 use Project\Domains\Admin\University\Infrastructure\Services\Media\Cover\Contracts\CoverableInterface;
@@ -114,6 +116,9 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
 
     #[ORM\Column(name: 'is_for_foreign', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $isForForeign;
+
+    #[ORM\Column(name: 'top_position', type: TopPositionType::NAME, nullable: true)]
+    private TopPosition $topPosition;
 
     private function __construct(Uuid $uuid, Country $country, City $city, YouTubeVideoId $youTubeVideoId)
     {
@@ -380,6 +385,15 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
         return $this;
     }
 
+    public function changeIsForForeign(bool $isForForeign): self
+    {
+        if ($this->isForForeign !== $isForForeign) {
+            $this->setIsForForeign($isForForeign);
+        }
+
+        return $this;
+    }
+
     public function isNull(): bool
     {
         return $this->uuid->isNull();
@@ -388,6 +402,27 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
     public function isNotNull(): bool
     {
         return $this->uuid->isNotNull();
+    }
+
+    public function getTopPosition(): ?TopPosition
+    {
+        return $this->topPosition;
+    }
+
+    public function setTopPosition(TopPosition $topPosition): self
+    {
+        $this->topPosition = $topPosition;
+
+        return $this;
+    }
+
+    public function changeTopPosition(TopPosition $topPosition): self
+    {
+        if ($this->topPosition->isNotEquals($topPosition)) {
+            $this->setTopPosition($topPosition);
+        }
+
+        return $this;
     }
 
     public function toArray(): array
@@ -406,6 +441,7 @@ class University extends AggregateRoot implements EntityUuid, TranslatableInterf
             'description' => $this->description->value,
             'is_on_the_country_list' => $this->isOnTheCountryList,
             'is_for_foreign' => $this->isForForeign,
+            'top_position' => $this->topPosition->value,
             'created_at' => $this->createdAt->getTimestamp(),
             'updated_at' => $this->updatedAt->getTimestamp(),
         ];
