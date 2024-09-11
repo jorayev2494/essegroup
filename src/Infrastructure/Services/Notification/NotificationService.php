@@ -35,9 +35,11 @@ readonly class NotificationService implements NotificationServiceInterface
             $notificationData
         );
 
-        $manager = $this->managerRepository->findByUuid(ManagerUuid::fromValue(AuthManager::managerUuid()->value));
-        if ($manager !== null) {
-            $notification->addViewedManagers($manager);
+        if (AuthManager::check()) {
+            $manager = $this->managerRepository->findByUuid(ManagerUuid::fromValue(AuthManager::managerUuid()->value));
+            if ($manager !== null) {
+                $notification->addViewedManagers($manager);
+            }
         }
 
         $this->repository->save($notification);
