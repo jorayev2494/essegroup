@@ -23,6 +23,20 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthManager
 {
+    public static function check(GuardType $guard = null): bool
+    {
+        if ($guard instanceof GuardType) {
+            return Auth::guard($guard->value)->check();
+        }
+
+        return match (true) {
+            self::check(GuardType::MANAGER) => true,
+            self::check(GuardType::COMPANY) => true,
+            self::check(GuardType::STUDENT) => true,
+            default => false
+        };
+    }
+
     public static function uuid(GuardType $guard): UuidValueObject
     {
         return UuidValueObject::fromValue(Auth::guard($guard->value)->id());
