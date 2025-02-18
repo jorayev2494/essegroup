@@ -128,8 +128,8 @@ services:
         image: idocker2494/esseelitegroup-admin:latest
         container_name: ${COMPOSE_PROJECT_NAME?Not project name}-admin-front-end
         restart: unless-stopped
-        # ports:
-        #     - ${ADMIN_FRONT_END_PORT?Not Admin Front End port}:80
+        ports:
+            - ${ADMIN_FRONT_END_PORT?Not Admin Front End port}:80
         networks:
             - essegroup
 
@@ -138,8 +138,8 @@ services:
         image: idocker2494/esseelitegroup-client:latest
         container_name: ${COMPOSE_PROJECT_NAME?Not project name}-client-front-end
         restart: unless-stopped
-        # ports:
-        #     - ${CLIENT_FRONT_END_PORT?Not Admin Front End port}:80
+        ports:
+            - ${CLIENT_FRONT_END_PORT?Not Admin Front End port}:80
         networks:
             - essegroup
 
