@@ -1,4 +1,4 @@
-FROM nginx:latest AS base
+FROM nginx:1.27 AS base
 
 WORKDIR /var/project
 
@@ -27,5 +27,7 @@ FROM base as production
 
 # Install packages
 RUN apt-get install openssl
+
+ADD ./nginx-production.conf /etc/nginx/nginx.conf
 
 ADD ./project-nginx-production.conf /etc/nginx/conf.d/default.conf
