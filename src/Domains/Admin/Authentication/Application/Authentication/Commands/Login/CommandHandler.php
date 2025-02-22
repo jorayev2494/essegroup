@@ -30,9 +30,9 @@ readonly class CommandHandler
             throw new BadRequestException('Invalid credentials!');
         }
 
-        if ($foundMember->getRole()->isNull()) {
-            throw new RoleNotFoundDomainException();
-        }
+        // if ($foundMember->getRole()->isNull()) {
+        //     throw new RoleNotFoundDomainException();
+        // }
 
         $accessToken = $this->authenticationService->authenticate(
             new CredentialsDTO($command->email, $command->password),
@@ -40,7 +40,7 @@ readonly class CommandHandler
             array_merge(
                 $foundMember->getClaims() ?? [],
                 [
-                    'role' => Output::make($foundMember->getRole())->toResponse()
+                    'role' => $foundMember->getRole()->isNotNull() ? Output::make($foundMember->getRole())->toResponse() : [],
                 ]
             )
         );
