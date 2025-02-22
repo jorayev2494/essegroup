@@ -10,7 +10,7 @@ use Project\Shared\Domain\Bus\Command\CommandBusInterface;
 
 class CompanySeeder extends Seeder
 {
-    private const array COMPANIES = [
+    private const COMPANIES = [
         // [
         //     'name' => 'Esse Elite Group',
         //     'domain' => 'esseelitegroup',
