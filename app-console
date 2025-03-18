@@ -34,6 +34,7 @@ ${YELLOW} Available commands: ${ENDCOLOR}${GREEN}
                                                                                             type ${BLUE}........................................${GREEN} Many actions
     artisan ${BLUE}...........................................................................${GREEN} Laravel Artisan commands
     composer ${BLUE}..........................................................................${GREEN} Composerz commands
+    ci/cd ${BLUE}.............................................................................${GREEN} Print logs of containers
 
     create-context module-name context-name ${BLUE}...........................................${GREEN} Create a context in module
     start-production-dependents ${BLUE}.......................................................${GREEN} Start production dependents
@@ -47,10 +48,10 @@ case "$1" in
         status
     ;;
     up | start)
-        start
+        start "${@:2}"
     ;;
     down | stop)
-        stop
+        stop "${@:2}"
     ;;
     restart)
         restart
@@ -95,6 +96,9 @@ case "$1" in
     ;;
     composer)
         composer "${@:2}"
+    ;;
+    ci/cd)
+        ci/cd "${@:2}"
     ;;
     create-context)
         create-context "${@:2}"

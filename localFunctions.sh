@@ -60,7 +60,7 @@ function status()
 
 function start()
 {
-    docker compose up -d --force-recreate --remove-orphans
+    docker compose up -d "${@:1}" --force-recreate --remove-orphans
     status
 }
 
@@ -74,7 +74,7 @@ function start-production-dependents()
 
 function stop()
 {
-    docker compose down --remove-orphans
+    docker compose down "${@:1}" --remove-orphans
 }
 
 function restart()
@@ -154,4 +154,14 @@ function create-context()
 function nginx-restart()
 {
     docker compose exec nginx bash -c "nginx -t && nginx -s reload && service nginx restart"
+}
+
+function ci/cd()
+{
+    if [[ $1 == "run" ]]; then
+        ./vendor/bin/envoy --path=./ci-cd/laravel/ci-cd.blade.php "${@:1}"
+        exit;
+    fi
+
+    ./vendor/bin/envoy "${@:1}"
 }
