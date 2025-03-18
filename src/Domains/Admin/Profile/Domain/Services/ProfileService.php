@@ -34,7 +34,8 @@ readonly class ProfileService implements ProfileServiceInterface
                 $firstName,
                 $lastName,
                 $avatar,
-                $email
+                $email,
+                AuthManager::manager()->getRole()->getUuid()->value
             )
         );
     }

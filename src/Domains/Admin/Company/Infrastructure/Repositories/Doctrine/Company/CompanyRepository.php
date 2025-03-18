@@ -43,7 +43,7 @@ class CompanyRepository extends BaseAdminEntityRepository implements CompanyRepo
                 ->setParameter('companyUuids', $httpQuery->filter->companyUuids);
         }
 
-        return $this->paginator($query->getQuery(), $httpQuery->paginator)->toArray();
+        return $this->paginator($query, $httpQuery->paginator)->toArray();
     }
 
     #[\Override]
