@@ -10,3 +10,12 @@ Route::group(
         $router->post('/', 'store');
     }
 );
+
+use Project\Domains\Admin\University\Presentation\Http\API\REST\Controllers\EmailApplicationController;
+
+Route::group(
+    ['prefix' => 'email-application', 'controller' => EmailApplicationController::class],
+    static function (Router $router): void {
+        $router->post('/', 'store');
+    }
+);
