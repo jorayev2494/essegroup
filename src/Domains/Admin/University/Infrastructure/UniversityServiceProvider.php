@@ -43,6 +43,9 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Domain\Application\Services\Contracts\ApplicationServiceInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Domain\Application\Services\ApplicationService::class],
         \Project\Domains\Admin\University\Domain\Alias\AliasRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Alias\Repositories\Doctrine\AliasRepository::class],
 
+        // Email Application
+        \Project\Domains\Admin\University\Domain\EmailApplication\EmailApplicationRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\EmailApplication\Repositories\Doctrine\EmailApplicationRepository::class],
+
         \Project\Domains\Admin\University\Domain\Application\StatusValueRepositoryInterface::class => [self::SERVICE_SINGLETON, \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\StatusValueRepository::class],
     ];
 
@@ -135,6 +138,16 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusValueDescriptionType::class,
         \Project\Domains\Admin\University\Infrastructure\Application\Repositories\Doctrine\Types\StatusValueValueType::class,
 
+        // Email Application
+        \Project\Domains\Admin\University\Infrastructure\EmailApplication\Repositories\Doctrine\Types\UuidType::class,
+        \Project\Domains\Admin\University\Infrastructure\EmailApplication\Repositories\Doctrine\Types\FirstNameType::class,
+        \Project\Domains\Admin\University\Infrastructure\EmailApplication\Repositories\Doctrine\Types\LastNameType::class,
+        \Project\Domains\Admin\University\Infrastructure\EmailApplication\Repositories\Doctrine\Types\FatherFirstNameType::class,
+        \Project\Domains\Admin\University\Infrastructure\EmailApplication\Repositories\Doctrine\Types\MotherFirstNameType::class,
+        \Project\Domains\Admin\University\Infrastructure\EmailApplication\Repositories\Doctrine\Types\PhoneType::class,
+        \Project\Domains\Admin\University\Infrastructure\EmailApplication\Repositories\Doctrine\Types\AdditionalPhoneType::class,
+        \Project\Domains\Admin\University\Infrastructure\EmailApplication\Repositories\Doctrine\Types\NoteType::class,
+
         // Degree
         \Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\Types\UuidType::class,
         \Project\Domains\Admin\University\Infrastructure\Degree\Repositories\Doctrine\Types\ValueType::class,
@@ -149,6 +162,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         \Project\Domains\Admin\University\Application\University\Commands\Create\CommandHandler::class,
         \Project\Domains\Admin\University\Application\University\Commands\Update\CommandHandler::class,
         \Project\Domains\Admin\University\Application\University\Commands\Delete\CommandHandler::class,
+        \Project\Domains\Admin\University\Application\EmailApplication\Commands\EmailApplication\CommandHandler::class,
 
         // Faculty
         \Project\Domains\Admin\University\Application\Faculty\Commands\Create\CommandHandler::class,
@@ -226,6 +240,7 @@ class UniversityServiceProvider extends AdminDomainServiceProvider
         __DIR__ . '/../Domain/Department/Name',
         __DIR__ . '/../Domain/Application/ValueObjects',
         __DIR__ . '/../Domain/Application',
+        __DIR__ . '/../Domain/EmailApplication',
         __DIR__ . '/../Domain/Degree',
         __DIR__ . '/../Domain/Alias',
     ];
