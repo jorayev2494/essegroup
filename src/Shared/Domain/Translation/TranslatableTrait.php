@@ -9,7 +9,6 @@ use Project\Shared\Domain\Translation\DomainEvents\TranslationDomainEventTypeEnu
 
 trait TranslatableTrait
 {
-    // #[\Override]
     public function getTranslations(): Collection
     {
         return $this->translations;
